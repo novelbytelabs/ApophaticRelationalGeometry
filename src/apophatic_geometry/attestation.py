@@ -1,8 +1,9 @@
 """Fail-closed source, runtime, and execution attestation utilities.
 
 No caller-supplied environment variable is accepted as provenance. Scientific
-artifacts must derive identity from a clean Git checkout, tracked source bytes,
-the frozen protocol lock, the declared integrator, and installed runtime files.
+artifacts derive identity from a clean Git checkout, tracked source bytes, the
+frozen protocol lock, declared implementation files, and installed runtime
+files.
 """
 
 from __future__ import annotations
@@ -53,8 +54,9 @@ def _require_repo_root(repo_root: str | Path) -> Path:
 def require_clean_tracked_tree(repo_root: str | Path) -> tuple[Path, str]:
     """Return ``(root, commit)`` for a clean tracked checkout.
 
-    Untracked files are not accepted as provenance and are not included in the
-    source hash. Modified, deleted, staged, or conflicted tracked files fail.
+    Modified, deleted, staged, or conflicted tracked files fail. Untracked
+    files are excluded from source identity and cannot affect the tracked-tree
+    digest.
     """
 
     root = _require_repo_root(repo_root)
@@ -69,13 +71,16 @@ def require_clean_tracked_tree(repo_root: str | Path) -> tuple[Path, str]:
 
 
 def _root_confined_file(root: Path, relative: str) -> Path:
-    candidate = (root / relative).resolve(strict=True)
+    source_path = root / relative
+    if source_path.is_symlink():
+        raise AttestationError(f"tracked source must not be a symlink: {relative}")
+    candidate = source_path.resolve(strict=True)
     try:
         candidate.relative_to(root)
     except ValueError as exc:
         raise AttestationError(f"tracked path escapes repository root: {relative}") from exc
-    if candidate.is_symlink() or not candidate.is_file():
-        raise AttestationError(f"tracked source must be a regular non-symlink file: {relative}")
+    if not candidate.is_file():
+        raise AttestationError(f"tracked source must be a regular file: {relative}")
     return candidate
 
 
@@ -119,7 +124,9 @@ def _distribution_tree_sha256(name: str) -> str:
         raise AttestationError(f"required distribution is unavailable: {name}") from exc
     files = distribution.files
     if not files:
-        raise AttestationError(f"distribution does not expose an installed-file manifest: {name}")
+        raise AttestationError(
+            f"distribution does not expose an installed-file manifest: {name}"
+        )
 
     digest = hashlib.sha256()
     file_count = 0
@@ -141,7 +148,7 @@ def _distribution_tree_sha256(name: str) -> str:
 
 
 def runtime_environment() -> dict[str, Any]:
-    """Return version and installed-byte fingerprints for execution dependencies."""
+    """Return versions and installed-byte fingerprints for runtime dependencies."""
 
     stream = io.StringIO()
     with redirect_stdout(stream):
@@ -156,7 +163,9 @@ def runtime_environment() -> dict[str, Any]:
         "python_version": platform.python_version(),
         "python_implementation": platform.python_implementation(),
         "python_build": list(platform.python_build()),
-        "python_executable_sha256": file_sha256(Path(sys.executable).resolve(strict=True)),
+        "python_executable_sha256": file_sha256(
+            Path(sys.executable).resolve(strict=True)
+        ),
         "platform": platform.platform(),
         "machine": platform.machine(),
         "processor": platform.processor(),
