@@ -17,6 +17,8 @@ from .models import (
     CONTRACT_VERSION,
     ModelId,
     ProjectionTarget,
+    combined_projected_derivative,
+    combined_projected_rk4_step,
     parse_model_id,
     projected_derivative,
     projected_rk4_step,
@@ -41,6 +43,7 @@ def _configuration_hash(
     steps: int,
     dt: float,
 ) -> str:
+    projected = model_id in {ModelId.MP, ModelId.MFP}
     payload = {
         "contract_version": CONTRACT_VERSION,
         "model_id": model_id.value,
@@ -50,6 +53,7 @@ def _configuration_hash(
             "s": state.s.tolist(),
             "q": state.q.tolist(),
         },
+        "projection_target_c0": collective_mode(state.x) if projected else None,
         "steps": steps,
         "dt": dt,
     }
@@ -69,12 +73,13 @@ def run(
         raise ValueError("dt must be finite and positive")
 
     model_id = parse_model_id(model)
-    if model_id is ModelId.MFP:
-        raise NotImplementedError("mfp is not implemented at the current roadmap gate")
-
     params = Parameters()
     state = reference_initial_state()
-    target = ProjectionTarget.from_state(state) if model_id is ModelId.MP else None
+    target = (
+        ProjectionTarget.from_state(state)
+        if model_id in {ModelId.MP, ModelId.MFP}
+        else None
+    )
     configuration_hash = _configuration_hash(model_id, params, state, steps, dt)
     source_commit = os.environ.get("ARG_SOURCE_COMMIT", "unavailable")
 
@@ -82,9 +87,14 @@ def run(
     last_post_residual: float | str = ""
     last_retraction_magnitude: float | str = ""
     if target is not None:
-        initial = projected_derivative(state, params, target)
-        last_raw_residual = initial.constraint_residual
-        last_post_residual = initial.constraint_residual
+        if model_id is ModelId.MP:
+            initial_residual = projected_derivative(state, params, target).constraint_residual
+        else:
+            initial_residual = combined_projected_derivative(
+                state, params, target
+            ).constraint_residual
+        last_raw_residual = initial_residual
+        last_post_residual = initial_residual
         last_retraction_magnitude = 0.0
 
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -115,6 +125,10 @@ def run(
                 "normalized_tangency_residual",
                 "projection_correction_norm",
                 "projection_denominator",
+                "feedback_norm",
+                "node_feedback_norm",
+                "local_proposal_norm",
+                "combined_proposal_norm",
                 "pre_retraction_constraint_residual",
                 "post_retraction_constraint_residual",
                 "retraction_magnitude",
@@ -123,19 +137,38 @@ def run(
 
         for step in range(steps + 1):
             distance = intrinsic_distance_matrix(state, params)
-            if target is not None:
+            if model_id is ModelId.MP and target is not None:
                 projection = projected_derivative(state, params, target)
-                projection_fields: list[float | str] = [
+                mechanism_fields: list[float | str] = [
                     projection.constraint_residual,
                     projection.normalized_tangency_residual,
                     projection.correction_norm,
                     projection.denominator,
+                    "",
+                    "",
+                    float(np.linalg.norm(projection.proposal.pack())),
+                    "",
+                    last_raw_residual,
+                    last_post_residual,
+                    last_retraction_magnitude,
+                ]
+            elif model_id is ModelId.MFP and target is not None:
+                combined = combined_projected_derivative(state, params, target)
+                mechanism_fields = [
+                    combined.constraint_residual,
+                    combined.normalized_tangency_residual,
+                    combined.correction_norm,
+                    combined.denominator,
+                    combined.feedback_norm,
+                    combined.node_feedback_norm,
+                    float(np.linalg.norm(combined.local_proposal.pack())),
+                    float(np.linalg.norm(combined.proposal.pack())),
                     last_raw_residual,
                     last_post_residual,
                     last_retraction_magnitude,
                 ]
             else:
-                projection_fields = ["", "", "", "", "", "", ""]
+                mechanism_fields = ["", "", "", "", "", "", "", "", "", "", ""]
 
             writer.writerow(
                 [
@@ -152,13 +185,19 @@ def run(
                     distance[0, 1],
                     distance[0, 2],
                     distance[1, 2],
-                    *projection_fields,
+                    *mechanism_fields,
                 ]
             )
 
             if step < steps:
-                if target is not None:
+                if model_id is ModelId.MP and target is not None:
                     result = projected_rk4_step(state, params, dt, target)
+                    state = result.state
+                    last_raw_residual = result.raw_constraint_residual
+                    last_post_residual = result.post_constraint_residual
+                    last_retraction_magnitude = result.retraction_magnitude
+                elif model_id is ModelId.MFP and target is not None:
+                    result = combined_projected_rk4_step(state, params, dt, target)
                     state = result.state
                     last_raw_residual = result.raw_constraint_residual
                     last_post_residual = result.post_constraint_residual
@@ -173,7 +212,7 @@ def main() -> None:
     parser.add_argument("--dt", type=float, default=0.005)
     parser.add_argument(
         "--model",
-        choices=[ModelId.M0.value, ModelId.MF.value, ModelId.MP.value],
+        choices=[member.value for member in ModelId],
         default=ModelId.MF.value,
         help="implemented model identifier",
     )

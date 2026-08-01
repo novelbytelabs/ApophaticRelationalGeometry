@@ -25,7 +25,7 @@ def _sigmoid_scalar(value: float) -> float:
 
 def _validate_c0(c0: float | None) -> float:
     if c0 is None:
-        raise ValueError("reference MP requires c0")
+        raise ValueError("reference projected model requires c0")
     value = float(c0)
     if not np.isfinite(value) or value < _MINIMUM_C0:
         raise ValueError("invalid reference c0")
@@ -62,7 +62,7 @@ def reference_derivative(
     c0: float | None = None,
 ) -> State:
     params.validate()
-    if model not in {"m0", "mf", "mp"}:
+    if model not in {"m0", "mf", "mp", "mfp"}:
         raise ValueError(f"unsupported reference model: {model}")
 
     x = state.x.copy()
@@ -88,26 +88,30 @@ def reference_derivative(
             + params.kappa * difference**2
         ) / params.tau_q
 
-    if model == "mf":
+    if model in {"mf", "mfp"}:
         c = float(np.dot(x, x) / 3.0)
         dx += -params.chi * c * x
         ds += params.eta_2 * c / params.tau_s
         dq += -params.rho * c / params.tau_q
-    elif model == "mp":
+
+    if model in {"mp", "mfp"}:
         target = _validate_c0(c0)
         dx = _project_reference_node_derivative(x, dx, target)
 
     return State(x=dx, s=ds, q=dq)
 
 
-def reference_mp_step_with_diagnostics(
+def _reference_projected_step_with_diagnostics(
     state: State,
     params: Parameters,
     dt: float,
     c0: float,
+    model: str,
 ) -> tuple[State, float, float, float]:
     """Independent projected RK4 plus radial retraction."""
 
+    if model not in {"mp", "mfp"}:
+        raise ValueError("reference projected step requires mp or mfp")
     if not np.isfinite(dt) or dt <= 0.0:
         raise ValueError("dt must be finite and positive")
     target = _validate_c0(c0)
@@ -123,7 +127,7 @@ def reference_mp_step_with_diagnostics(
             s=np.asarray(vector[3:6], dtype=np.float64),
             q=np.asarray(vector[6:9], dtype=np.float64),
         )
-        return reference_derivative(candidate, params, "mp", c0=target).pack()
+        return reference_derivative(candidate, params, model, c0=target).pack()
 
     k1 = rhs(y0)
     k2 = rhs(y0 + 0.5 * dt * k1)
@@ -146,6 +150,24 @@ def reference_mp_step_with_diagnostics(
     return retracted, raw_residual, post_residual, magnitude
 
 
+def reference_mp_step_with_diagnostics(
+    state: State,
+    params: Parameters,
+    dt: float,
+    c0: float,
+) -> tuple[State, float, float, float]:
+    return _reference_projected_step_with_diagnostics(state, params, dt, c0, "mp")
+
+
+def reference_mfp_step_with_diagnostics(
+    state: State,
+    params: Parameters,
+    dt: float,
+    c0: float,
+) -> tuple[State, float, float, float]:
+    return _reference_projected_step_with_diagnostics(state, params, dt, c0, "mfp")
+
+
 def reference_rk4_step(
     state: State,
     params: Parameters,
@@ -153,12 +175,13 @@ def reference_rk4_step(
     model: str,
     c0: float | None = None,
 ) -> State:
-    if model == "mp":
-        return reference_mp_step_with_diagnostics(
+    if model in {"mp", "mfp"}:
+        return _reference_projected_step_with_diagnostics(
             state,
             params,
             dt,
             _validate_c0(c0),
+            model,
         )[0]
 
     if not np.isfinite(dt) or dt <= 0.0:
