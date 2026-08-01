@@ -2,17 +2,19 @@
 
 ## Status of this document
 
-This document specifies the **target ARG model family**, including projected-admissibility variants. It is not a claim that every mechanism is currently implemented.
+This document specifies the ARG model family and distinguishes implemented mechanisms from broader targets.
 
 Current executable status:
 
 $$
-M_0,M_F\ \text{implemented and unit-tested};
-\qquad
-M_P,\ M_{FP},\ M_F\equiv M_P\ \text{unverified}.
+\boxed{
+M_0,M_F,M_P\ \text{implemented and unit-tested};
+\quad
+M_{FP}\ \text{and }M_F\equiv M_P\ \text{unverified}.
+}
 $$
 
-The implemented three-node models contain adaptive relations and state-dependent intrinsic distance. $M_0$ has no collective transition path. $M_F$ adds endogenous collective feedback. Neither implements the $\Gamma/H$ projection defined below.
+$M_P$ is the contract-v1.0 constant-amplitude projection sandbox. It is not the completed relational-admissibility geometry and has not been validated as a physical model.
 
 ## 1. Provisional presentation
 
@@ -39,7 +41,7 @@ $$
 The active edge strength is
 
 $$
-a_e=\sigma(s_e)=\frac{1}{1+\exp(-s_e)}.
+a_e=\sigma(s_e)=\frac{1}{1+e^{-s_e}}.
 $$
 
 The implemented three-node specialization uses
@@ -60,25 +62,23 @@ $$
 \rho_{je}:M_j\times\Theta_j\times C\to Y_e.
 $$
 
-Where subtraction is defined, a mismatch residual may be written
+Where subtraction is defined, a residual may be written
 
 $$
 \delta_e(Z)=\rho_{ie}(x_i,\theta_i,c)-\rho_{je}(x_j,\theta_j,c).
 $$
 
-Otherwise an explicit discrepancy map must be supplied.
+Otherwise an explicit discrepancy map into a normed residual space must be supplied.
 
 A candidate coherence energy is
 
 $$
 \mathcal E_{\mathrm{coh}}(Z)
 =
-\frac{1}{2}
-\sum_{e\in\bar E}
-a_e\delta_e^{\mathsf T}W_e\delta_e.
+\frac12\sum_{e\in\bar E}a_e\delta_e^{\mathsf T}W_e\delta_e.
 $$
 
-This compatibility structure belongs to the target family and is not yet implemented in the three-node code.
+This richer compatibility structure is not implemented in contract v1.0.
 
 ## 3. Intrinsic geometry
 
@@ -87,14 +87,9 @@ Define positive intrinsic edge length
 $$
 \ell_e(Z)
 =
-\frac{\exp(q_e)}{a_e}
-\psi_e\bigl(\delta_e(Z)\bigr),
-$$
-
-with $\psi_e>0$. A simple choice is
-
-$$
-\psi_e(\delta)=\sqrt{\epsilon^2+\|\delta\|^2}.
+\frac{e^{q_e}}{a_e}\psi_e\bigl(\delta_e(Z)\bigr),
+\qquad
+\psi_e>0.
 $$
 
 The intrinsic distance is
@@ -106,7 +101,7 @@ d_Z(i,j)
 \sum_{e\in\gamma}\ell_e(Z).
 $$
 
-The implemented models use the scalar specialization
+The implemented scalar specialization is
 
 $$
 \ell_{ij}
@@ -115,12 +110,44 @@ $$
 \sqrt{\epsilon^2+(x_i-x_j)^2}.
 $$
 
-## 4. Implemented $M_0$ mechanism
+For the complete undirected three-node graph with finite positive edge lengths, shortest-path distance is a metric.
 
-$M_0$ contains local nonlinear dynamics, neighbor coupling, adaptive edge activation, and metric deformation:
+## 4. $M_0$: local/adaptive proposal
+
+$M_0$ defines the shared proposal field
 
 $$
 \dot Z_0=F_0(Z).
+$$
+
+For node $i$:
+
+$$
+\dot x_i^{(0)}
+=
+\alpha x_i-
+\beta x_i^3+
+\sum_{j\ne i}w_{ij}(x_j-x_i),
+$$
+
+where
+
+$$
+w_{ij}=\sigma(s_{ij})e^{-q_{ij}}.
+$$
+
+For edge $(i,j)$:
+
+$$
+\tau_s\dot s_{ij}^{(0)}
+=
+\eta_0-\eta_1(x_i-x_j)^2-s_{ij},
+$$
+
+$$
+\tau_q\dot q_{ij}^{(0)}
+=
+-\gamma q_{ij}+\kappa(x_i-x_j)^2.
 $$
 
 No value computed from
@@ -129,11 +156,11 @@ $$
 c(x)=\frac13x^Tx
 $$
 
-enters an $M_0$ transition equation. The statistic may be logged only as an observation.
+enters an $M_0$ transition equation.
 
-## 5. Implemented $M_F$ mechanism
+## 5. $M_F$: collective feedback
 
-$M_F$ adds the feedback vector
+Define
 
 $$
 F_F(Z)
@@ -142,10 +169,10 @@ F_F(Z)
 -\chi c(x)x,
 \frac{\eta_2c(x)}{\tau_s}\mathbf 1,
 -\frac{\rho c(x)}{\tau_q}\mathbf 1
-\right),
+\right).
 $$
 
-so that
+Then
 
 $$
 \dot Z_F=F_0(Z)+F_F(Z).
@@ -159,54 +186,52 @@ $$
 
 is implemented and unit-tested.
 
-## 6. Target projected-admissibility mechanism
+This is collective feedback. It is not tangent-space projection.
 
-A projected variant requires explicit equality and inequality constraints:
+## 6. General projected admissibility
+
+A general projected model requires
 
 $$
 \Gamma(Z)=0,
 \qquad
-H(Z)\geq0.
+H(Z)\ge0,
 $$
 
-Then
+with admissible set
 
 $$
-\mathcal M
-=
-\{Z:\Gamma(Z)=0,\ H(Z)\geq0\}.
+\mathcal M=\{Z:\Gamma(Z)=0,\ H(Z)\ge0\}.
 $$
 
-A local model proposes velocity $F_{\mathrm{local}}(Z)$. The target velocity is
+A proposal field $F_{\mathrm{local}}$ is mapped to admissible motion:
 
 $$
-\dot Z
-=
-\Pi_{T_Z\mathcal M}F_{\mathrm{local}}(Z).
+\dot Z=\Pi_{T_Z\mathcal M}F_{\mathrm{local}}(Z).
 $$
 
-For smooth equality constraints and a positive-definite state metric $G(Z)$, a candidate expression is
+For smooth equality constraints and positive-definite state metric $G(Z)$, the regular equality-only expression is
 
 $$
 \dot Z
 =
 F_{\mathrm{local}}
 -
-G^{-1}J_{\Gamma}^{\mathsf T}
-\left(
-J_{\Gamma}G^{-1}J_{\Gamma}^{\mathsf T}
-\right)^{\dagger}
-J_{\Gamma}F_{\mathrm{local}}.
+G^{-1}J_\Gamma^{\mathsf T}
+\left(J_\Gamma G^{-1}J_\Gamma^{\mathsf T}\right)^{-1}
+J_\Gamma F_{\mathrm{local}},
 $$
 
-This expression requires rank, regularity, domain, and numerical-preservation analysis.
+when the indicated matrix is invertible. Inequality constraints require tangent-cone or active-set treatment and are not implemented in version 1.0.
 
-## 7. Frozen $M_P$ version 1.0 sandbox
+## 7. Implemented $M_P$ version 1.0
 
-The first projection contract fixes
+### Constraint
 
 $$
-\Gamma(Z)=c(x)-c_0
+\Gamma(Z)
+=
+c(x)-c_0
 =
 \frac13x^Tx-c_0=0,
 $$
@@ -214,62 +239,145 @@ $$
 where
 
 $$
-c_0=c(x(0))>0,
+c_0=c(x(0))\ge10^{-6},
 \qquad
 H=\varnothing.
 $$
 
-With the Euclidean metric, the frozen projected node derivative is
+The manifold is
+
+$$
+\mathcal M_{c_0}
+=
+\left\{Z:\frac13x^Tx=c_0\right\}.
+$$
+
+### Jacobian and regularity
+
+$$
+J_\Gamma(Z)
+=
+\left(\frac23x^T,0,0\right).
+$$
+
+On the declared manifold,
+
+$$
+J_\Gamma J_\Gamma^T
+=
+\frac49x^Tx
+=
+\frac43c_0>0.
+$$
+
+Thus the rank-one equality projection is regular on the declared domain.
+
+### Tangent projection
+
+With $G=I_9$, projection acts only on the node derivative:
+
+$$
+P_T(x)=I_3-\frac{xx^T}{x^Tx},
+$$
 
 $$
 \boxed{
-f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
+f_P=P_Tf_0
+=f_0-x\frac{x^Tf_0}{x^Tx}.
 }
 $$
 
-The constraint acts only on $x$; $s$ and $q$ retain their $M_0$ proposal equations. This is the Phase 3 implementation target and remains unverified in code.
+The $s$ and $q$ derivatives remain their $M_0$ proposal values.
 
-## 8. Combined mechanism
-
-A combined model must retain separate feedback and projection contributions:
+Tangency follows algebraically:
 
 $$
-\dot Z
+x^Tf_P=0,
+$$
+
+and therefore
+
+$$
+\frac{d}{dt}\Gamma(Z(t))
 =
-F_0(Z)
-+
-F_F(Z)
-+
-F_P\bigl(Z,F_0+F_F\bigr).
+\frac23x^Tf_P=0.
 $$
 
-Removing $F_F$ must recover $M_P$. Removing $F_P$ must recover $M_F$. Removing both must recover $M_0$.
+This is a continuous-time result on the regular domain.
 
-No equivalence
+### Numerical preservation
 
-$$
-F_F\equiv F_P
-$$
-
-is assumed.
-
-For the frozen constant-amplitude sandbox, the radial node feedback satisfies
+Every classical RK4 stage evaluates the projected vector field. After the complete step, the node state is retracted:
 
 $$
-P_T[-\chi c(x)x]=0,
+x_{n+1}
+=
+\sqrt{3c_0}\frac{x_{n+1}^{\mathrm{raw}}}
+{\|x_{n+1}^{\mathrm{raw}}\|}.
 $$
 
-so version 1.0 predicts
+The implementation records:
+
+- proposal;
+- projection correction;
+- projected derivative;
+- constraint residual;
+- normalized tangency residual;
+- projection denominator;
+- pre- and post-retraction residual;
+- retraction magnitude.
+
+It fails closed if a projected stage or retraction reaches the frozen near-singular threshold. No silent pseudoinverse, denominator clipping, or fallback projection is used.
+
+## 8. $M_{FP}$: combined mechanism target
+
+Version 1.0 fixes
 
 $$
-f_{FP}=f_P
+F_{\mathrm{proposal}}=F_0+F_F
 $$
 
-for node derivatives, while $s$ and $q$ feedback may still distinguish the models.
+followed by projection.
+
+The node derivative is
+
+$$
+f_{FP}=P_T\left(f_0-\chi c(x)x\right).
+$$
+
+Since
+
+$$
+P_Tx=0,
+$$
+
+the radial node-feedback term is annihilated:
+
+$$
+P_T[-\chi c(x)x]=0.
+$$
+
+Therefore the frozen contract predicts
+
+$$
+\boxed{f_{FP}=f_P}
+$$
+
+for node derivatives.
+
+The $s$ and $q$ derivatives retain $M_F$ feedback, so in general
+
+$$
+\dot s^{(FP)}\ne\dot s^{(P)},
+\qquad
+\dot q^{(FP)}\ne\dot q^{(P)}.
+$$
+
+$M_{FP}$ remains unimplemented and unverified.
 
 ## 9. Dynamic topology and metric
 
-A general system may include
+A broader system may include
 
 $$
 \dot x_i=f_i(x_i,x_{\mathcal N_i},s,q,c),
@@ -287,11 +395,11 @@ $$
 \dot c=R(c,\Psi(Z)).
 $$
 
-Whether $c$ is algebraically derived or dynamically independent must be declared separately for each model. In $M_0$ and $M_F$, it is algebraically derived.
+Whether $c$ is algebraically derived or independently dynamical must be declared per model. In contract v1.0 it is algebraically derived.
 
 ## 10. Non-collapse barrier
 
-A target variant may define
+A future variant may define
 
 $$
 U_{\mathrm{barrier}}(Z)
@@ -300,38 +408,32 @@ U_{\mathrm{barrier}}(Z)
 \qquad B_e,p_e>0.
 $$
 
-Then
-
-$$
-\ell_e\to0^+
-\quad\Longrightarrow\quad
-U_{\mathrm{barrier}}\to+\infty.
-$$
-
-The implication from divergent potential to an unreachable finite-energy boundary remains a proof obligation under explicit energy assumptions. The barrier is not implemented in $M_0$ or $M_F$.
+The implication from divergent potential to an unreachable finite-energy boundary remains conditional on a suitable conserved or coercive energy bound. The barrier is not implemented in $M_0$, $M_F$, or $M_P$.
 
 ## 11. Equivariance
 
-For an admissible presentation transformation $g$, the target dynamics should satisfy
+For admissible presentation transformation $g$, the target requirement is
 
 $$
-F(g\cdot Z)=Dg_ZF(Z),
+F(g\cdot Z)=Dg_ZF(Z).
 $$
 
-and every invariant observable $Q$ should satisfy
+Permutation equivariance is unit-tested for $M_0$, $M_F$, and $M_P$. General coordinate and presentation invariance remains a proof obligation.
 
-$$
-Q(g\cdot Z)=Q(Z).
-$$
+## 12. Claim boundary
 
-Permutation equivariance is unit-tested for $M_0$ and $M_F$. General equivariance remains a proof obligation.
+The specific statement
 
-## 12. Fail-closed projected claim
+> ARG implements the contract-v1.0 constant-amplitude projection sandbox
 
-The label “projected geometry” is licensed only after explicit constraints, projection implementation, preservation tests, code-equation parity, and substrate-path identification all pass.
+is licensed.
 
-At present the constraint definition is frozen, but implementation and verification are absent. Therefore:
+The broader statements
 
-$$
-\operatorname{PROJECTED\_CLAIM}=\text{UNVERIFIED}.
-$$
+> ARG has validated a physical projected geometry
+
+or
+
+> collective feedback and projection are equivalent
+
+remain unverified.
