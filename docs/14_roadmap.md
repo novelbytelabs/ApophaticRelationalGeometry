@@ -18,9 +18,9 @@ $$
 
 $$
 \boxed{
-\text{pilot-only runner verified};
+\text{Phase 6A.1 integrity remediation STOP-SHIP};
 \quad
-\text{development pilot not executed};
+\text{development pilot not authorized for execution};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
@@ -36,11 +36,12 @@ $$
 | Phase 3 — Implement and verify $M_P$ | COMPLETE | Projection sandbox merged and hosted-tested. |
 | Phase 4 — Implement and verify $M_{FP}$ | COMPLETE | Combined model merged; 51 tests passed in each configured Python environment. |
 | Phase 5 — Freeze comparative experiment protocol | COMPLETE | Data-free protocol and executable decision rules frozen; 65 tests passed in each configured environment. |
-| Phase 6A — Implement pilot-only runner | COMPLETE | Fail-closed runner, numerical gates, controls, and immutable archive verified; 100 tests passed in each configured environment. |
-| Phase 6B — Execute development pilot | NEXT GATE | Requires a separate committed authorization naming the verified runner commit. No pilot has run. |
+| Phase 6A — Implement pilot-only runner | COMPLETE WITH AUDIT REMEDIATION REQUIRED | Runner gate passed, but an independent audit found integrity defects outside and around the nominal equations. |
+| Phase 6A.1 — Integrity remediation | STOP-SHIP / ACTIVE | Provenance, numerical-domain, immutability, atomic-output, lock-containment, strict-JSON, environment-lock, and bundle-assembly defects must be closed and externally re-audited. |
+| Phase 6B — Execute development pilot | BLOCKED | No execution authorization may be created until Phase 6A.1 passes external audit. |
 | Phase 7 onward | BLOCKED | Confirmatory execution remains unauthorized. |
 
-Software tests verify declared code and protocol contracts. They do not validate the scientific hypothesis.
+Software tests verify declared code and protocol contracts. They do not validate the scientific hypothesis, and they do not supersede an unresolved independent audit.
 
 ---
 
@@ -84,54 +85,42 @@ Verification: PR `#9`, merge `d60bb3e618c590e0c994188cebf060bd4b347903`, Actions
 
 ## Phase 6A — Pilot-only runner
 
-**PASS at software and runner-contract level.**
+The runner implementation and its original software gate passed, but that result is now subordinate to the independent audit and does not authorize execution.
 
-The runner now:
-
-- reconstructs exactly 50 pilot configurations and no confirmatory configurations;
-- rejects mixed or confirmatory input before integration;
-- independently rejects confirmatory input in RK4, DOP853, and archive paths;
-- runs all four models at all frozen RK4 resolutions;
-- applies DOP853 to every decision-bearing model/map;
-- enforces H5, H6, refinement, endpoint, and alternate-integrator gates;
-- implements exogenous replay and frozen-$s/q$ controls;
-- executes all six relabeling tripwires;
-- writes a checksummed, write-once, read-only-finalized archive;
-- independently reconstructs membership, hashes, smoke trajectories, and archive checksums;
-- requires a separately committed execution authorization naming the verified runner commit.
-
-Hosted verification: PR `#11`, Actions `30722763003`, 100 tests on Python 3.10 and 100 on Python 3.12.
-
-The verification slice contains no execution authorization, pilot trajectory, result, archive, or confirmatory artifact. See `20_phase6_runner_design.md` and `21_phase6_runner_verification.md`.
+Original verification: PR `#11`, merge `b0b5acc1f2db77b7b0fab43eefafd15f3ee2f728`, 100 tests in each configured Python environment.
 
 ---
 
-# Phase 6B — Execute the development pilot
+# Phase 6A.1 — Integrity remediation
 
 ## Objective
 
-Execute exactly the 50 frozen pilot configurations with the already verified runner, preserving the protocol and all failures.
+Remediate the audit findings without changing scientific equations, thresholds, configurations, pilot/confirmatory membership, or outcome rules.
 
-## Preconditions
+## Mandatory remediation
 
-- commit the fixed execution authorization naming the verified Phase 6A runner commit;
-- change no protected model, protocol, runner, metric, threshold, configuration, or split file;
-- rerun hosted verification;
-- create a new empty archive destination;
-- retain confirmatory lockout.
+- make `State` arrays copied and read-only;
+- fail closed on exponential underflow, overflow, zero, or nonfinite geometry values;
+- reject lock traversal and symlink escape outside repository root;
+- reject non-standard JSON constants including NaN and Infinity;
+- remove environment-controlled source provenance and bind run identity to attested source, protocol, runner, integrator, dependency, and environment fingerprints;
+- make standalone simulator output atomic and completion-attested;
+- pin and fingerprint the execution environment;
+- assemble future audit bundles only after clean extraction, lock verification, and advertised-test success;
+- quarantine or remove stale Euler output from current evidence;
+- add adversarial tests derived from the independent audit, without using expected scientific trajectories as oracles.
 
-## Execution obligations
+## Exit criteria
 
-- run all canonical models, numerical profiles, controls, and relabeling tripwires;
-- stop on lock, split, H5, H6, parity, or permutation failure;
-- pause if more than 10% of pilot configurations fail numerical acceptance;
-- preserve all failures without imputation;
-- hash and retain every raw and summary artifact;
-- report developmental observations without changing the held-out protocol.
+- all audit-derived adversarial tests pass;
+- all pre-existing tests remain passing;
+- no pilot or confirmatory data is generated;
+- a fresh audit package validates its own lock and test attestation from a clean extraction;
+- an external Auditor AI reports no remaining STOP-SHIP finding.
 
-## Maximum result
+# Phase 6B — Execute the development pilot
 
-The pilot may expose numerical defects, degeneracies, uninformative observables, or developmental mechanism signatures. It cannot establish a confirmatory mechanism result, physical adequacy, causal autonomy, strong emergence, novelty, or ontology.
+Blocked until Phase 6A.1 is externally cleared. A prior execution issue or authorization template does not override this block.
 
 # Phase 7 — Confirmatory four-model experiment
 
@@ -151,4 +140,4 @@ Initial order:
 
 ## Immediate next action
 
-Create the separate Phase 6B execution authorization without changing protected runner or protocol files, rerun verification, and then execute only the frozen pilot set.
+Complete Phase 6A.1 remediation on an isolated branch, run hosted adversarial verification, assemble a fresh self-validating audit bundle, and submit it to an external Auditor AI. Do not create execution authorization or run the pilot.
