@@ -4,9 +4,15 @@ ARG is a candidate research synthesis of nonlinear local dynamics, adaptive rela
 
 It is not presently a claim of a new fundamental geometry or a description of absolute reality.
 
-## Current executable
+## Current executables
 
-The current three-node implementation is the collective-feedback prototype $M_F$:
+### $M_0$
+
+A local/adaptive baseline with no collective statistic in its transition equations.
+
+### $M_F$
+
+A matched collective-feedback prototype:
 
 $$
 c(x)=\frac13\sum_i x_i^2,
@@ -16,17 +22,17 @@ $$
 x\to c(x)\to(\dot x,\dot s,\dot q).
 $$
 
-It supports the narrow label:
+Only $M_F$ supports the narrow label:
 
 > **implemented prototype-level downward feedback/constraint**
 
-It does not yet implement $\Gamma/H$ admissibility projection.
+Neither model implements $\Gamma/H$ admissibility projection.
 
 ## Binding claim ceiling
 
 $$
 \boxed{
-M_F\ \text{implemented and unit-tested};
+M_0,M_F\ \text{implemented and unit-tested};
 \quad
 M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
 }
@@ -34,10 +40,10 @@ $$
 
 ## Canonical model family
 
-- $M_0$: local/adaptive baseline without collective feedback or projection; next implementation gate.
-- $M_F$: endogenous collective feedback; current executable.
-- $M_P$: explicit constant-amplitude projection sandbox; frozen but unimplemented.
-- $M_{FP}$: feedback plus projection with separate diagnostics; frozen but unimplemented.
+- $M_0$: implemented local/adaptive no-feedback baseline.
+- $M_F$: implemented endogenous collective-feedback prototype.
+- $M_P$: frozen constant-amplitude projection sandbox; Phase 3 implementation target.
+- $M_{FP}$: feedback plus projection; unimplemented.
 
 ## Foundations
 
@@ -45,7 +51,7 @@ $$
 - [Apophatic meta-axiom](01_apophatic_meta_axiom.md)
 - [Design requirements](02_design_requirements.md)
 - [Target formalism and mechanism split](03_formalism.md)
-- [Current minimal model: $M_F$](04_minimal_model.md)
+- [Original minimal model: $M_F$](04_minimal_model.md)
 - [Model-specific proof obligations](05_proof_obligations.md)
 - [Four-model experimental plan](06_experimental_plan.md)
 
@@ -61,24 +67,33 @@ $$
 - [Phase-gated roadmap](14_roadmap.md)
 - [Frozen four-model design contract v1.0](15_four_model_design_contract.md)
 
-## Decisions and history
+## Phase 2 software result
 
-- [Separate mathematics from ontology](adr/0001-separate-math-from-ontology.md)
-- [Archived negation-operator path](history/negation_operator_path.md)
+The merged $M_0$ slice added:
+
+- canonical dispatch;
+- exact no-feedback equations;
+- shared RK4;
+- independent derivative and integrator references;
+- exact reduction and regression tests;
+- fail-closed projected-model dispatch;
+- model and contract labels in outputs.
+
+A clean local reconstruction passed 20 software tests. No hosted check run was attached at merge time. This is not a scientific result.
 
 ## Current roadmap position
 
-**Phase 0 and Phase 1 are complete. Phase 2 is in progress.**
+**Phases 0–2 are complete. Phase 3 is in progress.**
 
-The design contract now freezes:
+The active task is implementation and independent verification of
 
-- exact equations for all four models;
-- shared RK4 integration;
-- mandatory retraction for projected models;
-- fail-closed singular handling;
-- reference parameters and development initial conditions;
-- observation maps, parity tests, and fairness rules.
+$$
+M_P:\qquad
+\Gamma(Z)=c(x)-c_0=0,
+\qquad
+f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
+$$
 
-The active task is implementation and independent verification of the true $M_0$ baseline while preserving current $M_F$ behavior.
+The gate requires projection identities, tangent preservation, mandatory radial retraction, singular fail-closed behavior, independent parity, and step-refinement evidence.
 
 > Separate the mechanisms. Freeze the contracts. Prove the projection. Test the alternatives. Reify nothing.
