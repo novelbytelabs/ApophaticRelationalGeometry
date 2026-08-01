@@ -4,21 +4,11 @@
 >
 > ARG investigates whether nonlinear dynamics, adaptive networks, state-dependent geometry, collective feedback, local-to-global compatibility, and constrained dynamics can be combined into a coherent and useful framework. Mathematical novelty, explanatory value, and physical relevance remain open research questions.
 
-## Current executable status
-
-The repository now implements two matched three-node prototypes.
+## Implemented model family
 
 ### $M_0$ — local/adaptive baseline
 
-$$
-\dot x_i
-=
-\alpha x_i-\beta x_i^3
-+
-\sum_{j\ne i}w_{ij}(x_j-x_i),
-$$
-
-with adaptive $s_{ij}$ and $q_{ij}$ dynamics but no collective statistic in any transition equation.
+Local nonlinear dynamics, neighbor coupling, adaptive edge activation, and metric deformation, with no collective statistic in any transition equation.
 
 ### $M_F$ — collective feedback
 
@@ -30,47 +20,48 @@ $$
 x\longrightarrow c(x)\longrightarrow(\dot x,\dot s,\dot q).
 $$
 
-This supports the narrow description:
+Licensed description:
 
 > **implemented prototype-level downward feedback/constraint with adaptive relational geometry**
 
-Neither executable currently implements $\Gamma/H$ admissibility projection.
+This does not establish macro-level causal autonomy.
 
-The binding claim ceiling is
+### $M_P$ — projected admissibility
+
+Contract v1.0 implements the constant-amplitude sandbox
+
+$$
+\Gamma(Z)=c(x)-c_0
+=\frac13x^Tx-c_0=0,
+\qquad
+c_0=c(x(0))\ge10^{-6},
+$$
+
+with node projection
 
 $$
 \boxed{
-M_0,M_F\ \text{implemented and unit-tested};
-\quad
-M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
+f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
 }
 $$
 
-## Target model family
+The implementation includes projection at every RK4 stage, mandatory radial retraction, fail-closed singular handling, mechanism diagnostics, and an independently written reference path.
 
-### $M_0$ — implemented
+This is a **software-verified constant-amplitude projection prototype**, not ARG's completed relational-admissibility geometry and not a validated physical model.
 
-Local/adaptive dynamics without collective feedback or projection.
+### $M_{FP}$ — next implementation gate
 
-### $M_F$ — implemented
+Feedback followed by projection remains unimplemented and unverified.
 
-The $M_0$ substrate plus endogenous collective feedback.
-
-### $M_P$ — Phase 3 target
-
-Version 1.0 freezes a minimal constant-amplitude projection sandbox:
+## Binding claim ceiling
 
 $$
-\Gamma(Z)=c(x)-c_0=0,
-\qquad
-c_0=c(x(0))>0.
+\boxed{
+M_0,M_F,M_P\ \text{implemented and unit-tested};
+\quad
+M_{FP}\ \text{and }M_F\equiv M_P\ \text{unverified}.
+}
 $$
-
-Implementation, preservation, and code-equation parity remain unverified.
-
-### $M_{FP}$ — later target
-
-Feedback plus projection with separate mechanism diagnostics. It remains unimplemented and unverified.
 
 ARG does not assume
 
@@ -78,34 +69,44 @@ $$
 M_F\equiv M_P.
 $$
 
-## Phase 2 software verification
+## Phase 3 software verification
 
-The merged $M_0$ slice includes:
+The merged $M_P$ slice verifies:
 
-- canonical four-model identifiers with fail-closed projected-model dispatch;
-- exact $M_0$ equations;
-- unchanged legacy $M_F$ right-hand side;
-- shared fixed-step RK4;
-- model ID and contract-version output labels;
-- independent derivative and RK4 reference paths;
-- exact zero-feedback reduction tests;
-- permutation, dependency, regression, and invalid-input tripwires.
+- projector symmetry, idempotence, and $P_Tx=0$;
+- continuous-time tangency $x^Tf_P=0$;
+- projected RK4 stages;
+- mandatory retraction to $c(x)=c_0$;
+- zero-norm and near-singular fail-closed behavior;
+- permutation equivariance;
+- production/reference derivative and projected-step parity;
+- decreasing one-step raw drift and retraction magnitude under refinement;
+- retention of all prior $M_0/M_F$ regressions.
 
-A clean local reconstruction passed **20 software tests**. No hosted check run was attached at merge time. This is not a scientific experiment.
+Verification record:
+
+- PR `#5`;
+- squash merge `97a9f6b7222b4543ee8184fb8e42b47b53ddf92c`;
+- GitHub Actions run `30717582276`;
+- **35 tests passed** on Python 3.10;
+- **35 tests passed** on Python 3.12.
+
+These are software tests, not scientific observations.
 
 ## What this project is—and is not
 
 This project is:
 
 - a candidate synthesis of established mathematical ideas;
-- an executable matched pair of local/adaptive and collective-feedback prototypes;
-- a phase-gated program for defining and testing projection separately from feedback;
-- a source of explicit proof obligations, baselines, ablations, and falsification tests.
+- an executable family separating local dynamics, collective feedback, and explicit projection;
+- a phase-gated program for fair mechanism comparison;
+- a source of explicit proof obligations, baselines, diagnostics, and falsification tests.
 
 This project is not presently:
 
-- an implementation of global-admissibility projection;
 - evidence that feedback and projection are equivalent;
+- an implementation of $M_{FP}$;
+- validation that projection improves prediction;
 - validation of macro-level causal autonomy or strong emergence;
 - a claim of a new fundamental geometry;
 - a completed physical theory;
@@ -134,12 +135,13 @@ This project is not presently:
 - `docs/13_alignment_and_claim_ceiling.md`
 - `docs/14_roadmap.md`
 - `docs/15_four_model_design_contract.md`
+- `docs/16_phase3_mp_verification.md`
 
 ### Implementation and tests
 
-- `src/apophatic_geometry/model.py` — legacy $M_F$ implementation retained for regression stability.
-- `src/apophatic_geometry/models.py` — canonical dispatch, $M_0$, feedback diagnostics, and shared RK4.
-- `tests/reference_equations.py` — independently written derivative and integrator reference path.
+- `src/apophatic_geometry/model.py` — legacy $M_F$ equation path retained for regression stability.
+- `src/apophatic_geometry/models.py` — canonical $M_0/M_F/M_P$ dispatch, projection, diagnostics, and RK4.
+- `tests/reference_equations.py` — independently written reference equations and integrators.
 - `tests/` — software verification and tripwires.
 
 ## Quick start
@@ -151,20 +153,26 @@ pip install -e '.[dev]'
 pytest
 python -m apophatic_geometry.simulate --model m0 --steps 2000 --dt 0.005 --output m0.csv
 python -m apophatic_geometry.simulate --model mf --steps 2000 --dt 0.005 --output mf.csv
+python -m apophatic_geometry.simulate --model mp --steps 2000 --dt 0.005 --output mp.csv
 ```
 
 ## Roadmap position
 
-**Phases 0–2 are complete. Phase 3 is in progress.**
+**Phases 0–3 are complete. Phase 4 is in progress.**
 
-The next gate is implementation and independent verification of $M_P$:
+The next gate implements
 
-- tangent projection;
-- projected RK4 stages;
-- mandatory radial retraction;
-- preservation and tangency diagnostics;
-- singular fail-closed behavior;
-- independent parity and step-refinement tests.
+$$
+M_{FP}:\qquad F_{\mathrm{proposal}}=F_0+F_F
+$$
+
+followed by projection. Contract v1.0 predicts
+
+$$
+\boxed{f_{FP}=f_P}
+$$
+
+for node derivatives because the radial node-feedback term is annihilated, while feedback remains in the $s$ and $q$ equations.
 
 ## Research maxim
 
