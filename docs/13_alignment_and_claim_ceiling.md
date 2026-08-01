@@ -2,204 +2,149 @@
 
 ## Purpose
 
-This document fixes the relationship between the general ARG formalism, the current executable prototypes, and the claims presently licensed by the evidence.
+This document fixes the relationship between the ARG formalism, the implemented prototypes, and the strongest claims licensed by current evidence.
 
-It is binding on the README, documentation, implementation, experiments, and external descriptions of the project.
+It is binding on documentation, code, experiments, releases, and external descriptions.
 
 ## Mechanism distinction
 
-ARG studies two different whole-to-part mechanisms.
+ARG studies two distinct whole-to-part mechanisms.
 
 ### Collective feedback
 
-A collective statistic is computed from the substrate and enters constituent transition equations.
-
-For the three-node $M_F$ prototype,
+A substrate-computed statistic enters constituent transition equations:
 
 $$
-c(x)=\frac{1}{3}\sum_{i=1}^{3}x_i^2,
+x\longrightarrow c(x)\longrightarrow(\dot x,\dot s,\dot q).
 $$
 
-and the substrate path is
-
-$$
-x\longrightarrow c(x)\longrightarrow (\dot x,\dot s,\dot q).
-$$
+This is implemented by $M_F$.
 
 ### Global admissibility projection
 
-An unconstrained proposal is projected onto the tangent space of an explicitly defined admissible set:
+A proposed vector field is projected onto the tangent space of an explicit admissible manifold:
 
 $$
-\mathcal M=\{Z:\Gamma(Z)=0,\ H(Z)\geq0\},
+\dot Z=\Pi_{T_Z\mathcal M}F_0(Z).
+$$
+
+Contract v1.0 implements the minimal constant-amplitude sandbox
+
+$$
+\Gamma(Z)=c(x)-c_0=\frac13x^Tx-c_0=0,
 $$
 
 $$
-\dot Z
-=
-\Pi_{T_Z\mathcal M}F_{\mathrm{local}}(Z).
+f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
 $$
 
-These mechanisms are not assumed equivalent.
+This is implemented by $M_P$.
+
+The mechanisms are not assumed equivalent:
 
 $$
-F_{\mathrm{feedback}}
-\not\equiv
-\Pi_{T_Z\mathcal M}F_{\mathrm{local}}
+M_F\not\equiv M_P
 $$
 
-unless an explicit derivation and code-level equivalence test establish otherwise.
+unless a scoped mathematical or observational equivalence is independently established.
 
 ## Canonical model family
 
-### $M_0$ — local/adaptive substrate baseline
+### $M_0$
 
-- local nonlinear node dynamics;
-- neighborhood coupling;
-- adaptive edge activation and metric deformation;
-- no collective statistic in transition equations;
-- no admissibility projection.
+Implemented and unit-tested local/adaptive baseline with no collective-statistic transition path and no projection.
 
-$M_0$ is implemented and unit-tested.
+### $M_F$
 
-### $M_F$ — collective-feedback prototype
+Implemented and unit-tested endogenous collective-feedback prototype.
 
-- the $M_0$ substrate;
-- endogenous collective statistic $c(x)$;
-- explicit feedback from $c(x)$ into node, edge, and metric transitions;
-- no $\Gamma/H$ admissibility projection.
+Licensed description:
 
-$M_F$ is implemented and unit-tested.
+> implemented prototype-level downward feedback/constraint
 
-### $M_P$ — projected-admissibility prototype
+This does not establish macro-level causal autonomy.
 
-Contract v1.0 freezes:
+### $M_P$
 
-$$
-\Gamma(Z)=c(x)-c_0=0,
-\qquad
-c_0=c(x(0))>0,
-$$
+Implemented and unit-tested contract-v1.0 constant-amplitude projected-admissibility sandbox.
 
-with no inequality constraints in this first sandbox.
+It includes:
 
-$M_P$ is not yet implemented or verified.
+- an explicit equality constraint;
+- Euclidean tangent projection;
+- projected RK4 stages;
+- mandatory radial retraction;
+- fail-closed singular handling;
+- independent reference parity;
+- constraint, tangency, correction, denominator, and retraction diagnostics.
 
-### $M_{FP}$ — combined feedback and projection
+It is a projection-mechanism sandbox, not ARG's completed relational-admissibility geometry and not a validated physical law.
 
-- collective feedback as in $M_F$;
-- admissibility projection as in $M_P$;
-- separately measurable feedback and projection contributions.
+### $M_{FP}$
 
-$M_{FP}$ is not yet implemented or verified.
+Feedback followed by projection remains unimplemented and unverified.
 
 ## Current claim ceiling
 
 $$
 \boxed{
-M_0,M_F\ \text{implemented and unit-tested};
+M_0,M_F,M_P\ \text{implemented and unit-tested};
 \quad
-M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
+M_{FP}\ \text{and }M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-The strongest presently licensed descriptions are:
+## Projected-implementation gate
 
-> ARG implements a unit-tested local/adaptive no-feedback baseline $M_0$.
+For the specific $M_P$ v1.0 implementation:
 
-> ARG implements a unit-tested prototype of endogenous collective downward feedback/constraint $M_F$ with adaptive relational geometry.
-
-> The stronger global-admissibility projection mechanism remains unimplemented and unverified.
-
-## Meaning of “downward” at the current stage
-
-Only $M_F$ supports the label:
-
-> **implemented prototype-level downward feedback/constraint**
-
-because its substrate path is explicit and system-derived information modifies constituent transitions.
-
-$M_0$ is the matched no-feedback baseline and carries no downward-feedback claim.
-
-Neither implemented model establishes:
-
-- validated macro-level causal autonomy;
-- organization-dependent causal power beyond the encoded statistic;
-- counterfactual adequacy;
-- invariance across all admissible presentations;
-- transport to other systems or scales;
-- defeat of simpler alternative models;
-- empirical strong emergence.
-
-## Fail-closed projected-claim gate
-
-A projected-geometry claim is licensed only when all conditions pass:
-
-$$
-\operatorname{PROJECTED\_CLAIM}
-=
-D_{\Gamma,H}
-\land_{FC}
-I_{\Pi}
-\land_{FC}
-T_{\mathrm{preserve}}
-\land_{FC}
-E_{\mathrm{code}}
-\land_{FC}
-S_{\mathrm{path}}.
-$$
-
-Where:
-
-- $D_{\Gamma,H}$ — $\Gamma$ and $H$ are explicitly defined;
-- $I_{\Pi}$ — the projection is implemented;
-- $T_{\mathrm{preserve}}$ — constraint preservation is tested;
-- $E_{\mathrm{code}}$ — code and equations are shown equivalent;
-- $S_{\mathrm{path}}$ — the substrate mechanism is identified.
-
-Current gate state:
-
-$$
-D_{\Gamma,H}=\text{PASS AT CONTRACT LEVEL},
-$$
-
-$$
-I_{\Pi}=T_{\mathrm{preserve}}=E_{\mathrm{code}}=S_{\mathrm{path}}=\text{UNVERIFIED}.
-$$
+| Gate | Status |
+|---|---|
+| Explicit $\Gamma/H$ definition | PASS — $\Gamma=c(x)-c_0$, $H=\varnothing$ |
+| Projection implementation | PASS |
+| Constraint-preservation tests | PASS at software/mechanism level |
+| Code-equation equivalence | PASS at tested cases against an independent reference path |
+| Substrate path | PASS — $F_0\to$ normal correction $\to f_P$, followed by numerical retraction |
 
 Therefore:
 
 $$
-\operatorname{PROJECTED\_CLAIM}=\text{UNVERIFIED}.
+\operatorname{MP\_V1\_IMPLEMENTATION\_CLAIM}=\text{PASS}.
 $$
+
+This does **not** promote the broader scientific claim:
+
+$$
+\operatorname{PROJECTED\_GEOMETRY\_SCIENTIFIC\_CLAIM}=\text{UNVERIFIED}.
+$$
+
+The implementation gate establishes that the declared mechanism exists in code and satisfies its frozen software contracts. It does not establish predictive utility, physical adequacy, novelty, transport, or macro-level causal autonomy.
+
+## Current non-claims
+
+ARG has not established:
+
+- that $M_F$ and $M_P$ are dynamically or observationally equivalent;
+- that either mechanism defeats simpler scientific alternatives;
+- that projection improves prediction;
+- that constant amplitude is a law of nature;
+- that $M_P$ is the final relational geometry;
+- that $M_{FP}$ is implemented;
+- that the four-model comparative experiment has been run;
+- that macro-level causal autonomy or strong emergence has been demonstrated;
+- that ARG is a fundamental physical theory.
+
+## Verification references
+
+- Phase 2 record: `08_claim_ledger.md`
+- Phase 3 record: `16_phase3_mp_verification.md`
+- Frozen equations and policies: `15_four_model_design_contract.md`
+- Current execution plan: `14_roadmap.md`
 
 ## NeoEmergenics relationship
 
-NeoEmergenics is an independent harness and fail-closed claim evaluator. It neither validates ARG nor requires ARG.
-
-ARG owns:
-
-- the four-model implementation;
-- mathematical proofs;
-- code-equation parity;
-- comparative experiments;
-- claim-ledger maintenance.
-
-NeoEmergenics may enforce the claim ceiling, but it supplies no scientific evidence for ARG.
-
-## Phase 2 verification scope
-
-The merged Phase 2 implementation established only software-level facts:
-
-- $M_0$ exists as code;
-- its transition path does not call the collective statistic;
-- $M_F$ remains regression-compatible at the frozen reference state;
-- $M_F(\chi=\eta_2=\rho=0)=M_0$ in the frozen equations;
-- production and independently written derivative/RK4 paths agree at tested cases;
-- 20 tests passed in a clean local reconstruction.
-
-No hosted check run was attached at merge time. No scientific experiment has been executed.
+NeoEmergenics remains an independent fail-closed harness and claim evaluator. It may enforce this ceiling but supplies no scientific evidence for ARG.
 
 ## Change-control rule
 
-No document, issue, paper, release note, or experiment report may describe the current executables as projected geometry unless the projected-claim gate has passed.
+Every claim must name the model and evidence level. “Projected geometry” may now refer to the implemented $M_P$ v1.0 sandbox, but must not be used without the qualifiers **constant-amplitude**, **prototype**, and **software-verified** when scientific or ontological interpretation could otherwise be inferred.
