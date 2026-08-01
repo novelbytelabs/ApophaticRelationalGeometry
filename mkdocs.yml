@@ -1,1 +1,35 @@
-site_name: My Docs
+site_name: Apophatic Relational Geometry
+site_description: Nonlinear dynamic relational constraint geometry under an apophatic non-reification schema
+repo_name: novelbytelabs/ApophaticRelationalGeometry
+repo_url: https://github.com/novelbytelabs/ApophaticRelationalGeometry
+
+theme:
+  name: readthedocs
+
+nav:
+  - Home: index.md
+  - Foundations:
+      - Scope and Status: 00_scope_and_status.md
+      - Apophatic Meta-Axiom: 01_apophatic_meta_axiom.md
+      - Design Requirements: 02_design_requirements.md
+      - Formalism: 03_formalism.md
+      - Minimal Model: 04_minimal_model.md
+      - Proof Obligations: 05_proof_obligations.md
+      - Experimental Plan: 06_experimental_plan.md
+  - Research Grounding:
+      - Grounding Plan: 07_research_grounding_plan.md
+      - Claim Ledger: 08_claim_ledger.md
+      - Novelty Matrix: 09_novelty_matrix.md
+      - Literature Landscape: 10_literature_landscape.md
+      - Benchmark Specification: 11_benchmark_specification.md
+      - Falsification Criteria: 12_falsification_criteria.md
+  - Decisions:
+      - Separate Mathematics from Ontology: adr/0001-separate-math-from-ontology.md
+  - History:
+      - Negation-Operator Path: history/negation_operator_path.md
+
+markdown_extensions:
+  - tables
+  - fenced_code
+  - toc:
+      permalink: true
