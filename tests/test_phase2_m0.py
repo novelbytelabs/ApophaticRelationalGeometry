@@ -112,8 +112,8 @@ def test_mp_dispatch_requires_explicit_target() -> None:
         derivatives_for_model(sample_state(), Parameters(), ModelId.MP)
 
 
-def test_mfp_remains_fail_closed() -> None:
-    with pytest.raises(NotImplementedError, match="not implemented"):
+def test_mfp_dispatch_requires_explicit_target() -> None:
+    with pytest.raises(ValueError, match="ProjectionTarget"):
         derivatives_for_model(sample_state(), Parameters(), ModelId.MFP)
 
 
