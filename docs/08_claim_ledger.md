@@ -26,9 +26,9 @@ Every substantive project claim must appear here before it is used in a paper, R
 
 | Model or relation | Status | Licensed statement |
 |---|---|---|
-| $M_0$ | Proposed | No-collective local/adaptive baseline; design not yet frozen. |
+| $M_0$ | Implemented and unit-tested | No-collective local/adaptive baseline with no $c(x)$ transition path. |
 | $M_F$ | Implemented and unit-tested | Prototype-level endogenous downward feedback/constraint with adaptive relational geometry. |
-| $M_P$ | Unverified | Target projected-admissibility prototype; not yet implemented. |
+| $M_P$ | Unverified | Constant-amplitude projected-admissibility contract is frozen; implementation and preservation remain unverified. |
 | $M_{FP}$ | Unverified | Target combined feedback-plus-projection model; not yet implemented. |
 | $M_F\equiv M_P$ | Unverified | No mathematical, approximate, or observational equivalence established. |
 
@@ -36,7 +36,7 @@ Current ceiling:
 
 $$
 \boxed{
-M_F\ \text{implemented and unit-tested};
+M_0,M_F\ \text{implemented and unit-tested};
 \quad
 M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
 }
@@ -49,18 +49,18 @@ $$
 | ARG-C001 | A general provisional state may be represented as $Z=(x,s,q,\theta,c)$. | Definition | Internal consistency and per-model specialization. | Target model family. |
 | ARG-C002 | Intrinsic edge length may depend on local mismatch, edge activation, and metric deformation. | Definition | None for the family; concrete properties require analysis. | Model family. |
 | ARG-C003 | Shortest-path distance over strictly positive edge lengths defines a metric on each connected component. | Proof obligation | Formal proof with all hypotheses stated. | Fixed state and connected component. |
-| ARG-C004 | The current executable computes $c(x)=\frac13\sum_i x_i^2$. | Implemented and unit-tested | Code-equation parity and regression tests. | $M_F$. |
+| ARG-C004 | $M_F$ computes $c(x)=\frac13\sum_i x_i^2$. | Implemented and unit-tested | Code-equation parity and regression tests. | $M_F$. |
 | ARG-C005 | The substrate path $x\to c(x)\to(\dot x,\dot s,\dot q)$ is explicit. | Implemented | Dependency audit and exact equation mapping. | $M_F$. |
-| ARG-C006 | The present result is implemented prototype-level downward feedback/constraint. | Implemented | Explicit substrate path; no stronger causal inference. | $M_F$ only. |
+| ARG-C006 | The present $M_F$ result is implemented prototype-level downward feedback/constraint. | Implemented | Explicit substrate path; no stronger causal inference. | $M_F$ only. |
 | ARG-C007 | $M_F$ establishes macro-level causal autonomy. | Unverified | Organization dependence, counterfactual adequacy, invariance, transport, and alternative-model defeat. | Not licensed. |
-| ARG-C008 | Local neighborhoods provide direct proposed motion. | Definition and implemented | Dependency graph and Jacobian sparsity. | Current $M_F$ implementation. |
-| ARG-C009 | State and intrinsic geometry coevolve nonlinearly in the current prototype. | Implemented | Code-equation parity and trajectory diagnostics. | $M_F$. |
-| ARG-C010 | An admissible set may be defined by $\Gamma(Z)=0$ and $H(Z)\geq0$. | Proposed definition | Complete domain, regularity, and active-set specification. | Target $M_P/M_{FP}$. |
-| ARG-C011 | The projected vector field preserves equality constraints. | Proof obligation | Derivation under explicit rank and regularity assumptions. | Target $M_P/M_{FP}$. |
-| ARG-C012 | ARG currently implements tangent-space projection. | Unverified | Explicit projection code and fail-closed gate. | Not licensed. |
-| ARG-C013 | Collective coherence removes inadmissible motion in the executable. | Unverified | Projection implementation and code-equation parity. | The current executable uses feedback instead. |
+| ARG-C008 | Local neighborhoods provide direct proposed motion. | Definition and implemented | Dependency graph and Jacobian sparsity. | $M_0$ and $M_F$. |
+| ARG-C009 | State and intrinsic geometry coevolve nonlinearly in the implemented prototypes. | Implemented | Code-equation parity and trajectory diagnostics. | $M_0$ and $M_F$. |
+| ARG-C010 | Contract v1.0 defines $M_P$ by $\Gamma(Z)=c(x)-c_0=0$, $c_0>0$, with no inequality constraints. | Definition | Frozen contract and explicit domain. | Target $M_P/M_{FP}$. |
+| ARG-C011 | The projected vector field preserves the equality constraint in continuous time. | Proof obligation | Derivation under explicit rank and regularity assumptions plus implementation tests. | Target $M_P/M_{FP}$. |
+| ARG-C012 | ARG currently implements tangent-space projection. | Unverified | Explicit projection code and complete fail-closed gate. | Not licensed. |
+| ARG-C013 | Collective coherence removes inadmissible motion in the executable. | Unverified | Projection implementation and code-equation parity. | Current executables are $M_0$ and $M_F$. |
 | ARG-C014 | $M_F$ and $M_P$ are dynamically equivalent. | Unverified | Exact conjugacy, reparameterization, bounded approximation, or scoped observational equivalence. | No current evidence. |
-| ARG-C015 | $M_{FP}$ reduces exactly to $M_F$, $M_P$, and $M_0$ when mechanisms are removed. | Proof obligation | Frozen contracts, implementation, and reduction tests. | Target combined model. |
+| ARG-C015 | $M_{FP}$ reduces exactly to $M_F$, $M_P$, and $M_0$ when mechanisms are removed. | Proof obligation | Implementation and reduction tests. | Target combined model. |
 | ARG-C016 | Local influence normally dominates away from coherence boundaries. | Conjectured | Preregistered regime definitions and matched comparisons. | Not yet established. |
 | ARG-C017 | Projection correction grows near admissibility boundaries. | Conjectured | Implemented $M_P$, boundary definitions, and confirmatory tests. | Blocked. |
 | ARG-C018 | Feedback magnitude grows near organization-dependent transitions. | Conjectured | $M_0/M_F$ comparison and counterfactual interventions. | Not yet established. |
@@ -68,12 +68,31 @@ $$
 | ARG-C020 | The full family is not observationally equivalent to an established constrained adaptive network. | Conjectured | Primary-source mapping and reparameterization audit. | Candidate novelty. |
 | ARG-C021 | The framework unifies fixed-network, adaptive-network, feedback, and constrained-dynamics limits. | Proof obligation | Explicit reduction maps and limiting derivations. | Target family. |
 | ARG-C022 | A non-collapse barrier creates an unreachable finite-energy boundary. | Proof obligation | Coercive energy inequality and continuation assumptions. | Barrier-enabled target variants. |
-| ARG-C023 | The dynamics are equivariant under node relabeling. | Mixed | Per-model proof plus permutation tripwires. | Unit-tested locally for current code; general claim unproved. |
+| ARG-C023 | The dynamics are equivariant under node relabeling. | Mixed | Per-model proof plus permutation tripwires. | Unit-tested for $M_0$ and $M_F$; general claim unproved. |
 | ARG-C024 | The graph, metric, feedback statistic, and constraint manifold are provisional presentations rather than absolute reality. | Philosophical | Not a mathematical theorem. | Interpretive layer. |
 | ARG-C025 | Mathematical success does not entail ontological ultimacy. | Philosophical | Meta-level argument only. | Apophatic schema. |
 | ARG-C026 | Objective reality has a pluralistic-monist organization. | Philosophical | No current direct evidence. | Ontological conjecture. |
 | ARG-C027 | Reality is computational in the specific sense represented by ARG. | Philosophical and unverified | Operational definition and empirical bridge. | Not established. |
 | ARG-C028 | A prime-generated substrate underlies the computational fabric. | Conjectured and quarantined | Formal definition, derived observables, and discriminating tests. | Separate research branch. |
+| ARG-C029 | $M_0$ contains no collective-statistic transition dependency. | Implemented and unit-tested | Dependency tripwire, direct equation audit, and independent reference parity. | $M_0$. |
+| ARG-C030 | $M_F(\chi=\eta_2=\rho=0)=M_0$ for the frozen equations. | Implemented and unit-tested | Exact reduction test. | $M_0/M_F$ relationship. |
+| ARG-C031 | Production $M_0/M_F$ derivatives and RK4 agree with an independently written reference path at the tested cases. | Unit-tested | Independent reference boundary and parity tests. | Software verification only. |
+| ARG-C032 | $M_0$ or $M_F$ has superior scientific explanatory power. | Unverified | Frozen comparative experiment, matched alternatives, uncertainty, and held-out confirmation. | No scientific result yet. |
+
+## Phase 2 verification record
+
+Merged Phase 2 supplies:
+
+- canonical model dispatch;
+- exact $M_0$ equations;
+- unchanged legacy $M_F$ right-hand side;
+- shared RK4;
+- model/contract output labels;
+- independent derivative and RK4 reference paths;
+- fail-closed $M_P/M_{FP}$ dispatch;
+- 20 passing tests in a clean local reconstruction.
+
+No hosted CI run was attached at merge time. This is local software verification plus code review, not hosted-CI attestation and not scientific evidence.
 
 ## Projected-claim gate
 
@@ -97,7 +116,7 @@ Current status:
 
 | Gate | Status |
 |---|---|
-| Explicit $\Gamma/H$ definition | UNVERIFIED |
+| Explicit $\Gamma/H$ definition | PASS AT CONTRACT LEVEL |
 | Projection implementation | UNVERIFIED |
 | Constraint-preservation tests | UNVERIFIED |
 | Code-equation equivalence | UNVERIFIED |
@@ -147,15 +166,16 @@ A claim may move to **implemented** only when:
 
 The repository currently does not establish that:
 
-- the current executable is projected geometry;
+- the current executables are projected geometry;
 - feedback and projection are equivalent;
 - ARG demonstrates macro-level causal autonomy or strong emergence;
+- $M_0$ or $M_F$ defeats alternative scientific models;
 - the geometry is a fundamental theory of physics;
 - the universe literally computes through this exact formalism;
 - the global constraint is a separate causal entity;
 - the apophatic schema is a theorem of mathematics;
 - primes are the ontological foundation of reality;
-- the minimal model has empirical validity.
+- either implemented prototype has empirical validity.
 
 ## Maintenance rule
 
