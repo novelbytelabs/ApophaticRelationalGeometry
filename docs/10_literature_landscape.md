@@ -4,20 +4,31 @@
 
 This document defines how ARG will ground its mathematical and scientific claims in primary research.
 
-It is a search and evidence plan. It does not claim that the neighboring fields validate ARG.
+It is a search and evidence plan. Neighboring fields do not validate ARG merely by resemblance.
 
 ## Current mechanism boundary
 
-The current executable is $M_F$, the collective-feedback prototype. $M_P$ and $M_{FP}$ remain unimplemented.
+All four contract-v1.0 prototypes are implemented and unit-tested:
 
-Literature review must therefore distinguish:
+$$
+\boxed{
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
+\quad
+M_F\equiv M_P\ \text{unverified}.
+}
+$$
+
+Literature review must distinguish:
 
 - endogenous collective feedback;
 - explicit projected admissibility;
 - feedback under constraints;
 - penalties and multiplier forces;
 - adaptive geometry;
-- claims of equivalence among these mechanisms.
+- same-state algebraic identities;
+- trajectory-level and observation-level equivalence.
+
+Implementation makes direct equation comparison possible. It does not establish novelty or scientific adequacy.
 
 ## Source standards
 
@@ -31,17 +42,19 @@ Priority order:
 
 Technical claims cannot rest on summaries, social posts, or promotional pages.
 
-## Research track 1: Collective variables and endogenous feedback
+---
 
-### Questions
+# Research track 1: collective variables and endogenous feedback
+
+## Questions
 
 - Which systems compute an order parameter, mean field, collective coordinate, or macrovariable and feed it back into constituent dynamics?
 - When is that feedback merely a reparameterization of local interactions?
 - How are organization dependence and counterfactual influence tested?
 - Which models combine mean-field feedback with adaptive topology or metric variables?
-- What mathematical conditions make the macrovariable dynamically informative rather than redundant?
+- What conditions make the macrovariable dynamically informative rather than redundant?
 
-### Search vocabulary
+## Search vocabulary
 
 - mean-field feedback;
 - order-parameter feedback;
@@ -53,19 +66,23 @@ Technical claims cannot rest on summaries, social posts, or promotional pages.
 - synergetics;
 - feedback through global observables.
 
-### Project relevance
+## Project relevance
 
-This track is the closest literature base for the current $M_F$ path
+This track is the closest literature base for
 
 $$
-x\to c(x)\to(\dot x,\dot s,\dot q).
+x\to c(x)\to(\dot x,\dot s,\dot q)
 $$
 
-It tests whether the implemented mechanism is standard, reducible, or distinctive only through its coupling to adaptive relational geometry.
+in $M_F$ and $M_{FP}$.
 
-## Research track 2: Constrained nonlinear dynamics
+It tests whether the implemented mechanism is standard, reducible, or distinctive only through coupling to adaptive relational geometry.
 
-### Questions
+---
+
+# Research track 2: constrained nonlinear dynamics
+
+## Questions
 
 - When does projection onto a constraint manifold define a unique vector field?
 - How are rank changes and nonsmooth boundaries handled?
@@ -73,7 +90,7 @@ It tests whether the implemented mechanism is standard, reducible, or distinctiv
 - What stabilization or retraction methods are needed numerically?
 - How are constraint forces separated from unconstrained motion?
 
-### Search vocabulary
+## Search vocabulary
 
 - projected dynamical systems;
 - tangent-cone dynamics;
@@ -84,27 +101,29 @@ It tests whether the implemented mechanism is standard, reducible, or distinctiv
 - viability theory;
 - incompressible-flow projection.
 
-### Project relevance
+## Project relevance
 
-This track tests whether target $M_P$
+This track determines whether the contract-v1.0 equations
 
 $$
 \dot Z=\Pi_{T_Z\mathcal M}F(Z)
 $$
 
-is standard constrained dynamics, a state-dependent extension, or ill-posed in the proposed regime.
+and the radial retraction are standard constrained dynamics, a familiar numerical construction, or part of a broader established framework.
 
-## Research track 3: Feedback under constraints
+---
 
-### Questions
+# Research track 3: feedback under constraints
+
+## Questions
 
 - Which models combine global feedback with holonomic, algebraic, or viability constraints?
 - Does projection act on a proposal that already contains feedback?
 - When do feedback and projection commute?
 - What exact reductions recover feedback-only and projection-only models?
-- Are there existing frameworks equivalent to target $M_{FP}$?
+- Are there existing frameworks equivalent to $M_{FP}$?
 
-### Search vocabulary
+## Search vocabulary
 
 - constrained feedback systems;
 - projected control systems;
@@ -113,13 +132,21 @@ is standard constrained dynamics, a state-dependent extension, or ill-posed in t
 - constrained adaptive control;
 - projected gradient systems with global coupling.
 
-### Project relevance
+## Project relevance
 
-This track assesses whether $M_{FP}$ is already known and whether $M_F\equiv M_P$ can hold in any nontrivial domain.
+This track assesses whether the implemented $M_{FP}$ structure is already known and whether the same-state identity
 
-## Research track 4: Adaptive and coevolving networks
+$$
+f_{FP}=f_P
+$$
 
-### Questions
+has any nontrivial trajectory-level consequence beyond ordinary radial projection.
+
+---
+
+# Research track 4: adaptive and coevolving networks
+
+## Questions
 
 - Which systems jointly evolve node state and edge structure?
 - When can adaptive weights be interpreted as geometry?
@@ -127,7 +154,7 @@ This track assesses whether $M_{FP}$ is already known and whether $M_F\equiv M_P
 - Which behaviors require topology change rather than state change alone?
 - How is causality separated when state and topology update one another?
 
-### Search vocabulary
+## Search vocabulary
 
 - adaptive networks;
 - coevolving networks;
@@ -138,13 +165,15 @@ This track assesses whether $M_{FP}$ is already known and whether $M_F\equiv M_P
 - network rewiring;
 - graph limits for adaptive systems.
 
-### Project relevance
+## Project relevance
 
-This track tests whether $s_e$ and $q_e$ add anything beyond ordinary dynamic edge weights.
+This track tests whether $s_e$ and $q_e$ add anything beyond ordinary dynamic edge weights and whether $M_P/M_{FP}$ trajectory differences are simply adaptive-network effects.
 
-## Research track 5: Local-to-global compatibility
+---
 
-### Questions
+# Research track 5: local-to-global compatibility
+
+## Questions
 
 - How are local states glued into globally consistent assignments?
 - Which sheaf or bundle structures allow nonlinear restriction maps?
@@ -152,7 +181,7 @@ This track tests whether $s_e$ and $q_e$ add anything beyond ordinary dynamic ed
 - Can restriction maps themselves evolve?
 - How do sheaf Laplacians compare with ARG mismatch energies?
 
-### Search vocabulary
+## Search vocabulary
 
 - cellular sheaves;
 - sheaf Laplacians;
@@ -163,7 +192,7 @@ This track tests whether $s_e$ and $q_e$ add anything beyond ordinary dynamic ed
 - compatibility complexes;
 - local-to-global obstruction.
 
-### Project relevance
+## Project relevance
 
 This track determines whether
 
@@ -175,11 +204,13 @@ $$
 \rho_{je}(x_j,\theta_j,c)
 $$
 
-should be formalized as a sheaf, bundle, groupoid, or more general compatibility system.
+should be formalized as a sheaf, bundle, groupoid, or more general compatibility system in a future relational projection contract.
 
-## Research track 6: Dynamic discrete geometry
+---
 
-### Questions
+# Research track 6: dynamic discrete geometry
+
+## Questions
 
 - When does a weighted graph define a meaningful intrinsic metric?
 - Which curvature notions remain stable under changing topology?
@@ -187,7 +218,7 @@ should be formalized as a sheaf, bundle, groupoid, or more general compatibility
 - What continuity results exist for time-dependent metric graphs?
 - Which geometric quantities are invariant under presentation changes?
 
-### Search vocabulary
+## Search vocabulary
 
 - metric graphs;
 - dynamic metric spaces;
@@ -198,13 +229,15 @@ should be formalized as a sheaf, bundle, groupoid, or more general compatibility
 - evolving metric-measure spaces;
 - discrete differential geometry.
 
-### Project relevance
+## Project relevance
 
-This track tests whether the implemented and target edge lengths define useful geometry rather than merely dynamic weights.
+This track tests whether the implemented edge lengths define useful geometry rather than merely dynamic weights.
 
-## Research track 7: Invariance and relational descriptions
+---
 
-### Questions
+# Research track 7: invariance and relational descriptions
+
+## Questions
 
 - What is the correct class of admissible presentation changes?
 - Should the symmetry structure be a group, action, or groupoid?
@@ -212,7 +245,7 @@ This track tests whether the implemented and target edge lengths define useful g
 - How should topology-changing systems be compared under relabeling?
 - What distinguishes gauge redundancy from physical symmetry?
 
-### Search vocabulary
+## Search vocabulary
 
 - equivariant dynamical systems;
 - gauge invariance;
@@ -222,13 +255,15 @@ This track tests whether the implemented and target edge lengths define useful g
 - relational mechanics;
 - coordinate-free dynamics.
 
-### Project relevance
+## Project relevance
 
-This track makes “no privileged presentation” operational for each of $M_0,M_F,M_P,M_{FP}$.
+This track makes “no privileged presentation” operational for each of $M_0,M_F,M_P,M_{FP}$ beyond the current permutation tests.
 
-## Research track 8: Singular barriers and noncollision
+---
 
-### Questions
+# Research track 8: singular barriers and noncollision
+
+## Questions
 
 - Under what conditions do singular potentials prevent collision?
 - What bounds follow from conserved or dissipative energy?
@@ -236,7 +271,7 @@ This track makes “no privileged presentation” operational for each of $M_0,M
 - Can barrier forces be defined on intrinsic graph distances?
 - When do numerical methods falsely cross a singular barrier?
 
-### Search vocabulary
+## Search vocabulary
 
 - singular interaction potentials;
 - hard-core repulsion;
@@ -246,9 +281,9 @@ This track makes “no privileged presentation” operational for each of $M_0,M
 - barrier methods;
 - singular ordinary differential equations.
 
-### Project relevance
+## Project relevance
 
-This track grounds any claim that
+This track grounds any future claim that
 
 $$
 U_{\mathrm{barrier}}
@@ -258,23 +293,27 @@ $$
 
 creates an unreachable finite-energy boundary.
 
-## Research track 9: Physical anchor systems
+---
 
-### Constrained mechanics
+# Research track 9: physical anchor systems
+
+## Constrained mechanics
 
 Reason: constraint manifolds, multiplier forces, projection, and energy behavior can be checked against established solutions.
 
-### Incompressible flow
+## Incompressible flow
 
 Reason: a provisional local update followed by a global compatibility correction is mathematically and physically developed.
 
-### Adaptive synchronization and flocking
+## Adaptive synchronization and flocking
 
 Reason: local state, neighborhood structure, collective observables, and effective geometry interact.
 
 For each anchor, reproduce a standard result before testing an ARG extension.
 
-## Research track 10: Philosophical and interpretive neighbors
+---
+
+# Research track 10: philosophical and interpretive neighbors
 
 This track remains separate from mathematical validation.
 
@@ -289,33 +328,35 @@ Topics include:
 
 These sources may clarify interpretation. They cannot establish equations, implementation, novelty, or physical validity.
 
-## Paper intake template
+---
 
-### Citation
+# Paper intake template
+
+## Citation
 
 Full bibliographic citation and persistent identifier.
 
-### Source type
+## Source type
 
 Original paper, review, monograph, code repository, dataset, or reproduction.
 
-### Exact contribution
+## Exact contribution
 
 State the theorem, equation, algorithm, or result actually used.
 
-### Assumptions
+## Assumptions
 
 List mathematical, numerical, and physical assumptions.
 
-### Mapping to ARG models
+## Mapping to ARG models
 
-Map the source into one or more of:
+Map the source into one or more of
 
 $$
 M_0,\qquad M_F,\qquad M_P,\qquad M_{FP}.
 $$
 
-### Mechanism classification
+## Mechanism classification
 
 Label each relevant term as:
 
@@ -327,27 +368,29 @@ Label each relevant term as:
 - penalty;
 - compatibility condition.
 
-### Overlap
+## Overlap
 
 Identify what the source already contains.
 
-### Difference
+## Difference
 
 Identify what remains different without relying on terminology alone.
 
-### Novelty implication
+## Novelty implication
 
 Record whether the source strengthens, narrows, or eliminates a candidate novelty claim.
 
-### Reproducibility
+## Reproducibility
 
 Record code, data, parameters, and reproduction status.
 
-### Open questions
+## Open questions
 
 List unresolved issues affecting ARG.
 
-## Initial collection target
+---
+
+# Initial collection target
 
 The first evidence set should contain at least:
 
@@ -371,4 +414,4 @@ This landscape is sufficient for the first novelty decision when:
 3. equivalence and reparameterization have been actively tested;
 4. unsupported novelty language has been removed;
 5. the remaining candidate contribution can be stated precisely;
-6. the current $M_F$ result is not used as evidence for unimplemented $M_P$ or $M_{FP}$.
+6. software implementation is not presented as evidence of scientific novelty or physical adequacy.
