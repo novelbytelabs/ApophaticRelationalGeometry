@@ -107,10 +107,14 @@ def test_rk4_step_matches_independent_reference(model_id: ModelId) -> None:
     assert np.allclose(actual.pack(), expected.pack(), rtol=0.0, atol=1.0e-14)
 
 
-@pytest.mark.parametrize("model_id", [ModelId.MP, ModelId.MFP])
-def test_unimplemented_projected_models_fail_closed(model_id: ModelId) -> None:
+def test_mp_dispatch_requires_explicit_target() -> None:
+    with pytest.raises(ValueError, match="ProjectionTarget"):
+        derivatives_for_model(sample_state(), Parameters(), ModelId.MP)
+
+
+def test_mfp_remains_fail_closed() -> None:
     with pytest.raises(NotImplementedError, match="not implemented"):
-        derivatives_for_model(sample_state(), Parameters(), model_id)
+        derivatives_for_model(sample_state(), Parameters(), ModelId.MFP)
 
 
 @pytest.mark.parametrize(
@@ -136,3 +140,4 @@ def test_simulation_output_is_labeled_with_model_and_contract(tmp_path) -> None:
     assert len(rows) == 2
     assert {row["model_id"] for row in rows} == {ModelId.M0.value}
     assert {row["contract_version"] for row in rows} == {CONTRACT_VERSION}
+    assert len({row["configuration_hash"] for row in rows}) == 1
