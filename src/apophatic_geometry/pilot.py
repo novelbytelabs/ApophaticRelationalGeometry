@@ -84,7 +84,7 @@ def pilot_plan(bundle: FrozenProtocolBundle) -> dict[str, Any]:
         },
         "canonical_models": [item.value for item in ModelId],
         "rk4_dts": bundle.protocol["time_and_sampling"]["refinement_dts"],
-        "alternate_integrator_models": [ModelId.MF.value, ModelId.MP.value],
+        "alternate_integrator_models": [item.value for item in ModelId],
         "controls": ["exogenous_replay", "freeze_s", "freeze_q", "freeze_sq"],
         "permutations": [list(value) for value in all_permutations()],
         "pilot_executed": False,
@@ -110,8 +110,9 @@ def summarize_configuration(
     missing = required.difference(trajectories)
     if missing:
         raise ProtocolIntegrityError(f"configuration summary lacks trajectories: {sorted(missing)}")
-    if set(alternates) != {ModelId.MF.value, ModelId.MP.value}:
-        raise ProtocolIntegrityError("configuration summary lacks primary alternate runs")
+    expected_alternates = {model.value for model in ModelId}
+    if set(alternates) != expected_alternates:
+        raise ProtocolIntegrityError("configuration summary lacks canonical alternate runs")
 
     m0 = trajectories[(ModelId.M0.value, fine_profile)]
     mf = trajectories[(ModelId.MF.value, fine_profile)]
@@ -236,7 +237,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                     trajectories[(model.value, trajectory.profile)] = trajectory
 
             alternates: dict[str, Trajectory] = {}
-            for model in (ModelId.MF, ModelId.MP):
+            for model in ModelId:
                 trajectory = integrate_dop853(
                     configuration,
                     params,
@@ -254,11 +255,16 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                 alternates[model.value] = trajectory
 
             assessments: dict[str, Any] = {}
-            for model in (ModelId.MF, ModelId.MP):
+            decision_maps = {
+                ModelId.M0: ("full",),
+                ModelId.MF: ("full",),
+                ModelId.MP: ("full", "x"),
+                ModelId.MFP: ("x",),
+            }
+            for model, maps in decision_maps.items():
                 coarse = trajectories[(model.value, f"rk4-dt-{dts[0]:.8g}")]
                 medium = trajectories[(model.value, f"rk4-dt-{dts[1]:.8g}")]
                 fine = trajectories[(model.value, f"rk4-dt-{dts[2]:.8g}")]
-                maps = ("full",) if model is ModelId.MF else ("full", "x")
                 for map_id in maps:
                     assessment = assess_numerics(
                         coarse,
