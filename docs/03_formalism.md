@@ -190,7 +190,7 @@ For smooth equality constraints and a positive-definite state metric $G(Z)$, a c
 $$
 \dot Z
 =
-F_{​\mathrm{local}}
+F_{\mathrm{local}}
 -
 G^{-1}J_{\Gamma}^{\mathsf T}
 \left(
