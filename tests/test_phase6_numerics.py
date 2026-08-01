@@ -10,28 +10,45 @@ import pytest
 
 from apophatic_geometry.models import ModelId
 from apophatic_geometry.pilot import (
-    ArchiveWriteResult, ConfirmatoryAccessError, ControlSpec, PilotArchiveWriter,
-    PilotConfiguration, Trajectory, archive_has_confirmatory_identifiers,
-    assess_numerics, exogenous_replay_control, frozen_parameters, integrate_dop853,
-    integrate_rk4, load_frozen_bundle, require_constraint_gate,
-    require_same_state_identity_gate, run_permutation_tripwires,
-    smoke_configuration, summarize_configuration,
+    ArchiveWriteResult,
+    ConfirmatoryAccessError,
+    ControlSpec,
+    PilotArchiveWriter,
+    PilotConfiguration,
+    Trajectory,
+    archive_has_confirmatory_identifiers,
+    assess_numerics,
+    exogenous_replay_control,
+    frozen_parameters,
+    integrate_dop853,
+    integrate_rk4,
+    load_frozen_bundle,
+    require_constraint_gate,
+    require_same_state_identity_gate,
+    run_permutation_tripwires,
+    smoke_configuration,
+    summarize_configuration,
 )
 from apophatic_geometry.protocol import canonical_json_sha256
 from reference_pilot import independent_file_hashes, independent_reference_trajectory
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
+
 @pytest.fixture(scope="module")
 def bundle():
     return load_frozen_bundle(REPO_ROOT)
+
 
 @pytest.fixture(scope="module")
 def params(bundle):
     return frozen_parameters(bundle)
 
+
 @pytest.mark.parametrize("model", list(ModelId))
-def test_smoke_rk4_matches_independent_reference(bundle, params, model: ModelId) -> None:
+def test_smoke_rk4_matches_independent_reference(
+    bundle, params, model: ModelId
+) -> None:
     config = smoke_configuration(bundle)
     production = integrate_rk4(
         config,
@@ -51,14 +68,18 @@ def test_smoke_rk4_matches_independent_reference(bundle, params, model: ModelId)
         horizon=0.02,
         observation_interval=0.01,
     )
-    np.testing.assert_allclose(production.states, reference, rtol=0.0, atol=2.0e-14)
+    np.testing.assert_allclose(
+        production.states, reference, rtol=0.0, atol=2.0e-14
+    )
     assert production.split == "smoke"
     assert production.states.shape == (3, 9)
     assert production.geometry.shape == (3, 3)
 
 
 @pytest.mark.parametrize("model", [ModelId.MP, ModelId.MFP])
-def test_smoke_projected_validity_gates(bundle, params, model: ModelId) -> None:
+def test_smoke_projected_validity_gates(
+    bundle, params, model: ModelId
+) -> None:
     config = smoke_configuration(bundle)
     trajectory = integrate_rk4(
         config,
@@ -76,7 +97,9 @@ def test_smoke_projected_validity_gates(bundle, params, model: ModelId) -> None:
 
 
 @pytest.mark.parametrize("model", list(ModelId))
-def test_smoke_dop853_policy_is_finite(bundle, params, model: ModelId) -> None:
+def test_smoke_dop853_policy_is_finite(
+    bundle, params, model: ModelId
+) -> None:
     config = smoke_configuration(bundle)
     trajectory = integrate_dop853(
         config,
@@ -150,17 +173,27 @@ def test_adaptive_substrate_ablations_hold_declared_state(
     if s_frozen:
         np.testing.assert_array_equal(
             trajectory.states[:, 3:6],
-            np.repeat(config.initial_state.s[None, :], trajectory.times.size, axis=0),
+            np.repeat(
+                config.initial_state.s[None, :],
+                trajectory.times.size,
+                axis=0,
+            ),
         )
     if q_frozen:
         np.testing.assert_array_equal(
             trajectory.states[:, 6:9],
-            np.repeat(config.initial_state.q[None, :], trajectory.times.size, axis=0),
+            np.repeat(
+                config.initial_state.q[None, :],
+                trajectory.times.size,
+                axis=0,
+            ),
         )
 
 
 @pytest.mark.parametrize("model", list(ModelId))
-def test_all_six_permutation_tripwires_pass_on_smoke(bundle, params, model: ModelId) -> None:
+def test_all_six_permutation_tripwires_pass_on_smoke(
+    bundle, params, model: ModelId
+) -> None:
     config = smoke_configuration(bundle)
     results = run_permutation_tripwires(
         config,
@@ -176,7 +209,9 @@ def test_all_six_permutation_tripwires_pass_on_smoke(bundle, params, model: Mode
     assert max(results.values()) <= 1.0e-11
 
 
-def test_configuration_summary_contains_frozen_primary_floor(bundle, params) -> None:
+def test_configuration_summary_contains_frozen_primary_floor(
+    bundle, params
+) -> None:
     config = smoke_configuration(bundle)
     dts = [0.004, 0.002, 0.001]
     trajectories: dict[tuple[str, str], Trajectory] = {}
@@ -233,7 +268,12 @@ def test_numerical_assessment_known_pass(bundle, params) -> None:
     coarse = replace(base, states=base.states + 1.0e-4)
     medium = replace(base, states=base.states + 1.0e-7)
     fine = base
-    alternate = replace(base, integrator="DOP853", profile="test-alt", states=base.states + 1.0e-8)
+    alternate = replace(
+        base,
+        integrator="DOP853",
+        profile="test-alt",
+        states=base.states + 1.0e-8,
+    )
     assessment = assess_numerics(coarse, medium, fine, alternate, "full")
     assert assessment.refinement_pass
     assert assessment.endpoint_pass
@@ -267,7 +307,9 @@ def _test_pilot_config(smoke: PilotConfiguration) -> PilotConfiguration:
     )
 
 
-def _make_test_pilot_trajectory(bundle, params) -> tuple[PilotConfiguration, Trajectory]:
+def _make_test_pilot_trajectory(
+    bundle, params
+) -> tuple[PilotConfiguration, Trajectory]:
     smoke = smoke_configuration(bundle)
     config = _test_pilot_config(smoke)
     trajectory = integrate_rk4(
@@ -282,6 +324,25 @@ def _make_test_pilot_trajectory(bundle, params) -> tuple[PilotConfiguration, Tra
     return config, trajectory
 
 
+def _archive_manifest() -> dict[str, object]:
+    return {
+        "runner_id": "ARG-P6-PILOT-RUNNER-v1",
+        "runner_version": "1.0.0",
+        "protocol_id": "ARG-P5-COMP-v1",
+        "protocol_version": "1.0.0",
+        "execution_id": "test-execution",
+        "execution_utc": "2026-08-01T00:00:00Z",
+        "split": "pilot",
+        "confirmatory_execution": "BLOCKED",
+        "run_identity_sha256": "1" * 64,
+        "attestation_sha256": "2" * 64,
+        "source_tree_sha256": "3" * 64,
+        "runtime_environment_sha256": "4" * 64,
+        "protocol_lock": {"file_sha256": "5" * 64},
+        "implementation_files": {"test.py": "6" * 64},
+    }
+
+
 def _restore_write_permissions(root: Path) -> None:
     if not root.exists():
         return
@@ -293,15 +354,11 @@ def _restore_write_permissions(root: Path) -> None:
     root.chmod(stat.S_IRWXU)
 
 
-def test_archive_is_deterministic_and_independently_hashed(tmp_path, bundle, params) -> None:
+def test_archive_is_deterministic_and_independently_hashed(
+    tmp_path, bundle, params
+) -> None:
     config, trajectory = _make_test_pilot_trajectory(bundle, params)
-    manifest = {
-        "runner_id": "ARG-P6-PILOT-RUNNER-v1",
-        "execution_id": "test-execution",
-        "execution_utc": "2026-08-01T00:00:00Z",
-        "split": "pilot",
-        "confirmatory_execution": "BLOCKED",
-    }
+    manifest = _archive_manifest()
     checksum_bytes = []
     try:
         for name in ("archive-a", "archive-b"):
@@ -318,6 +375,7 @@ def test_archive_is_deterministic_and_independently_hashed(tmp_path, bundle, par
             )
             checksums = writer.finalize()
             assert checksums
+            assert (root / "ARCHIVE_COMPLETE.json").is_file()
             checksum_bytes.append((root / "checksums.sha256").read_bytes())
             independently_hashed = independent_file_hashes(root)
             for relative, digest in independently_hashed.items():
@@ -329,7 +387,16 @@ def test_archive_is_deterministic_and_independently_hashed(tmp_path, bundle, par
         _restore_write_permissions(tmp_path / "archive-b")
 
 
-def test_archive_rejects_confirmatory_trajectory(tmp_path, bundle, params) -> None:
+def test_archive_rejects_incomplete_attestation(tmp_path) -> None:
+    manifest = _archive_manifest()
+    manifest.pop("run_identity_sha256")
+    with pytest.raises(ValueError, match="run_identity_sha256"):
+        PilotArchiveWriter(tmp_path / "archive", manifest)
+
+
+def test_archive_rejects_confirmatory_trajectory(
+    tmp_path, bundle, params
+) -> None:
     _, trajectory = _make_test_pilot_trajectory(bundle, params)
     confirmatory = replace(
         trajectory,
@@ -337,19 +404,14 @@ def test_archive_rejects_confirmatory_trajectory(tmp_path, bundle, params) -> No
         direction_id="d01",
         split="confirmatory",
     )
-    writer = PilotArchiveWriter(
-        tmp_path / "archive",
-        {
-            "runner_id": "ARG-P6-PILOT-RUNNER-v1",
-            "split": "pilot",
-            "confirmatory_execution": "BLOCKED",
-        },
-    )
+    writer = PilotArchiveWriter(tmp_path / "archive", _archive_manifest())
     with pytest.raises(ConfirmatoryAccessError):
         writer.write_trajectory(confirmatory)
 
 
-def test_confirmatory_identifier_scanner_uses_structured_values(tmp_path) -> None:
+def test_confirmatory_identifier_scanner_uses_structured_values(
+    tmp_path,
+) -> None:
     root = tmp_path / "archive"
     root.mkdir()
     (root / "manifest.json").write_text(
