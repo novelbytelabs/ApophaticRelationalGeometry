@@ -2,6 +2,6 @@ cff-version: 1.2.0
 message: "If you use this research code, please cite the repository."
 title: "Apophatic Relational Geometry"
 type: software
-version: 0.2.0
+version: 0.3.0
 date-released: 2026-08-01
-abstract: "Software prototypes for a local/adaptive baseline and endogenous collective feedback with state-dependent relational geometry. Projected admissibility remains unimplemented."
+abstract: "Software prototypes for local/adaptive dynamics, endogenous collective feedback, and a constant-amplitude projected-admissibility sandbox with state-dependent relational geometry. Scientific adequacy and feedback-projection equivalence remain unverified."
