@@ -1,9 +1,11 @@
-"""Write-once archive and confirmatory-contamination checks for Phase 6."""
+"""Write-once, attested archive and confirmatory-contamination checks."""
 
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
+import re
 import stat
 from typing import Any, Iterable, Mapping
 
@@ -21,6 +23,8 @@ from .pilot_types import (
     Trajectory,
 )
 from .protocol import PROTOCOL_ID, PROTOCOL_VERSION, file_sha256, load_json
+
+_HEX_64 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _canonical_json_bytes(value: Any) -> bytes:
@@ -40,6 +44,8 @@ def _write_new_bytes(path: Path, content: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("xb") as handle:
         handle.write(content)
+        handle.flush()
+        os.fsync(handle.fileno())
 
 
 def _write_new_json(path: Path, value: Any) -> None:
@@ -50,6 +56,14 @@ def _write_new_npy(path: Path, value: np.ndarray) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("xb") as handle:
         np.save(handle, np.asarray(value, dtype=np.float64), allow_pickle=False)
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def _require_digest(value: Any, name: str) -> str:
+    if not isinstance(value, str) or _HEX_64.fullmatch(value) is None:
+        raise ValueError(f"run manifest lacks valid {name}")
+    return value
 
 
 class PilotArchiveWriter:
@@ -58,38 +72,90 @@ class PilotArchiveWriter:
     def __init__(self, root: str | Path, run_manifest: Mapping[str, Any]) -> None:
         if run_manifest.get("runner_id") != RUNNER_ID:
             raise ValueError("run manifest has wrong runner_id")
+        if run_manifest.get("runner_version") != RUNNER_VERSION:
+            raise ValueError("run manifest has wrong runner_version")
+        if run_manifest.get("protocol_id") != PROTOCOL_ID:
+            raise ValueError("run manifest has wrong protocol_id")
+        if run_manifest.get("protocol_version") != PROTOCOL_VERSION:
+            raise ValueError("run manifest has wrong protocol_version")
         if run_manifest.get("split") != PILOT_SPLIT:
             raise ConfirmatoryAccessError("run manifest must be pilot-only")
         if run_manifest.get("confirmatory_execution") != "BLOCKED":
-            raise ConfirmatoryAccessError("run manifest must block confirmatory execution")
+            raise ConfirmatoryAccessError(
+                "run manifest must block confirmatory execution"
+            )
+        self.run_identity_sha256 = _require_digest(
+            run_manifest.get("run_identity_sha256"), "run_identity_sha256"
+        )
+        self.attestation_sha256 = _require_digest(
+            run_manifest.get("attestation_sha256"), "attestation_sha256"
+        )
+        self.source_tree_sha256 = _require_digest(
+            run_manifest.get("source_tree_sha256"), "source_tree_sha256"
+        )
+        self.runtime_environment_sha256 = _require_digest(
+            run_manifest.get("runtime_environment_sha256"),
+            "runtime_environment_sha256",
+        )
+        protocol_lock = run_manifest.get("protocol_lock")
+        implementation_files = run_manifest.get("implementation_files")
+        if not isinstance(protocol_lock, Mapping):
+            raise ValueError("run manifest lacks protocol-lock attestation")
+        _require_digest(protocol_lock.get("file_sha256"), "protocol lock hash")
+        if not isinstance(implementation_files, Mapping) or not implementation_files:
+            raise ValueError("run manifest lacks implementation-file hashes")
+        for name, digest in implementation_files.items():
+            if not isinstance(name, str):
+                raise ValueError("implementation-file path must be text")
+            _require_digest(digest, f"implementation hash for {name}")
+
         self.root = Path(root).resolve()
         if self.root.exists() and any(self.root.iterdir()):
-            raise FileExistsError("pilot archive directory must not already contain files")
+            raise FileExistsError(
+                "pilot archive directory must not already contain files"
+            )
         self.root.mkdir(parents=True, exist_ok=True)
         for name in ("environment", "configs", "raw", "summaries"):
             (self.root / name).mkdir(exist_ok=False)
         _write_new_json(self.root / "RUN_MANIFEST.json", run_manifest)
+        _write_new_json(
+            self.root / "ARCHIVE_STATUS.json",
+            {
+                "completion_status": "IN_PROGRESS",
+                "run_identity_sha256": self.run_identity_sha256,
+                "confirmatory_execution": "BLOCKED",
+            },
+        )
         _write_new_bytes(self.root / "failures.jsonl", b"")
         self._finalized = False
 
     def write_environment(self, environment: Mapping[str, Any]) -> str:
         path = self.root / "environment" / "runtime.json"
-        _write_new_json(path, environment)
+        payload = dict(environment) | {
+            "run_identity_sha256": self.run_identity_sha256,
+            "attestation_sha256": self.attestation_sha256,
+        }
+        _write_new_json(path, payload)
         return file_sha256(path)
 
     def write_configuration(self, configuration: PilotConfiguration) -> str:
         if configuration.split != PILOT_SPLIT:
-            raise ConfirmatoryAccessError("only pilot configurations may enter the archive")
+            raise ConfirmatoryAccessError(
+                "only pilot configurations may enter the archive"
+            )
         path = self.root / "configs" / f"{configuration.config_id}.json"
         payload = configuration.canonical_payload() | {
-            "configuration_hash": configuration.configuration_hash
+            "configuration_hash": configuration.configuration_hash,
+            "run_identity_sha256": self.run_identity_sha256,
         }
         _write_new_json(path, payload)
         return file_sha256(path)
 
     def write_trajectory(self, trajectory: Trajectory) -> ArchiveWriteResult:
         if trajectory.split != PILOT_SPLIT:
-            raise ConfirmatoryAccessError("only pilot trajectories may enter the archive")
+            raise ConfirmatoryAccessError(
+                "only pilot trajectories may enter the archive"
+            )
         relative = Path(
             "raw",
             trajectory.config_id,
@@ -105,6 +171,10 @@ class PilotArchiveWriter:
             "runner_id": RUNNER_ID,
             "runner_version": RUNNER_VERSION,
             "source_commit": trajectory.source_commit,
+            "source_tree_sha256": self.source_tree_sha256,
+            "attestation_sha256": self.attestation_sha256,
+            "runtime_environment_sha256": self.runtime_environment_sha256,
+            "run_identity_sha256": self.run_identity_sha256,
             "protocol_id": PROTOCOL_ID,
             "protocol_version": PROTOCOL_VERSION,
             "contract_version": CONTRACT_VERSION,
@@ -148,6 +218,7 @@ class PilotArchiveWriter:
         if not raw_input_hashes:
             raise ValueError("summary must name all raw input hashes")
         payload = dict(summary)
+        payload["run_identity_sha256"] = self.run_identity_sha256
         payload["raw_input_hashes"] = dict(sorted(raw_input_hashes.items()))
         path = self.root / "summaries" / f"{name}.json"
         _write_new_json(path, payload)
@@ -157,23 +228,42 @@ class PilotArchiveWriter:
         if self._finalized:
             raise RuntimeError("archive has been finalized")
         if record.get("split") not in {PILOT_SPLIT, SMOKE_SPLIT}:
-            raise ConfirmatoryAccessError("confirmatory failure records are forbidden")
+            raise ConfirmatoryAccessError(
+                "confirmatory failure records are forbidden"
+            )
+        payload = dict(record)
+        payload["run_identity_sha256"] = self.run_identity_sha256
         path = self.root / "failures.jsonl"
         with path.open("ab") as handle:
-            handle.write(_canonical_json_bytes(record))
+            handle.write(_canonical_json_bytes(payload))
+            handle.flush()
+            os.fsync(handle.fileno())
 
     def finalize(self) -> Mapping[str, str]:
         if self._finalized:
             raise RuntimeError("archive already finalized")
         checksum_path = self.root / "checksums.sha256"
+        _write_new_json(
+            self.root / "ARCHIVE_COMPLETE.json",
+            {
+                "completion_status": "COMPLETE",
+                "run_identity_sha256": self.run_identity_sha256,
+                "attestation_sha256": self.attestation_sha256,
+                "confirmatory_execution": "BLOCKED",
+            },
+        )
         entries: dict[str, str] = {}
         for path in sorted(self.root.rglob("*")):
             if path.is_file() and path != checksum_path:
                 relative = str(path.relative_to(self.root))
                 entries[relative] = file_sha256(path)
-        lines = "".join(f"{digest}  {relative}\n" for relative, digest in entries.items())
+        lines = "".join(
+            f"{digest}  {relative}\n" for relative, digest in entries.items()
+        )
         _write_new_bytes(checksum_path, lines.encode("utf-8"))
-        entries[str(checksum_path.relative_to(self.root))] = file_sha256(checksum_path)
+        entries[str(checksum_path.relative_to(self.root))] = file_sha256(
+            checksum_path
+        )
 
         for path in sorted(self.root.rglob("*"), reverse=True):
             if path.is_file():
@@ -207,7 +297,9 @@ def _contains_forbidden_identifier(value: Any, forbidden: set[str]) -> bool:
             for key, item in value.items()
         )
     if isinstance(value, list):
-        return any(_contains_forbidden_identifier(item, forbidden) for item in value)
+        return any(
+            _contains_forbidden_identifier(item, forbidden) for item in value
+        )
     if isinstance(value, str):
         return value in forbidden or any(
             value.startswith(f"p5-{item}-c") for item in forbidden
@@ -227,7 +319,7 @@ def archive_has_confirmatory_identifiers(
     archive_root: str | Path,
     confirmatory_direction_ids: Iterable[str],
 ) -> bool:
-    """Inspect path components and structured fields, never raw hash substrings."""
+    """Inspect path components and strict structured fields, never raw hashes."""
 
     root = Path(archive_root)
     forbidden = {str(value) for value in confirmatory_direction_ids}
@@ -244,7 +336,15 @@ def archive_has_confirmatory_identifiers(
         elif suffix == ".jsonl":
             for line in path.read_text(encoding="utf-8").splitlines():
                 if line.strip() and _contains_forbidden_identifier(
-                    json.loads(line), forbidden
+                    json.loads(
+                        line,
+                        parse_constant=lambda token: (_ for _ in ()).throw(
+                            ValueError(
+                                f"non-standard JSON constant: {token}"
+                            )
+                        ),
+                    ),
+                    forbidden,
                 ):
                     return True
         elif suffix == ".sha256":
@@ -252,6 +352,8 @@ def archive_has_confirmatory_identifiers(
                 if "  " not in line:
                     continue
                 _, relative_name = line.split("  ", 1)
-                if _path_contains_forbidden(Path(relative_name).parts, forbidden):
+                if _path_contains_forbidden(
+                    Path(relative_name).parts, forbidden
+                ):
                     return True
     return False
