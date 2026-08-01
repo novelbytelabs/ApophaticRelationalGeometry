@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import re
 from typing import Any, Mapping
 
 import numpy as np
@@ -26,6 +27,7 @@ EXECUTION_AUTHORIZATION_PATH = Path(
     "protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json"
 )
 ALLOWED_ABLATIONS = {None, "freeze_s", "freeze_q", "freeze_sq"}
+_SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 
 
 class PilotRunnerError(RuntimeError):
@@ -68,8 +70,8 @@ class PilotConfiguration:
     configuration_hash: str
 
     def __post_init__(self) -> None:
-        if not self.config_id or not self.direction_id:
-            raise ValueError("configuration identifiers must be non-empty")
+        if not _SAFE_ID.fullmatch(self.config_id) or not _SAFE_ID.fullmatch(self.direction_id):
+            raise ValueError("configuration identifiers must be path-safe")
         if self.split not in {PILOT_SPLIT, CONFIRMATORY_SPLIT, SMOKE_SPLIT}:
             raise ValueError(f"unsupported split: {self.split}")
         c0 = float(self.c0)
