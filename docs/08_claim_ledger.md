@@ -43,17 +43,17 @@ M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-Execution authorization:
+Current execution state:
 
 $$
 \boxed{
-\text{development pilot authorized};
+\text{pilot-only runner verified};
+\quad
+\text{development pilot not executed};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
 $$
-
-No pilot has been executed.
 
 ## Current claims
 
@@ -107,38 +107,33 @@ No pilot has been executed.
 | ARG-C046 | The Phase 5 primary decision rule is executable and fail closed. | Implemented and unit-tested | Known-answer positive, equivalence, inconclusive, invalid-input, and deterministic-bootstrap tests. | Decision software only. |
 | ARG-C047 | The 10-direction pilot and 14-direction confirmatory sets are deterministically separated at direction level. | Protocol-frozen and unit-tested | Hash-rule reconstruction, count checks, and no-overlap tests. | Frozen initial-condition domain. |
 | ARG-C048 | Phase 5 produced a numerical or scientific mechanism result. | Rejected | Phase 5 generated no trajectory data. | Not licensed. |
-| ARG-C049 | A development pilot is authorized. | Definition of current authorization | Phase 5 exit gate and lock must remain intact. | Execution permission only. |
-| ARG-C050 | The development pilot has been executed. | Unverified | Phase 6 runner, archive, and completed pilot outputs. | Not executed. |
+| ARG-C049 | A development pilot is authorized in principle. | Definition of current authorization | Phase 5 exit gate and lock remain intact. | Execution permission only. |
+| ARG-C050 | The development pilot has been executed. | Unverified | Separate execution authorization and completed pilot archive. | Not executed. |
+| ARG-C051 | The Phase 6 runner reconstructs exactly the 50 frozen pilot configurations and rejects confirmatory/mixed input. | Implemented and unit-tested | Independent membership/hash reconstruction and split tripwires. | Runner software only. |
+| ARG-C052 | The runner implements the frozen RK4/DOP853, H5/H6, control, relabeling, and numerical-floor policies. | Implemented and unit-tested | Smoke/reference parity, known-answer gates, and hosted verification. | Runner software only. |
+| ARG-C053 | The runner produces a write-once, checksummed archive and independently verifiable hashes. | Implemented and unit-tested | Deterministic archive tests and independent checksum reconstruction. | Archive software only. |
+| ARG-C054 | Phase 6 runner verification produced pilot evidence. | Rejected | The execution authorization and pilot archive are absent. | No pilot data. |
+| ARG-C055 | The verified runner may access the confirmatory set. | Rejected | Planner, integrator, archive, authorization, and contamination tripwires prohibit access. | Confirmatory execution blocked. |
 
 ## Verification records
 
-### Phase 2
+### Phases 2–4
 
-Twenty local software tests passed for $M_0/M_F$. No hosted check was attached at merge.
-
-### Phase 3
-
-PR `#5`, merge `97a9f6b7222b4543ee8184fb8e42b47b53ddf92c`, Actions `30717582276`, 35 tests on Python 3.10 and 35 on Python 3.12.
-
-### Phase 4
-
-PR `#7`, merge `205fb8c5bf1b832e241af230612e3d7056be05f5`, Actions `30718821666`, 51 tests on Python 3.10 and 51 on Python 3.12.
+- Phase 2: 20 local software tests for $M_0/M_F$; no hosted check attached at merge.
+- Phase 3: PR `#5`, merge `97a9f6b7222b4543ee8184fb8e42b47b53ddf92c`, Actions `30717582276`, 35 tests in each configured Python environment.
+- Phase 4: PR `#7`, merge `205fb8c5bf1b832e241af230612e3d7056be05f5`, Actions `30718821666`, 51 tests in each configured environment.
 
 ### Phase 5
 
-The frozen slice adds:
+Protocol `ARG-P5-COMP-v1`, its manifests, split, numerical policy, exclusions, stop rules, archive provenance, executable metrics, bootstrap, lock verification, and decisions were frozen before data. PR `#9`, merge `d60bb3e618c590e0c994188cebf060bd4b347903`, Actions `30720596773`, 65 tests in each configured environment.
 
-- protocol `ARG-P5-COMP-v1`;
-- primary and secondary hypotheses;
-- detection and scoped-equivalence thresholds;
-- direction-level inferential units;
-- deterministic 24-direction design and pilot/confirmatory split;
-- fixed parameters and interventions;
-- RK4/DOP853 numerical policy;
-- exclusions, stop rules, and archive provenance;
-- executable metrics, bootstrap, manifest validation, lock verification, and decision logic.
+### Phase 6A
 
-Hosted verification reported 65 tests passed on Python 3.10 and 65 on Python 3.12. No trajectories were generated.
+The pilot-only runner adds lock-first loading, exact pilot reconstruction, direct confirmatory rejection, all-model RK4/DOP853 paths, H5/H6 and numerical gates, frozen controls, all six relabelings, immutable archives, independent membership/trajectory/checksum references, and a separate execution-authorization boundary.
+
+PR `#11`, Actions `30722763003`, 100 tests on Python 3.10 and 100 on Python 3.12. No execution authorization, pilot trajectory, result, archive, or confirmatory artifact was introduced.
+
+See `20_phase6_runner_design.md` and `21_phase6_runner_verification.md`.
 
 ## Claim promotion rules
 
