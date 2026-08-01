@@ -10,7 +10,7 @@ A phase is complete only when its exit criteria are satisfied and the claim ledg
 
 $$
 \boxed{
-M_F\ \text{implemented and unit-tested};
+M_0,M_F\ \text{implemented and unit-tested};
 \quad
 M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
 }
@@ -20,10 +20,11 @@ $$
 
 | Phase | Status | Result |
 |---|---|---|
-| Phase 0 — Alignment and claim control | COMPLETE | Public and internal descriptions now match the executable evidence. |
+| Phase 0 — Alignment and claim control | COMPLETE | Public and internal descriptions match the executable evidence. |
 | Phase 1 — Four-model design contract | COMPLETE | `15_four_model_design_contract.md` frozen as version 1.0. |
-| Phase 2 — Implement and verify $M_0$ | IN PROGRESS | First code gate opened. |
-| Phase 3 onward | BLOCKED | Await $M_0$ exit gate. |
+| Phase 2 — Implement and verify $M_0$ | COMPLETE | $M_0$ merged with independent derivative/RK4 parity, reduction, equivariance, and no-feedback tripwires. |
+| Phase 3 — Implement and verify $M_P$ | IN PROGRESS | Projection implementation gate opened. |
+| Phase 4 onward | BLOCKED | Await $M_P$ exit gate. |
 
 Software-test results validate code contracts only. They do not validate the scientific hypothesis.
 
@@ -41,8 +42,7 @@ Completed:
 - explicit claim ceiling;
 - feedback/projection documentation separation;
 - package and citation metadata alignment;
-- claim-ledger and falsification alignment;
-- existing software tests retained.
+- claim-ledger and falsification alignment.
 
 ---
 
@@ -52,7 +52,7 @@ Completed:
 
 **PASS.**
 
-The frozen contract now specifies:
+The frozen contract specifies:
 
 - exact equations for $M_0,M_F,M_P,M_{FP}$;
 - fixed nine-dimensional substrate;
@@ -67,74 +67,119 @@ The frozen contract now specifies:
 - independent-reference boundary;
 - fairness and safety tripwires.
 
-The sphere constraint is accepted only as a minimal projection-mechanism testbed. It is not the completed relational geometry.
+The sphere constraint is only a minimal projection-mechanism testbed. It is not the completed relational geometry.
 
 ---
 
 # Phase 2 — Implement and verify $M_0$
 
-## Objective
+## Exit decision
 
-Create a true no-feedback local/adaptive baseline without altering the current $M_F$ behavior.
+**PASS.**
 
-## Required implementation
+Merged implementation:
 
-- expose a model identifier or dispatch mechanism;
-- implement $F_0$ directly from the frozen contract;
-- keep $c(x)$ diagnostic-only in $M_0$;
-- preserve the current state representation and intrinsic geometry;
-- add shared fixed-step RK4 integration without changing the legacy equations;
-- retain explicit Euler only as a transparent low-level test helper if needed;
-- label every output with model ID and contract version.
+- canonical model dispatch;
+- exact no-feedback $F_0$;
+- no $c(x)$ transition dependency in $M_0$;
+- unchanged legacy $M_F$ right-hand side;
+- shared classical fixed-step RK4;
+- model ID and contract-version labels in raw outputs;
+- fail-closed dispatch for unimplemented $M_P$ and $M_{FP}$;
+- independent reference equations and RK4 path;
+- hosted pytest workflow for future runs.
 
-## Required tests
+Verification completed:
 
 - hand-computed $M_0$ derivative;
-- no-feedback dependency audit;
-- $M_F(\chi=\eta_2=\rho=0)=M_0$ exactly;
+- fixed $M_F$ regression vector;
+- exact $M_F(\chi=\eta_2=\rho=0)=M_0$ reduction;
+- no-feedback dependency tripwire;
 - permutation equivariance;
-- finite-state and parameter validation;
-- independent-reference derivative parity;
-- independent-reference RK4 one-step parity;
-- regression test proving unchanged $M_F$ derivatives at the reference state.
+- production/reference derivative parity;
+- production/reference RK4 parity;
+- invalid-parameter and unimplemented-model fail-closed tests;
+- labeled-output test;
+- all five original tests retained.
 
-## Exit criteria
+A clean local reconstruction passed **20 software tests**. No hosted check run was attached at merge time; therefore the result is local software verification plus merged code review, not hosted-CI attestation.
 
-- all existing tests pass;
-- all new $M_0$ tests pass;
-- no hidden $c(x)$ transition path exists in $M_0$;
-- current $M_F$ behavior remains unchanged;
-- source and raw outputs identify the selected model;
-- implementation and reference paths agree within frozen tolerances;
-- claim ledger updated to mark $M_0$ implemented and unit-tested.
+## Claim promotion
 
-## Claim ceiling after completion
-
-Expected ceiling:
+Only $M_0$ is promoted:
 
 $$
-M_0,M_F\ \text{implemented and unit-tested};
-\quad
-M_P,M_{FP},M_F\equiv M_P\ \text{unverified}.
+M_0=\text{implemented and unit-tested}.
 $$
 
-No scientific mechanism claim is promoted merely by implementing $M_0$.
+No projection, equivalence, causal-autonomy, or scientific-performance claim is promoted.
 
 ---
 
 # Phase 3 — Implement and verify $M_P$
 
-Blocked until Phase 2 passes.
+## Objective
 
-Required elements:
+Implement the constant-amplitude projection sandbox exactly as frozen:
 
-- tangent projector;
-- projected RK4 stages;
-- mandatory radial retraction;
-- constraint and tangency diagnostics;
-- singular fail-closed path;
-- independent implementation parity;
-- step-refinement evidence.
+$$
+\Gamma(Z)=c(x)-c_0=0,
+\qquad
+c_0=c(x(0))>0,
+$$
+
+$$
+f_P
+=
+f_0-x\frac{x^Tf_0}{x^Tx}.
+$$
+
+## Required implementation
+
+- projection target object carrying $c_0$;
+- tangent projector or algebraically equivalent correction;
+- projected derivative with $s,q$ following $M_0$;
+- RK4 stage projection;
+- mandatory post-step radial retraction;
+- constraint residual, tangency residual, correction norm, and retraction magnitude;
+- declared near-singular threshold and fail-closed exception;
+- model-labeled outputs and configuration capture.
+
+## Required mathematical and software checks
+
+- $P_T^T=P_T$;
+- $P_T^2=P_T$;
+- $P_Tx=0$;
+- $x^Tf_P=0$;
+- $\frac{d}{dt}\Gamma=0$ in continuous time;
+- hand-computed projection case;
+- retraction restores $c(x)=c_0$;
+- zero-norm and near-singular paths fail closed;
+- permutation equivariance;
+- independent derivative and RK4/retraction parity;
+- step-refinement evidence for raw drift and retraction magnitude;
+- $M_0$ and $M_F$ regression suites remain passing.
+
+## Exit criteria
+
+- explicit projection code matches contract v1.0;
+- all projection identities and preservation tests pass;
+- production and independent reference paths agree;
+- singular behavior is fail-closed;
+- all prior tests remain passing;
+- claim ledger is updated only after the complete gate passes.
+
+## Claim ceiling after completion
+
+At most:
+
+$$
+M_0,M_F,M_P\ \text{implemented and unit-tested};
+\quad
+M_{FP},\ M_F\equiv M_P\ \text{unverified}.
+$$
+
+This would verify a projection implementation, not its physical adequacy.
 
 ---
 
@@ -217,4 +262,4 @@ ARG must reproduce an established result before claiming an extension.
 
 ## Immediate next action
 
-Implement the exact $M_0$ baseline and its independent verification suite under the frozen version 1.0 contract.
+Implement the frozen $M_P$ projection sandbox with independent parity, preservation, singular-path, and step-refinement tests.
