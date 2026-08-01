@@ -2,206 +2,311 @@
 
 ## Purpose
 
-This document freezes the benchmark structure before the project generates confirmatory results.
+This document freezes the comparison structure before ARG generates confirmatory results.
 
-The goal is not merely to show that the full model can produce interesting behavior. The goal is to determine whether its proposed mechanisms are necessary, identifiable, numerically stable, and empirically useful.
+The goal is to determine whether collective feedback, admissibility projection, and their combination are necessary, identifiable, numerically stable, and scientifically useful.
 
-## Model family
+## Current authorization
 
-All comparisons must use matched state dimensions, comparable parameter budgets, identical initial-condition families, and the same numerical accuracy targets.
+$$
+\boxed{
+M_F\ \text{implemented and unit-tested};
+\quad
+M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
+}
+$$
 
-### $M_0$: Fixed graph, local dynamics
+Current software work may verify $M_F$, design and implement $M_0$, and mathematically specify $M_P$. Comparative projected-geometry claims remain blocked.
 
-- Fixed topology.
-- Fixed edge weights.
-- No metric deformation.
-- No collective projection.
+## Canonical model family
 
-This is the minimal local baseline.
+All comparisons must use matched state dimensions where possible, comparable parameter budgets, identical initial-condition families, equal observation access, and the same numerical-accuracy targets.
 
-### $M_1$: Adaptive graph without collective projection
+### $M_0$: Local/adaptive substrate baseline
 
-- Dynamic edge activation.
-- Optional dynamic edge weights.
-- No tangent-space or normal-space projection.
+- local nonlinear node dynamics;
+- neighborhood coupling;
+- adaptive topology and metric variables where declared;
+- no collective statistic in constituent transition equations;
+- no tangent-space or normal-space projection.
 
-This tests whether adaptive topology alone explains the observed behavior.
+This is the mechanism-free baseline for the two global mechanisms under study.
 
-### $M_2$: Fixed geometry with collective projection
+### $M_F$: Collective-feedback prototype
 
-- Fixed graph and metric.
-- Dynamic local states.
-- Global admissibility projection enabled.
+- $M_0$ substrate;
+- endogenous statistic $c(x)$;
+- declared feedback paths into $\dot x$, $\dot s$, or $\dot q$;
+- no admissibility projection.
 
-This isolates the contribution of the collective constraint.
+The current executable three-node model is $M_F$.
 
-### $M_3$: Dynamic geometry with soft penalties
+### $M_P$: Projected-admissibility prototype
 
-- Dynamic graph and metric.
-- Coherence enforced through penalty terms rather than exact projection.
+- explicit state and proposal field;
+- explicit admissible set $\mathcal M=\{Z:\Gamma(Z)=0,H(Z)\geq0\}$;
+- implemented tangent-space or normal-space projection;
+- tested constraint preservation;
+- no collective feedback unless separately declared.
 
-This tests whether exact projection is necessary.
+$M_P$ is currently unimplemented.
 
-### $M_4$: Full proposed geometry
+### $M_{FP}$: Feedback plus projection
 
-- Dynamic local states.
-- Dynamic edge activation.
-- Dynamic metric deformation.
-- Dynamic compatibility structure where implemented.
-- Collective admissibility projection.
-- Non-collapse barrier where relevant.
-- Presentation-equivariance requirements.
+- collective feedback as in $M_F$;
+- projection as in $M_P$;
+- separately measurable feedback and projection vectors;
+- exact reductions to $M_0$, $M_F$, and $M_P$.
 
-## Benchmark stage A: Exact synthetic systems
+$M_{FP}$ is currently unimplemented.
 
-### A1. Three-node scalar model
+### Secondary control: $M_{\lambda}$
+
+A matched soft-penalty model may be included to test whether exact projection adds value beyond penalty enforcement. It is a secondary control and does not replace the canonical four-model comparison.
+
+## Stage A: Equation and software verification
+
+### A1. Current $M_F$ prototype
 
 Purpose:
 
-- verify implementation consistency;
-- measure $\chi_i$;
+- verify code-equation parity;
+- map all collective substrate paths;
 - test permutation equivariance;
-- exercise dynamic edge and metric variables.
+- exercise adaptive edge and metric variables.
 
 Required checks:
 
-- reference right-hand-side parity;
+- independent right-hand-side agreement;
 - convergence under decreasing time step;
 - inverse-permutation trajectory agreement;
 - deterministic replay;
 - finite-value tripwire;
-- constraint-error trace.
+- exact parameter manifest;
+- intentional mutation test proving feedback tests fail when a path is broken.
 
-### A2. Constrained pendulum or linkage
+### A2. $M_0$ reduction
 
 Purpose:
 
-- verify exact constraint preservation;
-- compare projection with multiplier and penalty methods;
+- create a true no-collective baseline;
+- prove that every $c(x)$ transition path is absent;
+- verify exact reduction from $M_F$ when feedback coefficients are removed.
+
+Required checks:
+
+- dependency audit;
+- exact equation comparison;
+- matched initial conditions;
+- identical local and adaptive parameters;
+- no diagnostic statistic entering transitions.
+
+## Stage B: Projection verification
+
+This stage is blocked until the $M_P$ design contract is frozen.
+
+### B1. Constraint definition
+
+Record:
+
+- complete state vector;
+- $\Gamma$ and $H$;
+- domains;
+- rank conditions;
+- active-set rules;
+- state-space metric;
+- singularity policy.
+
+### B2. Projection implementation
+
+Required outputs:
+
+- local proposal;
+- tangent component;
+- normal correction;
+- constraint Jacobian;
+- projection-system condition number;
+- retraction or constraint-integrator correction;
+- failure state for rank deficiency.
+
+### B3. Preservation tests
+
+Report:
+
+$$
+\epsilon_\Gamma(t)=\|\Gamma(Z(t))\|,
+$$
+
+including maximum, mean, final, and integrated error under solver refinement.
+
+For inequalities, report active-set transitions and violation margins.
+
+### B4. Reference comparisons
+
+Compare projection against:
+
+- an independently written projector;
+- a differential-algebraic or multiplier formulation where applicable;
+- the matched soft-penalty control $M_{\lambda}$.
+
+## Stage C: Four-model mechanism comparison
+
+Run
+
+$$
+M_0,\qquad M_F,\qquad M_P,\qquad M_{FP}
+$$
+
+under matched conditions.
+
+### C1. Feedback contribution
+
+$$
+\chi_i^F(t)
+=
+\frac{\|F_{F,i}(t)\|}
+{\|F_{0,i}(t)\|+\epsilon}.
+$$
+
+### C2. Projection contribution
+
+$$
+\chi_i^P(t)
+=
+\frac{\|F_{P,i}(t)\|}
+{\|F_{0,i}(t)+F_{F,i}(t)\|+\epsilon}.
+$$
+
+For $M_P$, set $F_F=0$.
+
+### C3. Combined interaction
+
+Use a preregistered trajectory or observable distance $\Delta$ and define
+
+$$
+R_{FP}
+=
+\Delta(M_{FP},M_0)
+-
+\Delta(M_F,M_0)
+-
+\Delta(M_P,M_0).
+$$
+
+Interpretation requires care because nonlinear model effects need not add linearly.
+
+### C4. Equivalence analysis
+
+Do not infer
+
+$$
+M_F\equiv M_P
+$$
+
+from similar aggregate plots.
+
+Test:
+
+- vector-field equality or reparameterization;
+- local Jacobians;
+- fixed points and stability;
+- bifurcations;
+- perturbation response;
+- full-state trajectory distance;
+- partial-observation identifiability;
+- domain and parameter dependence.
+
+An equivalence claim requires exact mathematics, a bounded approximation, or a declared observational equivalence.
+
+## Stage D: Dynamic-geometry ablation
+
+Within each applicable model compare:
+
+1. dynamic $q$ and $s$;
+2. frozen $q$;
+3. frozen $s$;
+4. frozen $q$ and $s$;
+5. static graph with parameter-matched node dynamics.
+
+This tests whether geometry contributes beyond extra adaptive state variables.
+
+## Stage E: Exact or established systems
+
+### E1. Constrained pendulum or linkage
+
+Purpose:
+
+- verify exact constraint behavior;
+- compare projection, multiplier, and penalty methods;
 - measure energy drift.
 
-Required outputs:
-
-- geometric constraint error;
-- velocity constraint error;
-- energy error;
-- projection magnitude;
-- solver cost.
-
-### A3. Divergence-free lattice flow
+### E2. Divergence-free lattice flow
 
 Purpose:
 
-- test a known local-proposal/global-correction structure;
-- determine whether the implementation reproduces a standard projection result.
+- reproduce a known local-proposal/global-correction structure;
+- evaluate whether any ARG extension adds value without violating incompressibility.
 
-Required outputs:
-
-- divergence norm before and after correction;
-- kinetic-energy change;
-- projection residual;
-- grid-refinement behavior.
-
-### A4. Adaptive synchronization network
+### E3. Adaptive synchronization network
 
 Purpose:
 
-- compare fixed, adaptive, and geometry-coupled networks;
-- test whether metric deformation contributes beyond edge adaptation.
+- compare local, feedback, projection, and combined variants;
+- test whether intrinsic metric dynamics add information beyond adaptive weights.
 
-Required outputs:
-
-- order parameter;
-- convergence time;
-- topology trajectory;
-- intrinsic-distance trajectory;
-- perturbation recovery.
-
-### A5. Compatibility or consensus network
+### E4. Compatibility or consensus network
 
 Purpose:
 
-- test local-to-global agreement;
-- compare ordinary graph Laplacian dynamics with compatibility-aware dynamics.
+- compare ordinary graph-Laplacian dynamics with compatibility-aware variants;
+- test local mismatch and global consistency measures.
 
-Required outputs:
+## Required interventions
 
-- local mismatch energy;
-- global consistency residual;
-- convergence rate;
-- failure under incompatible local assignments.
+1. alter graph structure while state is fixed;
+2. alter state while graph structure is fixed;
+3. replace $c(x)$ with a matched exogenous signal;
+4. relabel the entire system and invert the permutation;
+5. remove feedback only;
+6. remove projection only;
+7. remove both;
+8. replace projection with a matched penalty;
+9. freeze geometry variables;
+10. test singular and near-singular projection cases.
 
-## Benchmark stage B: Mechanism isolation
-
-Each benchmark must run all applicable models $M_0$ through $M_4$.
-
-Required ablations:
-
-1. freeze $q$;
-2. freeze $s$;
-3. freeze both $q$ and $s$;
-4. remove collective projection;
-5. replace projection with a matched penalty;
-6. replace endogenous collective state with a matched exogenous signal;
-7. remove the barrier;
-8. randomize graph structure while preserving basic graph statistics;
-9. permute initial states while holding structure fixed;
-10. relabel nodes and invert the permutation at evaluation.
-
-An ablation is informative only if the removed mechanism had an opportunity to act in the selected regime.
-
-## Benchmark stage C: Physical anchors
-
-### C1. Incompressible-flow anchor
-
-Minimum requirement:
-
-- reproduce a standard projection-based incompressible-flow result before adding dynamic geometry.
-
-Comparison question:
-
-> Does the proposed relational geometry improve prediction, stability, adaptivity, or interpretation without violating incompressibility?
-
-### C2. Constrained-mechanics anchor
-
-Minimum requirement:
-
-- reproduce a standard constrained trajectory with known invariants or reference solution.
-
-Comparison question:
-
-> Does the evolving metric or compatibility structure capture behavior not represented by ordinary constrained mechanics?
-
-### C3. Adaptive synchronization or flocking anchor
-
-Minimum requirement:
-
-- reproduce a standard adaptive-network result.
-
-Comparison question:
-
-> Does intrinsic geometry provide a measurable contribution beyond adaptive weights and topology?
+An intervention is informative only if the affected mechanism had an opportunity to act.
 
 ## Primary metrics
 
 ### Constraint error
 
 $$
-\epsilon_{\Gamma}(t)=\|\Gamma(Z(t))\|.
+\epsilon_\Gamma(t)=\|\Gamma(Z(t))\|.
 $$
 
-Report maximum, mean, final, and integrated error.
+Applicable only to $M_P$, $M_{FP}$, and constraint controls.
 
-### Local-versus-collective influence
+### Feedback magnitude
 
 $$
-\chi_i(t)
+\chi_i^F(t)
 =
-\frac{\|F_i^{\mathrm{collective}}(t)\|}
-{\|F_i^{\mathrm{local}}(t)\|+\epsilon}.
+\frac{\|F_{F,i}(t)\|}
+{\|F_{0,i}(t)\|+\epsilon}.
 $$
 
-Report distributions across nodes, time, regimes, and seeds.
+Applicable to $M_F$ and $M_{FP}$.
+
+### Projection magnitude
+
+$$
+\chi_i^P(t)
+=
+\frac{\|F_{P,i}(t)\|}
+{\|F_{0,i}(t)+F_{F,i}(t)\|+\epsilon}.
+$$
+
+Applicable to $M_P$ and $M_{FP}$.
 
 ### Metric evolution
 
@@ -211,17 +316,15 @@ $$
 \|g(t+\Delta t)-g(t)\|.
 $$
 
-Report alongside state change so that geometric motion is not mistaken for state motion.
-
 ### Energy behavior
 
 $$
 \Delta E(t)=E(t)-E(0).
 $$
 
-Use only when the modeled system has a defined conserved or dissipative energy law.
+Use only when the modeled system has a declared conserved or dissipative law.
 
-### Predictive performance
+### Predictive and dynamical performance
 
 Use task-appropriate measures such as:
 
@@ -230,80 +333,74 @@ Use task-appropriate measures such as:
 - held-out likelihood;
 - perturbation-response error;
 - synchronization-time error;
-- structural-transition prediction.
+- structural-transition prediction;
+- attractor or fixed-point recovery.
 
 ### Complexity and cost
 
 Report:
 
-- trainable or fitted parameter count;
+- fitted parameter count;
+- state dimension;
 - solver evaluations;
 - wall-clock time;
 - memory usage;
-- projection-system condition number where applicable.
+- projection-system condition number;
+- failed and singular runs.
 
 ## Fairness requirements
 
-- Tune each baseline using the same validation budget.
-- Match observation access across models.
-- Do not give the full model privileged state information.
+- Tune each model using the same validation budget.
+- Match observation access.
+- Do not give projected or combined models privileged state information without an explicit control.
 - Report failed runs and singular cases.
-- Use the same train, validation, and test divisions.
+- Use the same data divisions and structural intervention families.
 - Freeze evaluation code before final test execution.
 - Distinguish exploratory from confirmatory runs.
+- Do not count nested seeds as independent structural evidence.
 
 ## Numerical protocol
 
 Each reported result must include:
 
 - exact source commit;
-- environment lockfile or dependency manifest;
-- solver name and version;
+- dependency manifest;
+- solver and version;
 - absolute and relative tolerances;
-- time step or adaptive-step controls;
+- step controls;
 - seed manifest;
 - initial-condition manifest;
-- complete parameter file;
-- raw output checksum.
+- parameter file;
+- raw output checksum;
+- model contract version.
 
-At least one independently written reference implementation must agree within declared tolerances on the minimal systems.
+At least one independent implementation must agree within declared tolerances on the minimal systems.
 
-## Statistical protocol
+## Acceptance criteria
 
-Structural interventions, not nested solver seeds or repeated probes, are the primary inferential units when the scientific question concerns structure.
+A mechanism earns further study only when it:
 
-Report:
-
-- effect sizes;
-- uncertainty intervals;
-- the number and type of independent structural units;
-- all exclusions;
-- multiplicity treatment where multiple hypotheses are tested.
-
-## Acceptance criteria for the full model
-
-The full model earns further study only when it satisfies all applicable conditions:
-
-1. passes numerical and invariance tripwires;
-2. preserves constraints at the declared tolerance;
+1. passes equation, numerical, and invariance tripwires;
+2. preserves applicable constraints;
 3. remains stable across reasonable solver changes;
-4. outperforms or explains behavior not captured by simpler models;
-5. retains the effect under matched parameter budgets;
-6. survives relevant structural controls;
-7. produces at least one preregistered discriminating signature.
+4. differs from or improves upon simpler alternatives under matched conditions;
+5. survives structural and exogenous controls;
+6. produces a preregistered discriminating signature;
+7. does not require post hoc changes to its defining contract.
 
 ## Reporting template
 
 Every benchmark report must contain:
 
 1. question;
-2. preregistered hypothesis;
-3. compared models;
-4. data or system definition;
-5. fixed metrics;
-6. numerical protocol;
-7. raw and summarized results;
-8. ablations;
-9. failure analysis;
-10. claim-ledger updates;
-11. explicit non-claims.
+2. authorized claim ceiling;
+3. preregistered hypothesis;
+4. compared models;
+5. system or data definition;
+6. fixed metrics;
+7. numerical protocol;
+8. raw and summarized results;
+9. interventions and ablations;
+10. failure analysis;
+11. claim-ledger updates;
+12. explicit non-claims.
