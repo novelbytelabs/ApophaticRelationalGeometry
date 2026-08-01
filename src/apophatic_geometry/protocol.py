@@ -1,7 +1,8 @@
 """Executable definitions for the frozen ARG Phase 5 comparison protocol.
 
 This module contains metrics, manifest validation, deterministic uncertainty
-summaries, and fail-closed decision logic. It does not execute trajectories.
+summaries, strict JSON loading, root-confined lock verification, and fail-closed
+decision logic. It does not execute trajectories.
 """
 
 from __future__ import annotations
@@ -65,7 +66,9 @@ def _as_trajectory(value: Sequence[Sequence[float]] | FloatArray) -> FloatArray:
     if array.ndim == 1:
         array = array[:, None]
     if array.ndim != 2:
-        raise ValueError(f"trajectory must be one- or two-dimensional, received {array.ndim}")
+        raise ValueError(
+            f"trajectory must be one- or two-dimensional, received {array.ndim}"
+        )
     if array.shape[0] < 1:
         raise ValueError("trajectory must contain at least one observation")
     if not np.all(np.isfinite(array)):
@@ -79,11 +82,7 @@ def symmetric_normalized_rms(
     *,
     epsilon: float = 1.0e-30,
 ) -> float:
-    """Return the frozen dimensionless trajectory distance.
-
-    The value is zero for identical arrays and lies in ``[0, 2]`` up to
-    floating-point roundoff.
-    """
+    """Return the frozen dimensionless symmetric trajectory distance."""
 
     a = _as_trajectory(left)
     b = _as_trajectory(right)
@@ -91,12 +90,17 @@ def symmetric_normalized_rms(
         raise ValueError(f"trajectory shapes differ: {a.shape} != {b.shape}")
     if not np.isfinite(epsilon) or epsilon <= 0.0:
         raise ValueError("epsilon must be finite and positive")
-
-    difference_energy = float(np.sum((a - b) ** 2, dtype=np.float64))
-    state_energy = float(
-        np.sum(a**2, dtype=np.float64) + np.sum(b**2, dtype=np.float64)
-    )
-    value = float(np.sqrt(2.0 * difference_energy / (state_energy + epsilon)))
+    try:
+        with np.errstate(over="raise", invalid="raise", divide="raise"):
+            difference_energy = float(np.sum((a - b) ** 2, dtype=np.float64))
+            state_energy = float(
+                np.sum(a**2, dtype=np.float64) + np.sum(b**2, dtype=np.float64)
+            )
+            value = float(
+                np.sqrt(2.0 * difference_energy / (state_energy + epsilon))
+            )
+    except FloatingPointError as exc:
+        raise FloatingPointError("trajectory distance left the finite FP64 domain") from exc
     if not np.isfinite(value):
         raise FloatingPointError("non-finite trajectory distance")
     return value
@@ -112,7 +116,10 @@ def max_abs_discrepancy(
     b = _as_trajectory(right)
     if a.shape != b.shape:
         raise ValueError(f"trajectory shapes differ: {a.shape} != {b.shape}")
-    return float(np.max(np.abs(a - b)))
+    value = float(np.max(np.abs(a - b)))
+    if not np.isfinite(value):
+        raise FloatingPointError("non-finite maximum discrepancy")
+    return value
 
 
 def root_energy_ratio(
@@ -129,9 +136,13 @@ def root_energy_ratio(
         raise ValueError("numerator and denominator must share observation count")
     if not np.isfinite(epsilon) or epsilon <= 0.0:
         raise ValueError("epsilon must be finite and positive")
-    numerator_energy = float(np.sqrt(np.sum(n**2, dtype=np.float64)))
-    denominator_energy = float(np.sqrt(np.sum(d**2, dtype=np.float64)))
-    ratio = numerator_energy / (denominator_energy + epsilon)
+    try:
+        with np.errstate(over="raise", invalid="raise", divide="raise"):
+            numerator_energy = float(np.sqrt(np.sum(n**2, dtype=np.float64)))
+            denominator_energy = float(np.sqrt(np.sum(d**2, dtype=np.float64)))
+            ratio = numerator_energy / (denominator_energy + epsilon)
+    except FloatingPointError as exc:
+        raise FloatingPointError("energy ratio left the finite FP64 domain") from exc
     if not np.isfinite(ratio):
         raise FloatingPointError("non-finite energy ratio")
     return float(ratio)
@@ -148,7 +159,9 @@ def percentile_bootstrap_median(
 
     array = np.asarray(values, dtype=np.float64)
     if array.ndim != 1 or array.size < 2:
-        raise ValueError("bootstrap input must be a one-dimensional array of length >= 2")
+        raise ValueError(
+            "bootstrap input must be a one-dimensional array of length >= 2"
+        )
     if not np.all(np.isfinite(array)):
         raise ValueError("bootstrap input contains non-finite values")
     if not 0.0 < confidence_level < 1.0:
@@ -199,8 +212,8 @@ def evaluate_primary(
         raise ValueError("effects and numerical floors must be nonnegative")
     if not 0.0 < equivalence_margin < detect_threshold:
         raise ValueError("require 0 < equivalence_margin < detect_threshold")
-    if numerical_ratio <= 1.0:
-        raise ValueError("numerical_ratio must exceed one")
+    if not np.isfinite(numerical_ratio) or numerical_ratio <= 1.0:
+        raise ValueError("numerical_ratio must be finite and exceed one")
     if not 0.0 < required_fraction <= 1.0:
         raise ValueError("required_fraction must lie in (0, 1]")
 
@@ -249,9 +262,11 @@ def canonical_json_sha256(value: Any) -> str:
 
 
 def file_sha256(path: str | Path) -> str:
-    """Return the SHA-256 of an existing file."""
+    """Return the SHA-256 of an existing regular file."""
 
     file_path = Path(path)
+    if not file_path.is_file():
+        raise ValueError(f"not a regular file: {file_path}")
     digest = hashlib.sha256()
     with file_path.open("rb") as handle:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
@@ -259,11 +274,15 @@ def file_sha256(path: str | Path) -> str:
     return digest.hexdigest()
 
 
+def _reject_json_constant(token: str) -> None:
+    raise ValueError(f"non-standard JSON constant: {token}")
+
+
 def load_json(path: str | Path) -> Any:
-    """Load strict UTF-8 JSON."""
+    """Load RFC-compliant UTF-8 JSON and reject NaN/Infinity constants."""
 
     with Path(path).open("r", encoding="utf-8") as handle:
-        return json.load(handle)
+        return json.load(handle, parse_constant=_reject_json_constant)
 
 
 def validate_protocol_manifest(manifest: Mapping[str, Any]) -> None:
@@ -345,7 +364,9 @@ def validate_initial_condition_manifest(manifest: Mapping[str, Any]) -> None:
         if not np.isclose(np.linalg.norm(vector), 1.0, rtol=0.0, atol=1.0e-14):
             raise ValueError(f"direction {direction_id} is not normalized")
         if vector[2] <= 0.0:
-            raise ValueError(f"direction {direction_id} is not on the declared hemisphere")
+            raise ValueError(
+                f"direction {direction_id} is not on the declared hemisphere"
+            )
         expected_hash = hashlib.sha256(
             f"{direction_id}|{PROTOCOL_ID}".encode("utf-8")
         ).hexdigest()
@@ -380,8 +401,26 @@ def validate_initial_condition_manifest(manifest: Mapping[str, Any]) -> None:
         raise ValueError("confirmatory configuration count mismatch")
 
 
+def _locked_path(root: Path, relative_path: str) -> Path:
+    """Resolve one lock target and require containment within ``root``."""
+
+    if not relative_path or Path(relative_path).is_absolute():
+        raise ValueError(f"lock path must be non-empty and relative: {relative_path!r}")
+    resolved_root = root.resolve(strict=True)
+    candidate = (resolved_root / relative_path).resolve(strict=True)
+    try:
+        candidate.relative_to(resolved_root)
+    except ValueError as exc:
+        raise ValueError(
+            f"lock path escapes repository root: {relative_path}"
+        ) from exc
+    if not candidate.is_file():
+        raise ValueError(f"lock target is not a regular file: {relative_path}")
+    return candidate
+
+
 def verify_lock(repo_root: str | Path, lock_manifest: Mapping[str, Any]) -> None:
-    """Verify every critical file named by the Phase 5 lock manifest."""
+    """Verify every root-confined critical file named by the lock manifest."""
 
     if lock_manifest.get("protocol_id") != PROTOCOL_ID:
         raise ValueError("lock manifest has wrong protocol_id")
@@ -390,8 +429,11 @@ def verify_lock(repo_root: str | Path, lock_manifest: Mapping[str, Any]) -> None
         raise ValueError("lock manifest has no files")
 
     root = Path(repo_root)
-    for relative_path, expected_digest in files.items():
-        path = root / str(relative_path)
+    for raw_relative_path, expected_digest in files.items():
+        relative_path = str(raw_relative_path)
+        if not isinstance(expected_digest, str) or len(expected_digest) != 64:
+            raise ValueError(f"invalid SHA-256 for lock target: {relative_path}")
+        path = _locked_path(root, relative_path)
         if path.suffix.lower() == ".json":
             actual = canonical_json_sha256(load_json(path))
         else:
