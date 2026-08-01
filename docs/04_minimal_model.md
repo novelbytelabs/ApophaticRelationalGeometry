@@ -12,7 +12,7 @@ $$
 Z_F=(x,s,q).
 $$
 
-The collective statistic is algebraically derived from $x.
+The collective statistic is algebraically derived from $x$.
 
 ## Collective mode
 
