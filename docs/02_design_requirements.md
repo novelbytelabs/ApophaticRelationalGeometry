@@ -2,17 +2,19 @@
 
 ## Status
 
-These are requirements for the **target ARG model family**, not a claim that every requirement is already implemented by the current three-node executable.
+These requirements govern both the implemented contract-v1.0 prototypes and broader ARG variants.
 
 Current status:
 
 $$
-M_F\ \text{implemented and unit-tested};
-\qquad
-M_P,\ M_{FP},\ M_F\equiv M_P\ \text{unverified}.
+\boxed{
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
+\quad
+M_F\equiv M_P\ \text{unverified}.
+}
 $$
 
-The current $M_F$ prototype satisfies only the requirements applicable to collective feedback and adaptive relational geometry. Projection-specific requirements remain target obligations.
+Implementation of the four prototypes does not establish that every broader relational, invariance, physical, or scientific requirement has been satisfied.
 
 ## R1. Relationality
 
@@ -38,6 +40,8 @@ is assumed.
 
 For feedback variants, every collective statistic must be computed from declared substrate variables and every path back into constituent transitions must be explicit.
 
+This is implemented for $M_F$ and the feedback component of $M_{FP}$.
+
 ## R5. Global admissibility
 
 For projected variants, the complete configuration restricts proposed velocity through an explicitly defined admissible set
@@ -48,7 +52,14 @@ $$
 
 and an implemented projection or mathematically equivalent constrained solve.
 
-This requirement is not yet implemented in the current executable.
+Contract v1.0 implements the equality-only constant-amplitude case
+
+$$
+\Gamma(Z)=\frac13x^Tx-c_0=0,
+\qquad H=\varnothing,
+$$
+
+for $M_P$ and $M_{FP}$. Broader relational and inequality-constrained admissibility remains a target obligation.
 
 ## R6. One-many inseparability
 
@@ -74,23 +85,29 @@ For barrier-enabled variants, finite-energy trajectories should not attain zero 
 
 Observable predictions must be invariant or appropriately equivariant under declared relabelings and coordinate transformations.
 
+Permutation equivariance is unit-tested for all four prototypes. General presentation invariance remains open.
+
 ## R12. Exact reductions
 
-The canonical models must satisfy declared reductions:
+The canonical implementation must satisfy declared reductions:
 
-- removing feedback from $M_{FP}$ recovers $M_P$;
-- removing projection from $M_{FP}$ recovers $M_F$;
-- removing both recovers $M_0$;
+- the unprojected $M_{FP}$ proposal agrees with $M_F$;
+- setting $\chi=\eta_2=\rho=0$ in $M_{FP}$ recovers $M_P$;
+- removing feedback and projection recovers $M_0$;
 - removing all feedback paths from $M_F$ recovers $M_0$.
+
+These reductions are unit-tested at the software level.
 
 ## R13. Fail-closed projection
 
-A projected-geometry claim requires explicit constraints, projection implementation, preservation tests, code-equation parity, and substrate-path identification.
+A projected-implementation claim requires explicit constraints, projection implementation, preservation tests, code-equation parity, and substrate-path identification.
 
-Missing evidence yields
+The contract-v1.0 implementation gate passes for $M_P$ and $M_{FP}$. The broader scientific claim remains
 
 $$
-\operatorname{PROJECTED\_CLAIM}=\text{UNVERIFIED}.
+\operatorname{ARG\_COMPARATIVE\_SCIENTIFIC\_CLAIM}
+=
+\text{UNVERIFIED}.
 $$
 
 ## R14. Falsifiability
@@ -105,4 +122,4 @@ and against established alternatives with matched information and parameter acce
 
 ## R15. Claim discipline
 
-Software implementation and unit tests may establish code-level properties. They do not by themselves establish scientific validity, causal autonomy, strong emergence, novelty, or physical fundamentality.
+Software implementation and unit tests may establish code-level properties. They do not by themselves establish scientific validity, causal autonomy, strong emergence, novelty, equivalence, or physical fundamentality.
