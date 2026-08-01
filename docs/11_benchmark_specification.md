@@ -2,154 +2,122 @@
 
 ## Purpose
 
-This document freezes the comparison structure before ARG generates confirmatory results.
+This document fixes the comparison structure before ARG generates scientific results.
 
-The goal is to determine whether collective feedback, admissibility projection, and their combination are necessary, identifiable, numerically stable, and scientifically useful.
+The goal is to determine whether collective feedback, admissibility projection, and their combination are identifiable, numerically stable, scientifically useful, and distinguishable from simpler alternatives.
 
 ## Current authorization
 
 $$
 \boxed{
-M_F\ \text{implemented and unit-tested};
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
 \quad
-M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
+M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-Current software work may verify $M_F$, design and implement $M_0$, and mathematically specify $M_P$. Comparative projected-geometry claims remain blocked.
+Equation and software verification is complete for the four contract-v1.0 prototypes. Comparative execution remains blocked until the Phase 5 protocol freezes hypotheses, manifests, metrics, inferential units, numerical policies, stop rules, and provenance.
 
 ## Canonical model family
 
 All comparisons must use matched state dimensions where possible, comparable parameter budgets, identical initial-condition families, equal observation access, and the same numerical-accuracy targets.
 
-### $M_0$: Local/adaptive substrate baseline
+### $M_0$: local/adaptive substrate baseline
 
 - local nonlinear node dynamics;
 - neighborhood coupling;
-- adaptive topology and metric variables where declared;
+- adaptive edge and metric variables;
 - no collective statistic in constituent transition equations;
-- no tangent-space or normal-space projection.
+- no tangent-space projection.
 
-This is the mechanism-free baseline for the two global mechanisms under study.
-
-### $M_F$: Collective-feedback prototype
+### $M_F$: collective-feedback prototype
 
 - $M_0$ substrate;
 - endogenous statistic $c(x)$;
-- declared feedback paths into $\dot x$, $\dot s$, or $\dot q$;
+- declared feedback paths into $\dot x$, $\dot s$, and $\dot q$;
 - no admissibility projection.
 
-The current executable three-node model is $M_F$.
+### $M_P$: projected-admissibility prototype
 
-### $M_P$: Projected-admissibility prototype
+- $M_0$ proposal;
+- explicit equality constraint
 
-- explicit state and proposal field;
-- explicit admissible set $\mathcal M=\{Z:\Gamma(Z)=0,H(Z)\geq0\}$;
-- implemented tangent-space or normal-space projection;
-- tested constraint preservation;
-- no collective feedback unless separately declared.
+  $$
+  \Gamma(Z)=\frac13x^Tx-c_0=0;
+  $$
 
-$M_P$ is currently unimplemented.
+- node tangent projection;
+- projected RK4 stages;
+- mandatory radial retraction;
+- no collective feedback in proposal equations.
 
-### $M_{FP}$: Feedback plus projection
+### $M_{FP}$: feedback plus projection
 
-- collective feedback as in $M_F$;
-- projection as in $M_P$;
-- separately measurable feedback and projection vectors;
-- exact reductions to $M_0$, $M_F$, and $M_P$.
+- explicit proposal $F_0+F_F$;
+- node tangent projection after feedback;
+- retained feedback in $s$ and $q$;
+- separately measurable local, feedback, combined-proposal, projection, and retraction terms.
 
-$M_{FP}$ is currently unimplemented.
-
-### Secondary control: $M_{\lambda}$
-
-A matched soft-penalty model may be included to test whether exact projection adds value beyond penalty enforcement. It is a secondary control and does not replace the canonical four-model comparison.
-
-## Stage A: Equation and software verification
-
-### A1. Current $M_F$ prototype
-
-Purpose:
-
-- verify code-equation parity;
-- map all collective substrate paths;
-- test permutation equivariance;
-- exercise adaptive edge and metric variables.
-
-Required checks:
-
-- independent right-hand-side agreement;
-- convergence under decreasing time step;
-- inverse-permutation trajectory agreement;
-- deterministic replay;
-- finite-value tripwire;
-- exact parameter manifest;
-- intentional mutation test proving feedback tests fail when a path is broken.
-
-### A2. $M_0$ reduction
-
-Purpose:
-
-- create a true no-collective baseline;
-- prove that every $c(x)$ transition path is absent;
-- verify exact reduction from $M_F$ when feedback coefficients are removed.
-
-Required checks:
-
-- dependency audit;
-- exact equation comparison;
-- matched initial conditions;
-- identical local and adaptive parameters;
-- no diagnostic statistic entering transitions.
-
-## Stage B: Projection verification
-
-This stage is blocked until the $M_P$ design contract is frozen.
-
-### B1. Constraint definition
-
-Record:
-
-- complete state vector;
-- $\Gamma$ and $H$;
-- domains;
-- rank conditions;
-- active-set rules;
-- state-space metric;
-- singularity policy.
-
-### B2. Projection implementation
-
-Required outputs:
-
-- local proposal;
-- tangent component;
-- normal correction;
-- constraint Jacobian;
-- projection-system condition number;
-- retraction or constraint-integrator correction;
-- failure state for rank deficiency.
-
-### B3. Preservation tests
-
-Report:
+At the same regular full state,
 
 $$
-\epsilon_\Gamma(t)=\|\Gamma(Z(t))\|,
+\boxed{f_{FP}=f_P},
 $$
 
-including maximum, mean, final, and integrated error under solver refinement.
+but trajectory identity is not implied because the adaptive-substrate derivatives differ.
 
-For inequalities, report active-set transitions and violation margins.
+### Secondary control: $M_\lambda$
 
-### B4. Reference comparisons
+A matched soft-penalty model may be introduced to test whether exact projection adds value beyond penalty enforcement. It is not part of the frozen four-model family and requires a separate preregistered amendment.
 
-Compare projection against:
+---
 
-- an independently written projector;
-- a differential-algebraic or multiplier formulation where applicable;
-- the matched soft-penalty control $M_{\lambda}$.
+# Stage A: equation and software verification
 
-## Stage C: Four-model mechanism comparison
+## Status
+
+**Complete for contract v1.0.**
+
+Verified elements include:
+
+- independent $M_0/M_F$ derivative and RK4 parity;
+- no-$c(x)$ dependency in $M_0$;
+- exact $M_F(\chi=\eta_2=\rho=0)=M_0$ reduction;
+- $M_P$ projector identities, tangency, retraction, singular handling, and independent parity;
+- explicit $M_{FP}$ decomposition into $F_0$, $F_F$, $F_0+F_F$, correction, and projected derivative;
+- same-state identity $f_{FP}=f_P$;
+- retained $s/q$ feedback;
+- zero-feedback $M_{FP}=M_P$ reduction;
+- permutation-equivariance tripwires for all four models;
+- labeled outputs and configuration hashes.
+
+These are software results only.
+
+---
+
+# Stage B: Phase 5 protocol freeze
+
+## Status
+
+**In progress. No pilot is authorized.**
+
+The protocol must freeze:
+
+- primary and secondary hypotheses;
+- parameter and initial-condition manifests;
+- development and confirmatory partitions;
+- observation maps and tolerances;
+- structural inferential units;
+- intervention and ablation schedule;
+- metrics and uncertainty treatment;
+- refinement and alternate-integrator policy;
+- exclusions, failures, and stop rules;
+- raw-output schema and checksum policy;
+- claim-promotion and falsification rules.
+
+---
+
+# Stage C: four-model mechanism comparison
 
 Run
 
@@ -159,7 +127,11 @@ $$
 
 under matched conditions.
 
-### C1. Feedback contribution
+## C1. $M_0$ versus $M_F$
+
+Question: does endogenous collective feedback produce behavior not reproduced by the no-feedback adaptive substrate?
+
+Feedback contribution:
 
 $$
 \chi_i^F(t)
@@ -168,34 +140,40 @@ $$
 {\|F_{0,i}(t)\|+\epsilon}.
 $$
 
-### C2. Projection contribution
+## C2. $M_0$ versus $M_P$
+
+Question: what behavior is attributable to constant-amplitude projection rather than the unprojected substrate?
+
+Projection contribution:
 
 $$
 \chi_i^P(t)
 =
 \frac{\|F_{P,i}(t)\|}
-{\|F_{0,i}(t)+F_{F,i}(t)\|+\epsilon}.
+{\|F_{0,i}(t)\|+\epsilon}.
 $$
 
-For $M_P$, set $F_F=0$.
+## C3. $M_P$ versus $M_{FP}$
 
-### C3. Combined interaction
+Question: when does retained feedback in $s$ and $q$ make $M_{FP}$ distinguishable from $M_P$ despite the same-state node identity?
 
-Use a preregistered trajectory or observable distance $\Delta$ and define
+Required distinction:
 
 $$
-R_{FP}
-=
-\Delta(M_{FP},M_0)
--
-\Delta(M_F,M_0)
--
-\Delta(M_P,M_0).
+f_{FP}(Z)=f_P(Z)
 $$
 
-Interpretation requires care because nonlinear model effects need not add linearly.
+at the same regular state does not imply
 
-### C4. Equivalence analysis
+$$
+\Phi_t^{FP}(Z_0)=\Phi_t^P(Z_0).
+$$
+
+The protocol must measure when adaptive-substrate divergence propagates back into node dynamics and intrinsic geometry.
+
+## C4. $M_F$ versus $M_P$
+
+Question: are collective feedback and tangent projection dynamically distinct under the declared domain and observation maps?
 
 Do not infer
 
@@ -216,9 +194,27 @@ Test:
 - partial-observation identifiability;
 - domain and parameter dependence.
 
-An equivalence claim requires exact mathematics, a bounded approximation, or a declared observational equivalence.
+An equivalence claim requires exact mathematics, a bounded approximation, or declared observational equivalence.
 
-## Stage D: Dynamic-geometry ablation
+## C5. Combined interaction
+
+Using a preregistered trajectory or observable distance $\Delta$, define
+
+$$
+R_{FP}
+=
+\Delta(M_{FP},M_0)
+-
+\Delta(M_F,M_0)
+-
+\Delta(M_P,M_0).
+$$
+
+Interpretation requires care because nonlinear effects need not add linearly.
+
+---
+
+# Stage D: dynamic-geometry ablation
 
 Within each applicable model compare:
 
@@ -228,40 +224,38 @@ Within each applicable model compare:
 4. frozen $q$ and $s$;
 5. static graph with parameter-matched node dynamics.
 
-This tests whether geometry contributes beyond extra adaptive state variables.
+This tests whether intrinsic geometry contributes beyond extra adaptive state variables or ordinary weighted-network dynamics.
 
-## Stage E: Exact or established systems
+---
 
-### E1. Constrained pendulum or linkage
+# Stage E: established-system anchors
 
-Purpose:
+## E1. Constrained pendulum or linkage
 
 - verify exact constraint behavior;
 - compare projection, multiplier, and penalty methods;
 - measure energy drift.
 
-### E2. Divergence-free lattice flow
-
-Purpose:
+## E2. Divergence-free lattice flow
 
 - reproduce a known local-proposal/global-correction structure;
-- evaluate whether any ARG extension adds value without violating incompressibility.
+- evaluate whether an ARG extension adds value without violating incompressibility.
 
-### E3. Adaptive synchronization network
-
-Purpose:
+## E3. Adaptive synchronization network
 
 - compare local, feedback, projection, and combined variants;
 - test whether intrinsic metric dynamics add information beyond adaptive weights.
 
-### E4. Compatibility or consensus network
+## E4. Compatibility or consensus network
 
-Purpose:
-
-- compare ordinary graph-Laplacian dynamics with compatibility-aware variants;
+- compare graph-Laplacian dynamics with compatibility-aware variants;
 - test local mismatch and global consistency measures.
 
-## Required interventions
+No physical-anchor claim is authorized until the synthetic four-model protocol is stable.
+
+---
+
+# Required interventions
 
 1. alter graph structure while state is fixed;
 2. alter state while graph structure is fixed;
@@ -270,23 +264,61 @@ Purpose:
 5. remove feedback only;
 6. remove projection only;
 7. remove both;
-8. replace projection with a matched penalty;
+8. replace projection with a matched penalty under a separate amendment;
 9. freeze geometry variables;
 10. test singular and near-singular projection cases.
 
 An intervention is informative only if the affected mechanism had an opportunity to act.
 
-## Primary metrics
+---
 
-### Constraint error
+# Observation maps
+
+Every conclusion must name its observation map.
+
+## Full state
 
 $$
-\epsilon_\Gamma(t)=\|\Gamma(Z(t))\|.
+O_{\mathrm{full}}(Z)=(x,s,q).
 $$
 
-Applicable only to $M_P$, $M_{FP}$, and constraint controls.
+## Node state
 
-### Feedback magnitude
+$$
+O_x(Z)=x.
+$$
+
+## Adaptive substrate
+
+$$
+O_{sq}(Z)=(s,q).
+$$
+
+## Intrinsic geometry
+
+$$
+O_d(Z)=(d_{01},d_{02},d_{12}).
+$$
+
+## Mechanism map
+
+Include local proposal, feedback, combined proposal, projection correction, constraint residual, tangency residual, denominator, and retraction magnitude.
+
+A model may be equivalent under one observation map and distinguishable under another. Unqualified equivalence language is prohibited.
+
+---
+
+# Primary metrics
+
+## Constraint error
+
+$$
+\epsilon_\Gamma(t)=|\Gamma(Z(t))|.
+$$
+
+Applicable to $M_P$, $M_{FP}$, and constraint controls.
+
+## Feedback magnitude
 
 $$
 \chi_i^F(t)
@@ -297,34 +329,39 @@ $$
 
 Applicable to $M_F$ and $M_{FP}$.
 
-### Projection magnitude
+## Projection magnitude
 
 $$
 \chi_i^P(t)
 =
 \frac{\|F_{P,i}(t)\|}
-{\|F_{0,i}(t)+F_{F,i}(t)\|+\epsilon}.
+{\|F_{\mathrm{proposal},i}(t)\|+\epsilon}.
 $$
 
 Applicable to $M_P$ and $M_{FP}$.
 
-### Metric evolution
+## Trajectory discrepancy
+
+For declared observation map $O$,
+
+$$
+D_O(A,B)
+=
+\sup_{t\in[0,T]}
+\|O(Z_A(t))-O(Z_B(t))\|.
+$$
+
+The protocol must specify normalization, aggregation, and tolerance.
+
+## Metric evolution
 
 $$
 \Delta_{\mathrm{metric}}(t)
 =
-\|g(t+\Delta t)-g(t)\|.
+\|d(t+\Delta t)-d(t)\|.
 $$
 
-### Energy behavior
-
-$$
-\Delta E(t)=E(t)-E(0).
-$$
-
-Use only when the modeled system has a declared conserved or dissipative law.
-
-### Predictive and dynamical performance
+## Predictive and dynamical performance
 
 Use task-appropriate measures such as:
 
@@ -336,7 +373,7 @@ Use task-appropriate measures such as:
 - structural-transition prediction;
 - attractor or fixed-point recovery.
 
-### Complexity and cost
+## Complexity and cost
 
 Report:
 
@@ -345,10 +382,11 @@ Report:
 - solver evaluations;
 - wall-clock time;
 - memory usage;
-- projection-system condition number;
 - failed and singular runs.
 
-## Fairness requirements
+---
+
+# Fairness requirements
 
 - Tune each model using the same validation budget.
 - Match observation access.
@@ -357,9 +395,12 @@ Report:
 - Use the same data divisions and structural intervention families.
 - Freeze evaluation code before final test execution.
 - Distinguish exploratory from confirmatory runs.
-- Do not count nested seeds as independent structural evidence.
+- Do not count nested seeds or solver steps as independent structural evidence.
+- Report parameter-count and mechanism-access differences.
 
-## Numerical protocol
+---
+
+# Numerical protocol
 
 Each reported result must include:
 
@@ -371,12 +412,22 @@ Each reported result must include:
 - seed manifest;
 - initial-condition manifest;
 - parameter file;
-- raw output checksum;
+- raw-output checksum;
 - model contract version.
+
+Require runs at
+
+$$
+\Delta t,\quad \Delta t/2,\quad \Delta t/4,
+$$
+
+and a second appropriate integration method before strong scientific conclusions.
 
 At least one independent implementation must agree within declared tolerances on the minimal systems.
 
-## Acceptance criteria
+---
+
+# Acceptance criteria
 
 A mechanism earns further study only when it:
 
@@ -388,7 +439,11 @@ A mechanism earns further study only when it:
 6. produces a preregistered discriminating signature;
 7. does not require post hoc changes to its defining contract.
 
-## Reporting template
+Failure is an admissible outcome and must narrow or stop the affected claim.
+
+---
+
+# Reporting template
 
 Every benchmark report must contain:
 
@@ -397,7 +452,7 @@ Every benchmark report must contain:
 3. preregistered hypothesis;
 4. compared models;
 5. system or data definition;
-6. fixed metrics;
+6. fixed observation maps and metrics;
 7. numerical protocol;
 8. raw and summarized results;
 9. interventions and ablations;
