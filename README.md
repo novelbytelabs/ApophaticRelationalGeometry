@@ -36,7 +36,7 @@ $$
 
 ### $M_0$ — local/adaptive baseline
 
-No collective feedback and no admissibility projection.
+No collective feedback and no admissibility projection. This is the next implementation gate.
 
 ### $M_F$ — collective feedback
 
@@ -44,14 +44,12 @@ A substrate-computed statistic enters constituent transition equations. This is 
 
 ### $M_P$ — projected admissibility
 
-A proposed vector field is projected onto an explicitly defined admissible set:
+Version 1.0 freezes a minimal constant-amplitude projection sandbox:
 
 $$
-\mathcal M=\{Z:\Gamma(Z)=0,\ H(Z)\geq0\},
-$$
-
-$$
-\dot Z=\Pi_{T_Z\mathcal M}F_{\mathrm{local}}(Z).
+\Gamma(Z)=c(x)-c_0=0,
+\qquad
+c_0=c(x(0))>0.
 $$
 
 This remains unimplemented and unverified.
@@ -118,7 +116,7 @@ This project is not presently:
 - `docs/12_falsification_criteria.md` — conditions that narrow or reject claims.
 - `docs/13_alignment_and_claim_ceiling.md` — canonical feedback/projection split.
 - `docs/14_roadmap.md` — phase-gated execution roadmap.
-- `docs/15_four_model_design_contract.md` — active Phase 1 model contract draft.
+- `docs/15_four_model_design_contract.md` — frozen version 1.0 model contract.
 
 ### Decisions, implementation, and tests
 
@@ -139,30 +137,28 @@ python -m apophatic_geometry.simulate --steps 2000 --dt 0.005 --output run.csv
 
 ## Roadmap position
 
-**Phase 0 is complete. Phase 1 is in progress.**
+**Phase 0 and Phase 1 are complete. Phase 2 is in progress.**
 
-The five existing software tests passed in a clean local verification run. This validates the current software checks, not the scientific hypothesis.
+The four-model contract is frozen as version 1.0 with:
 
-The active task is review and freeze of `docs/15_four_model_design_contract.md`. Its v0.1 candidate uses the constant-amplitude manifold
+- exact $M_0,M_F,M_P,M_{FP}$ definitions;
+- shared fixed-step RK4 integration;
+- mandatory retraction for projected models;
+- fail-closed singular handling;
+- fixed observation maps and independent-reference requirements;
+- the exact version 1.0 prediction $f_{FP}=f_P$ for node derivatives.
 
-$$
-\Gamma(Z)=c(x)-c_0=0,
-\qquad
-c_0=c(x(0))>0,
-$$
-
-to create a minimal, explicit, state-dimension-matched $M_P$ mechanism test.
+The active task is implementation and verification of the true $M_0$ baseline while preserving current $M_F$ behavior.
 
 Immediate sequence:
 
-1. review the v0.1 design contract;
-2. resolve its open numerical and experimental decisions;
-3. freeze or reject the sphere-constraint prototype;
-4. implement the true $M_0$ baseline;
-5. prove $M_P$ before production implementation;
-6. implement $M_{FP}$;
-7. run the preregistered comparative mechanism experiment;
-8. proceed to physical anchors only after the gates pass.
+1. implement and independently verify $M_0$;
+2. update the claim ledger only after its gate passes;
+3. implement and verify $M_P$;
+4. implement and verify $M_{FP}$;
+5. freeze the comparative experiment protocol;
+6. run a development pilot;
+7. authorize a confirmatory run only after all tripwires pass.
 
 ## Research maxim
 
