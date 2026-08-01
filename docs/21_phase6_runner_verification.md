@@ -53,15 +53,7 @@ Raw trajectory records include full state, node state, adaptive substrate, intri
 
 ## Independent verification boundary
 
-The test-only reference path independently reconstructs:
-
-- pilot membership and expected count;
-- configuration hashes;
-- smoke-only trajectories for all four models;
-- archive file hashes;
-- the no-confirmatory invariant.
-
-It does not call the production planner, archive writer, checksum writer, or summary function it checks.
+The test-only reference path independently reconstructs pilot membership, configuration hashes, smoke-only trajectories for all four models, archive file hashes, and the no-confirmatory invariant. It does not call the production planner, archive writer, checksum writer, or summary function it checks.
 
 ## Hosted verification
 
@@ -71,10 +63,10 @@ Pull request:
 #11
 ```
 
-Final GitHub Actions run:
+Final merge-preview GitHub Actions run:
 
 ```text
-30723005085
+30723065931
 ```
 
 Environments:
@@ -86,14 +78,7 @@ These are 100 unique software tests executed in two Python environments, not 200
 
 ## No-pilot-data verification
 
-The final pull-request file list contains source code, tests, protocol documentation, and package/workflow configuration only. It contains no:
-
-- `EXECUTION_AUTHORIZATION.json`;
-- pilot trajectory;
-- pilot raw archive;
-- pilot effect summary;
-- pilot failure archive;
-- confirmatory trajectory or artifact.
+The final pull-request file list contains source code, tests, protocol documentation, and package/workflow configuration only. It contains no `EXECUTION_AUTHORIZATION.json`, pilot trajectory, pilot raw archive, pilot effect summary, pilot failure archive, or confirmatory artifact.
 
 Therefore:
 
@@ -121,14 +106,7 @@ $$
 
 ## Non-claims
 
-This verification does not establish:
-
-- that $M_F$ and $M_P$ differ or agree;
-- any numerical effect size;
-- that $M_P$ and $M_{FP}$ trajectories diverge;
-- that feedback or projection improves prediction;
-- physical adequacy, macro-level causal autonomy, or strong emergence;
-- mathematical novelty or a fundamental geometry.
+This verification does not establish that $M_F$ and $M_P$ differ or agree, any numerical effect size, trajectory divergence, predictive improvement, physical adequacy, causal autonomy, strong emergence, mathematical novelty, or a fundamental geometry.
 
 ## Next gate
 
