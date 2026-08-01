@@ -75,7 +75,7 @@ def test_smoke_projected_validity_gates(bundle, params, model: ModelId) -> None:
     assert np.max(trajectory.tangency_residual) <= 1.0e-12
 
 
-@pytest.mark.parametrize("model", [ModelId.MF, ModelId.MP])
+@pytest.mark.parametrize("model", list(ModelId))
 def test_smoke_dop853_policy_is_finite(bundle, params, model: ModelId) -> None:
     config = smoke_configuration(bundle)
     trajectory = integrate_dop853(
@@ -88,7 +88,7 @@ def test_smoke_dop853_policy_is_finite(bundle, params, model: ModelId) -> None:
     )
     assert trajectory.states.shape == (3, 9)
     assert np.all(np.isfinite(trajectory.states))
-    if model is ModelId.MP:
+    if model in {ModelId.MP, ModelId.MFP}:
         require_constraint_gate(trajectory, config.c0)
         require_same_state_identity_gate(trajectory, params, config.c0)
 
@@ -202,7 +202,7 @@ def test_configuration_summary_contains_frozen_primary_floor(bundle, params) -> 
             source_commit="smoke",
             max_step=0.001,
         )
-        for model in (ModelId.MF, ModelId.MP)
+        for model in ModelId
     }
     summary = summarize_configuration(trajectories, alternates, dts)
     primary = summary["primary"]
@@ -300,6 +300,7 @@ def test_archive_is_deterministic_and_independently_hashed(tmp_path, bundle, par
         "execution_id": "test-execution",
         "execution_utc": "2026-08-01T00:00:00Z",
         "split": "pilot",
+        "confirmatory_execution": "BLOCKED",
     }
     checksum_bytes = []
     try:
@@ -336,7 +337,14 @@ def test_archive_rejects_confirmatory_trajectory(tmp_path, bundle, params) -> No
         direction_id="d01",
         split="confirmatory",
     )
-    writer = PilotArchiveWriter(tmp_path / "archive", {"split": "pilot"})
+    writer = PilotArchiveWriter(
+        tmp_path / "archive",
+        {
+            "runner_id": "ARG-P6-PILOT-RUNNER-v1",
+            "split": "pilot",
+            "confirmatory_execution": "BLOCKED",
+        },
+    )
     with pytest.raises(ConfirmatoryAccessError):
         writer.write_trajectory(confirmatory)
 
