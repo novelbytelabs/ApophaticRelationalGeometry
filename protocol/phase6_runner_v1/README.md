@@ -2,18 +2,24 @@
 
 ## Status
 
-**Runner implementation and verification only. No pilot has been executed.**
+**Runner implementation and software verification passed. No pilot has been executed.**
 
-The runner implements protocol `ARG-P5-COMP-v1` for the 50 frozen pilot configurations. Confirmatory trajectory generation is blocked in the planner, batch authorizer, RK4 path, DOP853 path, archive writer, and archive contamination scan.
+The runner implements protocol `ARG-P5-COMP-v1` for the 50 frozen pilot configurations. Confirmatory trajectory generation is blocked in the planner, batch authorizer, RK4 path, DOP853 path, archive writer, execution authorization, and archive contamination scan.
 
-## Commands
+Hosted verification:
+
+- GitHub Actions run `30722763003`;
+- Python 3.10: 100 passed;
+- Python 3.12: 100 passed.
+
+## Data-free commands
 
 ```bash
 arg-pilot validate --repo-root .
 arg-pilot plan --repo-root .
 ```
 
-Both commands are data-free. They verify the Phase 5 lock, reconstruct only the pilot plan, and check that the Phase 4 model files are unchanged.
+Both commands verify the Phase 5 lock, reconstruct only the pilot plan, and check that the Phase 4 model files are unchanged. They generate no trajectory.
 
 The command
 
@@ -21,13 +27,13 @@ The command
 arg-pilot execute --repo-root . --archive artifacts/phase6_pilot
 ```
 
-fails closed unless the later execution slice commits the fixed file:
+fails closed unless a later execution slice commits the fixed file:
 
 ```text
 protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
 ```
 
-There is no command-line flag, environment variable, alternate path, or fallback that can bypass this gate.
+There is no command-line flag, environment variable, alternate path, or fallback that bypasses this gate.
 
 ## Future authorization record
 
@@ -39,7 +45,7 @@ The authorization file must name:
 - split `pilot`;
 - `confirmatory_execution: BLOCKED`.
 
-The execution commit may add the authorization file, but protected model, protocol, runner, and analysis files must remain byte-equivalent to the authorized runner commit.
+The execution commit may add the authorization file, but protected model, protocol, runner, analysis, and split-control files must remain equivalent to the authorized runner commit.
 
 ## Archive layout
 
