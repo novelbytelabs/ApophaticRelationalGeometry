@@ -1,10 +1,14 @@
 # Apophatic Relational Geometry
 
-A research program for a nonlinear, dynamic geometry in which local states and local rules generate proposed motion, while global coherence removes inadmissible motion.
+> **Status: Candidate synthesis — not a claim of a new fundamental geometry.**
+>
+> This repository investigates whether established ideas from constrained dynamics, adaptive networks, state-dependent geometry, local-to-global compatibility, and relational modeling can be combined into a coherent and useful framework. The project does **not** currently claim that this synthesis is mathematically novel, that it is a fundamental theory of physics, or that it identifies the structure or substance of reality. Novelty, explanatory value, and physical relevance must be established through primary-source comparison, mathematical proof, and falsifiable experiments.
+
+A research program for a candidate nonlinear, dynamic relational constraint formalism in which local states and local rules generate proposed motion, while global coherence removes inadmissible motion.
 
 The project separates two layers:
 
-1. **Mathematical layer:** a concrete, testable dynamic relational constraint geometry.
+1. **Mathematical layer:** a concrete, testable candidate synthesis of dynamic relational and constrained-dynamical mechanisms.
 2. **Interpretive layer:** an apophatic non-reification schema that forbids identifying any internal mathematical object with absolute reality.
 
 The central dynamical form is
@@ -19,15 +23,32 @@ $$
 
 where local dynamics propose change and the global admissible geometry removes the component incompatible with coherence.
 
+## What this project is—and is not
+
+This project is:
+
+- a candidate synthesis of existing mathematical ideas;
+- a framework to be compared directly with neighboring established theories;
+- a source of explicit proof obligations, baselines, ablations, and falsification tests;
+- an investigation into whether the combined framework yields any genuinely new theorem, invariant, dynamical regime, or predictive advantage.
+
+This project is not presently:
+
+- a claim of a new fundamental geometry;
+- a completed physical theory;
+- evidence that reality literally is a graph, manifold, constraint surface, or computational structure;
+- a claim that combining known mechanisms is itself a scientific breakthrough.
+
 ## Core commitments
 
-- No fixed background geometry is assumed.
+- No fixed background geometry is assumed within the candidate model.
 - Local states, relations, metric variables, and collective modes may coevolve.
 - Local neighborhoods provide direct causal influence.
 - Global constraints delimit admissible collective motion.
-- The whole is not a separate controller; it is realized by the jointly compatible configuration.
+- The whole is not a separate controller; it is represented by the jointly compatible configuration.
 - Node labels and coordinate choices carry no physical privilege.
 - The formalism is a hypothesis and modeling framework, not an identification with reality itself.
+- Stronger claims require demonstrated novelty, mathematical consistency, and empirical discrimination from existing models.
 
 ## Repository map
 
@@ -69,7 +90,15 @@ python -m apophatic_geometry.simulate --steps 2000 --dt 0.005 --output run.csv
 
 ## Current status
 
-The repository begins with a fully specified minimal model and executable tests. It does **not** yet establish that the geometry describes physical reality. The immediate goals are mathematical consistency, numerical stability, identifiable mechanisms, falsifiable predictions, and a primary-source novelty audit.
+The repository begins with a specified minimal model and executable tests. It does **not** yet establish mathematical novelty, a new fundamental geometry, or a description of physical reality. Its current status is **candidate synthesis under investigation**.
+
+The immediate goals are to:
+
+- determine how much of the framework is already contained in established research;
+- prove or disprove its mathematical consistency claims;
+- compare it fairly with simpler and neighboring models;
+- identify whether the synthesis produces any distinct, reproducible result;
+- narrow or reject the hypothesis when the evidence requires it.
 
 ## Research maxim
 
