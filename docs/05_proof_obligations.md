@@ -1,168 +1,214 @@
 # Proof Obligations
 
-Strong claims are blocked until the applicable obligations are met for the specific model being discussed.
+Strong claims remain blocked until the applicable obligations are met for the specific model and evidence level under discussion.
 
-The canonical model family is
-
-$$
-M_0,\qquad M_F,\qquad M_P,\qquad M_{FP}.
-$$
-
-Current status:
+## Current status
 
 $$
-M_F\ \text{implemented and unit-tested};
-\qquad
-M_P,\ M_{FP},\ M_F\equiv M_P\ \text{unverified}.
+\boxed{
+M_0,M_F,M_P\ \text{implemented and unit-tested};
+\quad
+M_{FP}\ \text{and }M_F\equiv M_P\ \text{unverified}.
+}
 $$
 
-## Obligations shared by all implemented models
+Passing a software obligation does not discharge a scientific or physical-validation obligation.
 
-### P1. Positivity of edge lengths
+## Shared obligations
 
-Prove
+### S1. Positivity of edge lengths
+
+For every finite declared state, establish
 
 $$
-\ell_e(Z)>0
+\ell_e(Z)>0.
 $$
 
-for every finite state in the declared domain.
+### S2. Metric validity
 
-### P2. Metric validity
+On every connected component, establish nonnegativity, symmetry, identity of indiscernibles, and the triangle inequality for shortest-path distance.
 
-On each connected component, prove that shortest-path distance is nonnegative, symmetric, zero only on the diagonal, and satisfies the triangle inequality.
+### S3. Existence and uniqueness
 
-### P3. Existence and uniqueness
+State conditions under which each finite-dimensional initial-value problem has a unique local solution.
 
-State regularity conditions under which each finite-dimensional initial-value problem has a unique local solution.
+### S4. Boundedness and continuation
 
-### P4. Boundedness or blow-up classification
+Classify regimes with bounded trajectories, finite-time blow-up, stiffness, overflow, or loss of numerical validity.
 
-Determine parameter regimes yielding bounded trajectories, finite-time blow-up, stiffness, or loss of connectivity.
+### S5. Equivariance
 
-### P5. Equivariance
+Prove permutation equivariance and identify invariant observables for each model. Current permutation tests are software evidence, not the complete theorem.
 
-Prove permutation equivariance and invariant observables under node relabeling for each model separately.
+### S6. Numerical convergence
 
-### P6. Numerical convergence
+Show that scientific conclusions survive refinement, alternative integrators, and independently written implementations.
 
-Demonstrate that conclusions survive decreasing time step, alternative integrators, and independent reference implementations.
+## $M_F$ obligations
 
-## Obligations specific to $M_F$
+### F1. Substrate-path completeness — software level passed
 
-### F1. Substrate-path completeness
-
-Identify every dependency path
+The declared path
 
 $$
 x\to c(x)\to(\dot x,\dot s,\dot q)
 $$
 
-and prove that no undeclared collective path exists.
+is explicit and unit-tested. A broader dependency audit remains appropriate before scientific use.
 
-### F2. $M_0$ reduction
-
-Show that removing all declared $c(x)$ feedback terms recovers $M_0$ exactly.
-
-### F3. Feedback identifiability
-
-Show through controlled interventions that the effects of $c(x)$ feedback can be separated from local coupling, adaptive topology, and metric deformation.
-
-### F4. Downward-claim ceiling
-
-Use only the label “implemented prototype-level downward feedback/constraint” until organization dependence, counterfactual adequacy, invariance, transport, and alternative-model defeat are tested.
-
-## Obligations specific to $M_P$
-
-### P7. Explicit admissible set
-
-Define
+### F2. $M_0$ reduction — passed
 
 $$
-\mathcal M=\{Z:\Gamma(Z)=0,\ H(Z)\geq0\}
+M_F(\chi=\eta_2=\rho=0)=M_0
 $$
 
-with complete domains and regularity assumptions.
+is implemented and unit-tested.
 
-### P8. Projection existence and uniqueness
+### F3. Feedback identifiability — open
 
-Prove that the tangent-space or normal-space projection exists and is unique on the declared operating domain.
+Separate feedback effects from local coupling, adaptive edges, and metric deformation through controlled comparisons.
 
-### P9. Constraint preservation
+### F4. Downward-claim ceiling — binding
 
-For the continuous-time projected vector field, prove
+Use only “implemented prototype-level downward feedback/constraint” until organization dependence, counterfactual adequacy, invariance, transport, and alternative-model defeat are tested.
+
+## $M_P$ obligations
+
+### P1. Explicit admissible set — passed for version 1.0
+
+$$
+\Gamma(Z)=\frac13x^Tx-c_0=0,
+\qquad
+c_0\ge10^{-6},
+\qquad
+H=\varnothing.
+$$
+
+### P2. Projection existence and uniqueness — passed on the declared regular domain
+
+For $x^Tx>0$,
+
+$$
+P_T=I-\frac{xx^T}{x^Tx}
+$$
+
+is uniquely defined. The implementation fails closed near rank loss.
+
+### P3. Continuous-time preservation — passed for version 1.0
+
+$$
+f_P=f_0-x\frac{x^Tf_0}{x^Tx}
+$$
+
+satisfies
+
+$$
+x^Tf_P=0,
+$$
+
+hence
 
 $$
 \frac{d}{dt}\Gamma(Z(t))=0
 $$
 
-and state the active-set rule for $H(Z)\geq0$.
+on the regular domain.
 
-### P10. Numerical preservation
+### P4. Discrete numerical preservation — software level passed
 
-Show that the chosen integration and retraction method preserves constraints to declared tolerances under refinement.
+Projected RK4 stages and mandatory radial retraction preserve the frozen constraint tolerance at tested cases. Broader multi-step and regime-level convergence remains open before scientific use.
 
-### P11. Code-equation parity
+### P5. Code-equation parity — passed at tested cases
 
-Independently verify that the implementation computes the documented projection operator, including rank-deficient and singular cases.
+Production derivatives and projected RK4/retraction agree with an independently written reference path.
 
-### P12. Projection substrate path
+### P6. Projection substrate path — passed for the implementation
 
-Identify how the global constraint is computed and how the resulting correction reaches each constituent transition.
+The implementation exposes
 
-## Obligations specific to $M_{FP}$
+$$
+F_0\longrightarrow F_{\mathrm{correction}}\longrightarrow F_P
+$$
 
-### FP1. Exact reductions
+and the post-step numerical retraction separately.
 
-Prove that:
+### P7. Physical justification — open
+
+No evidence yet establishes that constant node amplitude is the correct admissibility condition for a real system or the completed ARG relational geometry.
+
+### P8. Predictive utility — open
+
+No comparison yet shows that $M_P$ explains or predicts behavior better than $M_0$, $M_F$, or established alternatives.
+
+## $M_{FP}$ obligations
+
+### FP1. Exact reductions — open
+
+The implementation must verify:
 
 - removing feedback recovers $M_P$;
 - removing projection recovers $M_F$;
 - removing both recovers $M_0$.
 
-### FP2. Mechanism separation
+### FP2. Mechanism separation — open
 
-Retain separately measurable vectors for local proposal, feedback, and projection correction.
+Retain separate local proposal, feedback, projection-correction, and retraction diagnostics.
 
-### FP3. Ordering and interaction
+### FP3. Ordering — frozen, implementation open
 
-Declare whether feedback is applied before projection, after projection, or through a coupled solve, and test any noncommuting alternatives.
+Version 1.0 fixes feedback first and projection second.
 
-### FP4. No double counting
+### FP4. Node identity — open
 
-Show that the same collective influence is not encoded once as feedback and again as projection without explicit justification.
+Because the node feedback is radial,
+
+$$
+P_T[-\chi c(x)x]=0,
+$$
+
+so the implementation must verify
+
+$$
+\boxed{f_{FP}=f_P}
+$$
+
+for regular node derivatives.
+
+### FP5. Retained substrate feedback — open
+
+Verify that $M_{FP}$ retains the $\eta_2c(x)$ and $-\rho c(x)$ terms in the $s$ and $q$ equations.
+
+### FP6. No double counting — open
+
+Demonstrate that feedback and projection remain explicitly distinct mechanisms rather than duplicated labels for one effect.
 
 ## Equivalence obligation
 
-### E1. $M_F\equiv M_P$
+### E1. $M_F\equiv M_P$ — unverified
 
-No equivalence may be claimed from visually similar trajectories.
-
-A valid equivalence claim requires at least one of:
+Visual trajectory similarity is insufficient. A valid claim requires at least one of:
 
 - exact conjugacy;
 - exact reparameterization;
 - a proved approximation with error bounds;
-- a precisely scoped observational equivalence under a declared observation map.
-
-If equivalence is obtained only by defining $\Gamma$ from the already chosen feedback vector field, the construction must be examined for circularity.
+- scoped observational equivalence under a declared observation map and tolerance.
 
 ## Barrier obligation
 
-### B1. Non-collapse
+### B1. Non-collapse — open
 
-Under an explicit conserved or bounded energy, show that finite-energy trajectories cannot reach
+Under an explicit conserved or bounded energy, prove that finite-energy trajectories cannot reach
 
 $$
 \ell_e=0.
 $$
 
-A divergent formula alone is not yet a noncollision theorem.
+A divergent barrier formula alone is not a noncollision theorem.
 
 ## Novelty obligation
 
-### N1. Falsifiable novelty
+### N1. Falsifiable novelty — open
 
-Identify at least one theorem, invariant, reduction, or prediction that cannot be reproduced by a simpler or established model with matched information and parameter access.
+Identify at least one theorem, invariant, reduction, or prediction not reproduced by a simpler or established model with matched information and parameter access.
 
-Failure to meet N1 leaves ARG as a candidate synthesis rather than a new mathematical framework.
+Until N1 passes, ARG remains a candidate synthesis.
