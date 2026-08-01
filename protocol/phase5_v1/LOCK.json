@@ -5,14 +5,36 @@
     "protocol/phase5_v1/interventions.json": "65bbffef086d5cd3509417dd88c5052a40a4c7923a0e2e384f69ed0fca2e8e47",
     "protocol/phase5_v1/parameters.json": "d287fd6a199318a55d2f3b45652ce778d69b84f981b02b3dbd534be6ddf6e8c1",
     "protocol/phase5_v1/protocol.json": "d4b02568b8dacf019e71e728ccc87797d8cd48cdfe373e97d585e6a9aecf985b",
-    "src/apophatic_geometry/protocol.py": "5c35e4d2ca88f55280c3fc29c68e0691eee047dbb6efe3f311687d6c017a260f",
+    "src/apophatic_geometry/protocol.py": "ddc77cbe410722c9bf591b07bba0a9c5b82b99b4a97391357ff57554b6e46222",
     "tests/test_phase5_protocol.py": "a859f9c29384f577bbbe2875af1670dac916620c8536653379e446a5f0af4561"
   },
   "hash_algorithm": "sha256",
   "json_hashing": "canonical sorted compact UTF-8 JSON",
-  "lock_id": "ARG-P5-LOCK-v1",
+  "lock_id": "ARG-P5-LOCK-v1.1-INTEGRITY",
   "model_implementation_commit": "205fb8c5bf1b832e241af230612e3d7056be05f5",
   "protocol_id": "ARG-P5-COMP-v1",
   "protocol_version": "1.0.0",
-  "status": "FROZEN"
+  "status": "FROZEN_NO_DATA_INTEGRITY_REMEDIATED",
+  "supersedes": {
+    "lock_id": "ARG-P5-LOCK-v1",
+    "raw_file_sha256": "9a042d074040ca6d066d65286c9fb232adc92e58ccd5dc27f422303e80d1a68a",
+    "canonical_json_sha256": "6c56d479c1c394ab2967443a6ab2c4bebfd861225095068d7921a97d478382c8"
+  },
+  "remediation_scope": {
+    "issue": 13,
+    "pull_request": 14,
+    "scientific_design_changed": false,
+    "parameters_changed": false,
+    "initial_conditions_changed": false,
+    "pilot_confirmatory_split_changed": false,
+    "metrics_changed": false,
+    "thresholds_changed": false,
+    "decision_rules_changed": false,
+    "trajectory_data_generated": false,
+    "changes": [
+      "reject non-standard JSON constants",
+      "confine lock targets to the declared repository root",
+      "require regular root-contained lock files"
+    ]
+  }
 }
