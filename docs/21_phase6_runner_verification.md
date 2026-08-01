@@ -28,8 +28,8 @@ The verified runner implements:
 - DOP853 replication for every model used by H1–H4;
 - segmented DOP853 plus radial retraction for projected models;
 - the frozen observation schedule over $T=10$;
-- refinement, endpoint, and alternate-integrator acceptance rules;
-- configuration-level numerical floors;
+- refinement, endpoint, and alternate-integrator acceptance rules for every decision-bearing map;
+- configuration-level primary numerical floors;
 - H5 constraint-preservation gates;
 - H6 same-state node-identity gates;
 - exogenous replay and frozen-$s$, frozen-$q$, and frozen-$(s,q)$ controls;
@@ -71,10 +71,10 @@ Pull request:
 #11
 ```
 
-GitHub Actions run:
+Final GitHub Actions run:
 
 ```text
-30722763003
+30723005085
 ```
 
 Environments:
@@ -86,7 +86,7 @@ These are 100 unique software tests executed in two Python environments, not 200
 
 ## No-pilot-data verification
 
-The Phase 6 runner slice contains source code, tests, protocol documentation, and package/workflow configuration only. It contains no:
+The final pull-request file list contains source code, tests, protocol documentation, and package/workflow configuration only. It contains no:
 
 - `EXECUTION_AUTHORIZATION.json`;
 - pilot trajectory;
@@ -104,8 +104,6 @@ $$
 $$
 
 ## Licensed result
-
-The strongest licensed statement is:
 
 > ARG implements and software-verifies a fail-closed pilot-only runner and immutable archival pipeline for the frozen Phase 5 protocol, including independent pilot-membership, trajectory, checksum, and confirmatory-lockout checks at tested cases.
 
