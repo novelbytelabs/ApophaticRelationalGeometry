@@ -1,0 +1,42 @@
+{
+  "baseline_id": "ARG-P6-INTEGRITY-BASELINE-v1",
+  "status": "FROZEN_NO_EXECUTION",
+  "protocol_id": "ARG-P5-COMP-v1",
+  "protocol_version": "1.0.0",
+  "phase4_model_implementation_commit": "205fb8c5bf1b832e241af230612e3d7056be05f5",
+  "scientific_equations_changed": false,
+  "trajectory_data_generated": false,
+  "confirmatory_execution": "BLOCKED",
+  "audit_basis": "Independent 2026-08-01 delivered-bundle audit and current-main reproduction",
+  "verification_policy": {
+    "canonical_equation_file": "src/apophatic_geometry/models.py",
+    "canonical_equation_file_must_match_phase4": true,
+    "remediated_files_must_match_sha256": true,
+    "adversarial_tests_use_stored_scientific_outputs": false,
+    "external_reaudit_required": true
+  },
+  "files": {
+    "src/apophatic_geometry/model.py": "5a7d921f135c72e3f1714f1bd9612fdc51eaa6208a9d72ab6becad8a42492e40",
+    "src/apophatic_geometry/models.py": "d511827234055192f8fb5ac23577cab44327650003e961a572defab05482cb22",
+    "src/apophatic_geometry/protocol.py": "ddc77cbe410722c9bf591b07bba0a9c5b82b99b4a97391357ff57554b6e46222",
+    "src/apophatic_geometry/attestation.py": "8ac9f2ded86fbf8855f428a1ed96c5268c8acc35f66c8da34d7e32aa0a51c0c8",
+    "src/apophatic_geometry/simulate.py": "0859ceda44ff0156d1c6dfce4ecc07d686b477a6e8e87b0902053c12c40b14bb",
+    "src/apophatic_geometry/pilot_types.py": "d1e4ed0e2a3f7a3fe2cc06f569957ada75d889fcd76036d9c072574f8fcea6d2",
+    "src/apophatic_geometry/pilot_manifest.py": "1a0f8527f58d68765af262d039058e454f282bf16d2d9821181785b2e5642c12",
+    "src/apophatic_geometry/pilot_mechanisms.py": "67d20ad3724e4c509905ef711b426c96286cc648a1523db49af1a7377676182d",
+    "src/apophatic_geometry/pilot_integrators.py": "2d0a71a437f93a343204cf58d171bc7ebec8031c7de6e2869becdae25810d14b",
+    "src/apophatic_geometry/pilot_gates.py": "f131ee4707c3d08b5bb6e9c7d7c98885d00caea000ef7efc00c1481869075f54",
+    "src/apophatic_geometry/pilot_integrate.py": "f431a90fe6020b800e5fc53394f9ff753349c01b8f09bab974a0a47de964a4af",
+    "src/apophatic_geometry/pilot_archive.py": "a4257247ef386d80f3c81904fa623955b8e76fe11fb135d1a280f1218a9c3f93",
+    "src/apophatic_geometry/pilot.py": "572dc92f69408a76362d76e8befc35ce3cd11dc6fd296f34d845f19983e6f00d",
+    "src/apophatic_geometry/pilot_cli.py": "f9dbee8c061d32d8ede47c3879696b38e2d7484ffe4d03fe198601d707160910",
+    "protocol/phase5_v1/LOCK.json": "b13f8a51ad6b6488b6b3df6e61de4661449f8ac831815e55e086122d591b6d4c",
+    "protocol/phase6_runner_v1/EXECUTION_ENVIRONMENT.json": "dca80caa86a8334ada40267be8fdc8583d067438f311187db80a1943aee37064",
+    "tests/reference_equations.py": "216b1b6fc4e224eed727ee227b86df8bb3ea52a428c339ca5e6b94b1d8e2c820",
+    "tests/reference_pilot.py": "bb516b44afd2f5363004c089aecdb76d95569091aa90fd995dfda6da51d60c7c",
+    "tests/test_phase5_protocol.py": "a859f9c29384f577bbbe2875af1670dac916620c8536653379e446a5f0af4561",
+    "tests/test_phase6_numerics.py": "2a45e7249099a4dc9636a6dc35a59226b73c056e54f6284a266ffb76bc33ddac",
+    "tests/test_phase6_planning.py": "88a5e6b823f9a147afeb8f9012cf1f2cf9ebbf32d6bcdac627e256a5c5ce95f3",
+    "tests/test_phase6a1_integrity.py": "47281a2e5e4c156b4ab428da92320c97ff6b3c9bab14738fca9a2f82b5af4cbe"
+  }
+}
