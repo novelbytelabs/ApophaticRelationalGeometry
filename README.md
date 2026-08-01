@@ -140,6 +140,7 @@ ARG is not presently:
 - `docs/16_phase3_mp_verification.md`
 - `docs/17_phase4_mfp_verification.md`
 - `docs/18_phase5_comparative_protocol.md`
+- `docs/19_phase5_protocol_verification.md`
 - `protocol/phase5_v1/` — frozen machine-readable protocol bundle and lock.
 
 ### Implementation and tests
