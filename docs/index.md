@@ -1,37 +1,53 @@
 # Apophatic Relational Geometry
 
-A research program for a nonlinear, dynamic geometry in which local states and local rules generate proposed motion, while global coherence removes inadmissible motion.
+ARG is a candidate research synthesis of nonlinear local dynamics, adaptive relational geometry, collective feedback, and projected constraint mechanisms.
 
-The project separates:
+It is not presently a claim of a new fundamental geometry or a description of absolute reality.
 
-1. a concrete mathematical and computational model;
-2. an apophatic non-reification schema governing how the model is interpreted.
+## Current executable
 
-The repository does **not** currently establish that this geometry describes fundamental physical reality.
-
-## Core formalism
-
-The central dynamical form is
+The current three-node implementation is the collective-feedback prototype $M_F$:
 
 $$
-\dot Z
-=
-F_{\mathrm{local}}(Z)
--
-\Pi_{N_Z\mathcal M}F_{\mathrm{local}}(Z).
+c(x)=\frac13\sum_i x_i^2,
 $$
 
-Local dynamics propose change. The current admissible geometry removes motion incompatible with global coherence.
+$$
+x\to c(x)\to(\dot x,\dot s,\dot q).
+$$
+
+It supports the narrow label:
+
+> **implemented prototype-level downward feedback/constraint**
+
+It does not yet implement $\Gamma/H$ admissibility projection.
+
+## Binding claim ceiling
+
+$$
+\boxed{
+M_F\ \text{implemented and unit-tested};
+\quad
+M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
+}
+$$
+
+## Canonical model family
+
+- $M_0$: local/adaptive baseline without collective feedback or projection.
+- $M_F$: endogenous collective feedback; current executable.
+- $M_P$: explicit projected admissibility; unimplemented.
+- $M_{FP}$: feedback plus projection with separate diagnostics; unimplemented.
 
 ## Foundations
 
 - [Scope and status](00_scope_and_status.md)
 - [Apophatic meta-axiom](01_apophatic_meta_axiom.md)
 - [Design requirements](02_design_requirements.md)
-- [Formalism](03_formalism.md)
-- [Minimal model](04_minimal_model.md)
-- [Proof obligations](05_proof_obligations.md)
-- [Experimental plan](06_experimental_plan.md)
+- [Target formalism and mechanism split](03_formalism.md)
+- [Current minimal model: $M_F$](04_minimal_model.md)
+- [Model-specific proof obligations](05_proof_obligations.md)
+- [Four-model experimental plan](06_experimental_plan.md)
 
 ## Research grounding
 
@@ -41,20 +57,24 @@ Local dynamics propose change. The current admissible geometry removes motion in
 - [Literature landscape](10_literature_landscape.md)
 - [Benchmark specification](11_benchmark_specification.md)
 - [Falsification criteria](12_falsification_criteria.md)
+- [Canonical alignment and claim ceiling](13_alignment_and_claim_ceiling.md)
+- [Phase-gated roadmap](14_roadmap.md)
 
 ## Decisions and history
 
 - [Separate mathematics from ontology](adr/0001-separate-math-from-ontology.md)
 - [Archived negation-operator path](history/negation_operator_path.md)
 
-## Current research phase
+## Current roadmap position
 
-The immediate priorities are:
+ARG is at **Phase 0: alignment and claim control**.
 
-1. establish the closest existing mathematical frameworks;
-2. prove or restrict the foundational equations;
-3. implement fair mechanism-level baselines;
-4. recover established physical special cases;
-5. isolate at least one falsifiable contribution unique to the full model.
+Immediate priorities:
 
-> Construct freely. Test rigorously. Reify nothing.
+1. complete documentation alignment;
+2. rerun and record existing software tests;
+3. freeze the four-model design contract;
+4. implement the true $M_0$ baseline;
+5. design and prove $M_P$ before production implementation.
+
+> Separate the mechanisms. Freeze the contracts. Prove the projection. Test the alternatives. Reify nothing.
