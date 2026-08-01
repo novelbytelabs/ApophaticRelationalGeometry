@@ -12,8 +12,8 @@ nav:
       - Scope and Status: 00_scope_and_status.md
       - Apophatic Meta-Axiom: 01_apophatic_meta_axiom.md
       - Design Requirements: 02_design_requirements.md
-      - Target Formalism: 03_formalism.md
-      - Current MF Prototype: 04_minimal_model.md
+      - Formalism and Mechanism Split: 03_formalism.md
+      - Original MF Prototype: 04_minimal_model.md
       - Proof Obligations: 05_proof_obligations.md
       - Experimental Plan: 06_experimental_plan.md
   - Research Grounding:
@@ -26,6 +26,7 @@ nav:
       - Canonical Alignment: 13_alignment_and_claim_ceiling.md
       - Roadmap: 14_roadmap.md
       - Four-Model Design Contract: 15_four_model_design_contract.md
+      - Phase 3 MP Verification: 16_phase3_mp_verification.md
   - Decisions:
       - Separate Mathematics from Ontology: adr/0001-separate-math-from-ontology.md
   - History:
