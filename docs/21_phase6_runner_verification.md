@@ -63,7 +63,7 @@ Pull request:
 #11
 ```
 
-Final merge-preview GitHub Actions run:
+The runner and its final claim-control alignment repeatedly passed the complete hosted matrix. A representative full verification run is:
 
 ```text
 30723065931
@@ -74,11 +74,11 @@ Environments:
 - Python 3.10 — **100 passed**;
 - Python 3.12 — **100 passed**.
 
-These are 100 unique software tests executed in two Python environments, not 200 independent experimental observations.
+These are 100 unique software tests executed in two Python environments, not 200 independent experimental observations. The pull request's latest check must also pass before merge.
 
 ## No-pilot-data verification
 
-The final pull-request file list contains source code, tests, protocol documentation, and package/workflow configuration only. It contains no `EXECUTION_AUTHORIZATION.json`, pilot trajectory, pilot raw archive, pilot effect summary, pilot failure archive, or confirmatory artifact.
+The pull-request file list contains source code, tests, protocol documentation, and package/workflow configuration only. It contains no `EXECUTION_AUTHORIZATION.json`, pilot trajectory, pilot raw archive, pilot effect summary, pilot failure archive, or confirmatory artifact.
 
 Therefore:
 
