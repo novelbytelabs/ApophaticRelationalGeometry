@@ -30,6 +30,7 @@ def bundle():
 def params(bundle):
     return frozen_parameters(bundle)
 
+
 def test_phase6_bundle_and_plan_are_pilot_only(bundle) -> None:
     plan = pilot_plan(bundle)
     assert plan["configuration_count"] == EXPECTED_PILOT_CONFIGURATIONS
@@ -37,6 +38,7 @@ def test_phase6_bundle_and_plan_are_pilot_only(bundle) -> None:
     assert plan["split"] == "pilot"
     assert plan["pilot_executed"] is False
     assert plan["confirmatory_execution"] == "BLOCKED"
+    assert plan["alternate_integrator_models"] == [model.value for model in ModelId]
     assert len(plan["configuration_ids"]) == len(set(plan["configuration_ids"]))
 
     confirmatory = {
@@ -179,6 +181,12 @@ def test_execute_is_blocked_without_separate_authorization(tmp_path) -> None:
     with pytest.raises(ProtocolIntegrityError, match="execution record is absent"):
         execute_pilot(REPO_ROOT, archive)
     assert not archive.exists()
+
+
+def test_configuration_identifiers_reject_path_traversal(bundle) -> None:
+    pilot = build_pilot_configurations(bundle)[0]
+    with pytest.raises(ValueError, match="path-safe"):
+        replace(pilot, config_id="../escape", configuration_hash="2" * 64)
 
 
 def test_no_execution_authorization_or_pilot_archive_is_committed() -> None:
