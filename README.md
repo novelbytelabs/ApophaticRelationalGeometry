@@ -2,6 +2,8 @@
 
 > **Status: candidate synthesis — not a claim of a new fundamental geometry.**
 
+> **STOP-SHIP:** An independent audit identified integrity defects in the delivered audit bundle and in supporting code paths. Phase 6A.1 remediation is active. Pilot execution, confirmatory execution, and scientific claims are blocked until adversarial remediation tests and an external re-audit pass.
+
 ARG investigates whether nonlinear local dynamics, adaptive relations, state-dependent geometry, endogenous collective feedback, and explicit admissibility projection can form a coherent and scientifically useful framework. Mathematical novelty, physical relevance, and explanatory value remain open.
 
 ## Implemented four-model family
@@ -34,8 +36,6 @@ $$
 f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
 $$
 
-The implementation projects every RK4 stage, applies mandatory radial retraction, fails closed near rank loss, exposes mechanism diagnostics, and agrees with an independently written software reference at tested cases.
-
 ### $M_{FP}$ — feedback followed by projection
 
 $$
@@ -62,52 +62,43 @@ $$
 
 No implemented result establishes scientific superiority, physical adequacy, strong emergence, macro-level causal autonomy, mathematical novelty, or a fundamental geometry.
 
-## Frozen protocol and verified pilot-only runner
+## Audit status
 
-Protocol `ARG-P5-COMP-v1` was frozen before trajectory generation. It fixes the hypotheses, effect and equivalence thresholds, direction-level inferential units, deterministic pilot/confirmatory split, fixed parameters, RK4 refinement, DOP853 replication, numerical floors, exclusions, stop rules, provenance, executable decision logic, and critical-file lock.
+The independent audit found strong nominal differential and RK4 parity, but also found serious integrity defects:
 
-Phase 6 now implements and software-verifies a fail-closed runner for exactly the 50 frozen pilot configurations. The runner:
+- a delivered bundle that invalidated its own lock and could not reproduce its advertised test result;
+- a stale Euler `run.csv` presented alongside the current RK4 implementation;
+- writable aliased `State` arrays;
+- non-fail-closed finite extremes in conductance and intrinsic geometry;
+- permissive JSON parsing and lock-root traversal;
+- caller-controlled standalone provenance;
+- non-atomic standalone output with no completion attestation;
+- incomplete environment and supply-chain locking.
 
-- verifies the Phase 5 lock before loading configurations;
-- rejects confirmatory and mixed batches before integration;
-- rejects confirmatory input independently in RK4, DOP853, and archive paths;
-- runs all four models under the frozen numerical policy;
-- implements the frozen controls and all six node-relabeling tripwires;
-- writes a checksummed, write-once archive;
-- requires a separate committed execution authorization naming a previously verified runner commit.
+Previous test counts do not waive these findings. The stale Euler output is rejected as current evidence.
 
-Final hosted verification in GitHub Actions run `30723005085` reported **100 passing tests** on Python 3.10 and **100 passing tests** on Python 3.12.
-
-Current execution state:
+## Current execution state
 
 $$
 \boxed{
-\text{runner verified};
+\text{Phase 6A.1 integrity remediation STOP-SHIP};
 \quad
-\text{development pilot not executed};
+\text{development pilot not authorized for execution};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
 $$
 
-The verification slice contains no execution authorization, pilot trajectory, pilot result, pilot archive, or confirmatory artifact.
+No pilot has been executed. No execution authorization is valid while Phase 6A.1 remains open.
 
-## What this project is—and is not
+## Integrity rules
 
-ARG is:
-
-- a candidate synthesis of established mathematical ingredients;
-- an executable family separating local dynamics, feedback, projection, and their combination;
-- a phase-gated research program with explicit proof obligations and falsification criteria;
-- a preregistered mechanism-comparison framework with a verified pilot-only runner.
-
-ARG is not presently:
-
-- evidence that feedback and projection are equivalent;
-- validation that any mechanism improves prediction;
-- evidence of macro-level causal autonomy or strong emergence;
-- a completed physical theory;
-- proof that reality literally is a graph, manifold, constraint surface, or computational structure.
+- no oracles, hardcoded scientific outputs, golden trajectory replay, hidden fixtures, or test-mode model branches;
+- no threshold, parameter, configuration, split, or outcome-rule change after outcome inspection;
+- tests must target invariants, independent references, metamorphic properties, failure behavior, and provenance;
+- failed runs remain failures and are never imputed;
+- a fresh audit bundle must validate itself after clean extraction;
+- an external Auditor AI must clear the remediation before Phase 6B can reopen.
 
 ## Repository map
 
@@ -138,19 +129,18 @@ ARG is not presently:
 - `docs/19_phase5_protocol_verification.md`
 - `docs/20_phase6_runner_design.md`
 - `docs/21_phase6_runner_verification.md`
-- `protocol/phase5_v1/` — frozen protocol bundle and lock.
-- `protocol/phase6_runner_v1/` — runner authorization boundary; no execution authorization is present.
+- `docs/22_phase6a1_integrity_remediation.md`
 
 ### Implementation and tests
 
-- `src/apophatic_geometry/model.py` — legacy $M_F$ equation path retained for regression stability.
-- `src/apophatic_geometry/models.py` — canonical four-model equations, projection, diagnostics, and RK4.
-- `src/apophatic_geometry/protocol.py` — frozen metrics, bootstrap, validation, hashing, and decisions.
-- `src/apophatic_geometry/pilot.py` — gated pilot-only orchestration.
-- `src/apophatic_geometry/pilot_*` — split authorization, integration, gates, controls, and archive modules.
-- `tests/reference_equations.py` and `tests/reference_pilot.py` — independent verification paths.
+- `src/apophatic_geometry/model.py` — core state, geometry, and original $M_F$ path.
+- `src/apophatic_geometry/models.py` — canonical four-model equations and RK4.
+- `src/apophatic_geometry/protocol.py` — metrics, strict manifest loading, root-confined locks, and decisions.
+- `src/apophatic_geometry/attestation.py` — source/runtime attestation derived from the execution substrate.
+- `src/apophatic_geometry/simulate.py` — exploratory simulator with atomic completion-attested output.
+- `src/apophatic_geometry/pilot.py` and `pilot_*` — gated pilot-only machinery; execution remains blocked.
 
-## Data-free validation commands
+## Data-free validation
 
 ```bash
 python -m venv .venv
@@ -161,13 +151,7 @@ arg-pilot validate --repo-root .
 arg-pilot plan --repo-root .
 ```
 
-`validate` and `plan` do not execute trajectories. `arg-pilot execute` fails closed because the separate execution authorization is intentionally absent.
-
-## Roadmap position
-
-**Phases 0–5 are complete. The Phase 6 runner gate has passed; pilot execution is the next separate gate.**
-
-No development-pilot result or confirmatory result exists.
+These commands do not establish a scientific result.
 
 ## Research maxim
 
