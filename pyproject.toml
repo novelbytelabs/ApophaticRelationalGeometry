@@ -4,13 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apophatic-relational-geometry"
-version = "0.5.0"
-description = "ARG four-model prototypes with a frozen comparative protocol and fail-closed decision machinery"
+version = "0.6.0"
+description = "ARG four-model prototypes with a frozen protocol and fail-closed pilot-only runner"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "Arqon Tech Research"}]
 dependencies = [
   "numpy>=1.26",
+  "scipy>=1.12",
 ]
 
 [project.optional-dependencies]
@@ -20,6 +21,7 @@ dev = [
 
 [project.scripts]
 arg-simulate = "apophatic_geometry.simulate:main"
+arg-pilot = "apophatic_geometry.pilot_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
