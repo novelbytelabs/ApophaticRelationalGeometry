@@ -8,13 +8,13 @@ Current executable status:
 
 $$
 \boxed{
-M_0,M_F,M_P\ \text{implemented and unit-tested};
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
 \quad
-M_{FP}\ \text{and }M_F\equiv M_P\ \text{unverified}.
+M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-$M_P$ is the contract-v1.0 constant-amplitude projection sandbox. It is not the completed relational-admissibility geometry and has not been validated as a physical model.
+The projected models are contract-v1.0 constant-amplitude mechanism sandboxes. They are not the completed relational-admissibility geometry and have not been validated as physical models.
 
 ## 1. Provisional presentation
 
@@ -204,10 +204,10 @@ $$
 \mathcal M=\{Z:\Gamma(Z)=0,\ H(Z)\ge0\}.
 $$
 
-A proposal field $F_{\mathrm{local}}$ is mapped to admissible motion:
+A proposal field $F$ is mapped to admissible motion:
 
 $$
-\dot Z=\Pi_{T_Z\mathcal M}F_{\mathrm{local}}(Z).
+\dot Z=\Pi_{T_Z\mathcal M}F(Z).
 $$
 
 For smooth equality constraints and positive-definite state metric $G(Z)$, the regular equality-only expression is
@@ -215,11 +215,11 @@ For smooth equality constraints and positive-definite state metric $G(Z)$, the r
 $$
 \dot Z
 =
-F_{\mathrm{local}}
+F
 -
 G^{-1}J_\Gamma^{\mathsf T}
 \left(J_\Gamma G^{-1}J_\Gamma^{\mathsf T}\right)^{-1}
-J_\Gamma F_{\mathrm{local}},
+J_\Gamma F,
 $$
 
 when the indicated matrix is invertible. Inequality constraints require tangent-cone or active-set treatment and are not implemented in version 1.0.
@@ -242,14 +242,6 @@ $$
 c_0=c(x(0))\ge10^{-6},
 \qquad
 H=\varnothing.
-$$
-
-The manifold is
-
-$$
-\mathcal M_{c_0}
-=
-\left\{Z:\frac13x^Tx=c_0\right\}.
 $$
 
 ### Jacobian and regularity
@@ -303,41 +295,15 @@ $$
 \frac23x^Tf_P=0.
 $$
 
-This is a continuous-time result on the regular domain.
+## 8. Implemented $M_{FP}$ version 1.0
 
-### Numerical preservation
-
-Every classical RK4 stage evaluates the projected vector field. After the complete step, the node state is retracted:
+The combined model first constructs
 
 $$
-x_{n+1}
-=
-\sqrt{3c_0}\frac{x_{n+1}^{\mathrm{raw}}}
-{\|x_{n+1}^{\mathrm{raw}}\|}.
+F_{\mathrm{proposal}}=F_0+F_F,
 $$
 
-The implementation records:
-
-- proposal;
-- projection correction;
-- projected derivative;
-- constraint residual;
-- normalized tangency residual;
-- projection denominator;
-- pre- and post-retraction residual;
-- retraction magnitude.
-
-It fails closed if a projected stage or retraction reaches the frozen near-singular threshold. No silent pseudoinverse, denominator clipping, or fallback projection is used.
-
-## 8. $M_{FP}$: combined mechanism target
-
-Version 1.0 fixes
-
-$$
-F_{\mathrm{proposal}}=F_0+F_F
-$$
-
-followed by projection.
+then projects the node component.
 
 The node derivative is
 
@@ -357,15 +323,27 @@ $$
 P_T[-\chi c(x)x]=0.
 $$
 
-Therefore the frozen contract predicts
+Therefore, at the same regular full state,
 
 $$
-\boxed{f_{FP}=f_P}
+\boxed{f_{FP}=f_P}.
 $$
 
-for node derivatives.
+The $s$ and $q$ derivatives retain the feedback terms:
 
-The $s$ and $q$ derivatives retain $M_F$ feedback, so in general
+$$
+\tau_s\dot s_{ij}^{(FP)}
+=
+\eta_0-\eta_1(x_i-x_j)^2+\eta_2c(x)-s_{ij},
+$$
+
+$$
+\tau_q\dot q_{ij}^{(FP)}
+=
+-\gamma q_{ij}+\kappa(x_i-x_j)^2-\rho c(x).
+$$
+
+Thus, in general,
 
 $$
 \dot s^{(FP)}\ne\dot s^{(P)},
@@ -373,9 +351,37 @@ $$
 \dot q^{(FP)}\ne\dot q^{(P)}.
 $$
 
-$M_{FP}$ remains unimplemented and unverified.
+The same-state node identity does not imply trajectory identity. Divergent $s/q$ states can change later conductances and later node proposals.
 
-## 9. Dynamic topology and metric
+The production implementation exposes separately $F_0$, $F_F$, $F_0+F_F$, the projection correction, and the projected derivative.
+
+## 9. Numerical preservation for projected models
+
+Every classical RK4 stage evaluates the applicable projected vector field. After each complete step, the node state is retracted:
+
+$$
+x_{n+1}
+=
+\sqrt{3c_0}\frac{x_{n+1}^{\mathrm{raw}}}
+{\|x_{n+1}^{\mathrm{raw}}\|}.
+$$
+
+The implementation records:
+
+- local proposal;
+- feedback vector where applicable;
+- combined proposal where applicable;
+- projection correction;
+- projected derivative;
+- constraint residual;
+- normalized tangency residual;
+- projection denominator;
+- pre- and post-retraction residual;
+- retraction magnitude.
+
+It fails closed if a projected stage or retraction reaches the frozen near-singular threshold. No silent pseudoinverse, denominator clipping, or fallback projection is used.
+
+## 10. Dynamic topology and metric
 
 A broader system may include
 
@@ -397,7 +403,7 @@ $$
 
 Whether $c$ is algebraically derived or independently dynamical must be declared per model. In contract v1.0 it is algebraically derived.
 
-## 10. Non-collapse barrier
+## 11. Non-collapse barrier
 
 A future variant may define
 
@@ -408,9 +414,9 @@ U_{\mathrm{barrier}}(Z)
 \qquad B_e,p_e>0.
 $$
 
-The implication from divergent potential to an unreachable finite-energy boundary remains conditional on a suitable conserved or coercive energy bound. The barrier is not implemented in $M_0$, $M_F$, or $M_P$.
+The implication from divergent potential to an unreachable finite-energy boundary remains conditional on a suitable conserved or coercive energy bound. The barrier is not implemented in the four contract-v1.0 models.
 
-## 11. Equivariance
+## 12. Equivariance
 
 For admissible presentation transformation $g$, the target requirement is
 
@@ -418,15 +424,19 @@ $$
 F(g\cdot Z)=Dg_ZF(Z).
 $$
 
-Permutation equivariance is unit-tested for $M_0$, $M_F$, and $M_P$. General coordinate and presentation invariance remains a proof obligation.
+Permutation equivariance is unit-tested for all four models. General coordinate and presentation invariance remains a proof obligation.
 
-## 12. Claim boundary
+## 13. Claim boundary
 
-The specific statement
+The statements
 
 > ARG implements the contract-v1.0 constant-amplitude projection sandbox
 
-is licensed.
+and
+
+> ARG implements feedback followed by projection with separate mechanism diagnostics
+
+are licensed at the software-verification level.
 
 The broader statements
 
