@@ -1,0 +1,225 @@
+{
+  "alternate_integrator": {
+    "agreement_rule": "For every primary-map run, D(RK4 dt/4, DOP853) <= max(1e-5, 10*D(RK4 dt/2, RK4 dt/4)).",
+    "atol": 1e-12,
+    "library": "scipy.integrate.solve_ivp",
+    "max_step": 0.001,
+    "method": "DOP853",
+    "projected_policy": "Integrate in 0.001 segments and apply the same radial retraction at each segment boundary for MP and MFP.",
+    "rtol": 1e-10
+  },
+  "authorization": {
+    "after_phase5_pass": "development pilot only",
+    "condition": "All lock hashes, software tests, and pre-execution tripwires must pass.",
+    "confirmatory_execution": "BLOCKED",
+    "scientific_claim_promotion": "BLOCKED"
+  },
+  "claim_control": {
+    "licensed_after_pilot": "developmental numerical observations only",
+    "not_licensed": [
+      "MF is equivalent to MP",
+      "any model is scientifically superior",
+      "macro-level causal autonomy",
+      "strong emergence",
+      "physical adequacy",
+      "mathematical novelty",
+      "ontological conclusions"
+    ]
+  },
+  "contract_version": "1.0",
+  "failure_and_missing_policy": {
+    "direction_completeness": "all five c0 configurations and both compared models must pass all mandatory numerical gates",
+    "imputation": "none",
+    "pilot_stop_rules": [
+      "Stop immediately on code-equation parity failure, lock mismatch, mislabeled split, or permutation tripwire failure.",
+      "Pause and diagnose if more than 10% of pilot configurations fail numerical gates.",
+      "Do not relax thresholds after viewing effects."
+    ],
+    "primary_decision_block": "More than one failed confirmatory direction, any identity-gate failure, any invariant tripwire failure, or any lock mismatch forces INCONCLUSIVE/INVALID.",
+    "retain_all_failures": true
+  },
+  "inferential_design": {
+    "bootstrap_seed": 20260801,
+    "independent_unit": "direction_id",
+    "integrator_repeats": "not independent",
+    "model_random_seeds": "none; dynamics and configurations are deterministic",
+    "permutations": "tripwires only",
+    "repeated_conditions": "five c0 levels within direction",
+    "secondary_multiplicity": "Secondary endpoints are developmental and cannot promote claims. Report 98.75% percentile intervals for H2-H4 and geometry outcomes as a four-family Bonferroni descriptive safeguard.",
+    "timepoints": "not independent"
+  },
+  "metrics": {
+    "direction_numerical_floor": "maximum, over the five c0 configurations and both compared models, of RK4 dt/2-vs-dt/4 trajectory discrepancy and RK4 dt/4-vs-DOP853 discrepancy",
+    "feedback_ratio": "sqrt(sum_t ||FF_t||_2^2)/(sqrt(sum_t ||F0_t||_2^2)+1e-30)",
+    "max_abs": "max_t,j |a_tj-b_tj|",
+    "projection_ratio": "sqrt(sum_t ||correction_t||_2^2)/(sqrt(sum_t ||proposal_t||_2^2)+1e-30)",
+    "symmetric_normalized_rms": "sqrt(2*sum_t ||a_t-b_t||_2^2 / (sum_t ||a_t||_2^2 + sum_t ||b_t||_2^2 + 1e-30))"
+  },
+  "model_ids": [
+    "m0",
+    "mf",
+    "mp",
+    "mfp"
+  ],
+  "model_implementation_commit": "205fb8c5bf1b832e241af230612e3d7056be05f5",
+  "numerical_acceptance": {
+    "constraint_tolerance": "abs(c(x)-c0) <= 1e-12*max(1,c0) after every retraction",
+    "endpoint_tolerance": "||O_dt/2(T)-O_dt/4(T)||_inf <= 1e-6 + 1e-5*||O_dt/4(T)||_inf",
+    "nonfinite_policy": "fail closed",
+    "rk4_refinement_ordering": "D(dt/2,dt/4) < D(dt,dt/2) for every frozen observation map used in a decision.",
+    "singular_policy": "fail closed; no clipping, pseudoinverse, or fallback",
+    "tangency_tolerance": 1e-12
+  },
+  "observation_maps": {
+    "d": {
+      "definition": "d01,d02,d12 shortest-path distances",
+      "dimension": 3
+    },
+    "full": {
+      "definition": "concatenate x,s,q",
+      "dimension": 9
+    },
+    "mechanism": {
+      "definition": "F0, FF, combined proposal, projection correction, constraint residual, normalized tangency residual, denominator, and retraction diagnostics"
+    },
+    "sq": {
+      "definition": "concatenate s,q",
+      "dimension": 6
+    },
+    "x": {
+      "definition": "x",
+      "dimension": 3
+    }
+  },
+  "pilot_confirmatory_separation": {
+    "amendment_rule": "A substantive metric, threshold, model, parameter, or configuration change creates protocol v1.1+ and requires a fresh unexecuted confirmatory split.",
+    "confirmatory_access": "No confirmatory trajectory may be generated during Phase 6 pilot.",
+    "confirmatory_directions": 14,
+    "pilot_directions": 10,
+    "split_source": "initial_conditions.json direction-level hash split"
+  },
+  "primary_hypothesis": {
+    "comparison": [
+      "mf",
+      "mp"
+    ],
+    "config_effect": "trajectory metric for one direction and c0 configuration",
+    "detect_threshold": 0.02,
+    "equivalence_margin": 0.002,
+    "estimator": "median across confirmatory direction units",
+    "id": "H1_MF_MP_FULL_STATE_DISTINGUISHABILITY",
+    "metric": "symmetric_normalized_rms",
+    "negative_rule": "EQUIVALENT_WITHIN_PROTOCOL_MARGIN only if the upper 95% bootstrap bound is below 0.002, every direction effect is below 0.002, and every direction numerical floor is below 0.002/3.",
+    "numerical_ratio_required": 10.0,
+    "observation_map": "full",
+    "otherwise": "INCONCLUSIVE",
+    "positive_rule": "DETECTED only if the lower 95% bootstrap bound exceeds 0.02 and at least 80% of direction effects exceed 0.02 and are at least 10 times their direction numerical floor.",
+    "question": "Are collective feedback (MF) and constant-amplitude projection (MP) dynamically distinguishable under the full-state observation map over the frozen confirmatory domain?",
+    "required_detected_fraction": 0.8,
+    "scope": "Any result is restricted to contract v1.0, the frozen parameter set, T=10, the declared observation map, and the initial-condition domain.",
+    "uncertainty": {
+      "confidence_level": 0.95,
+      "interpretation": "design-distribution uncertainty over the frozen direction set, not population sampling uncertainty",
+      "method": "percentile bootstrap over direction units",
+      "resamples": 50000,
+      "seed": 20260801
+    },
+    "unit_effect": "median of the five c0 config effects within one direction"
+  },
+  "protocol_id": "ARG-P5-COMP-v1",
+  "protocol_version": "1.0.0",
+  "provenance": {
+    "archive_layout": [
+      "RUN_MANIFEST.json",
+      "environment/",
+      "configs/",
+      "raw/",
+      "summaries/",
+      "failures.jsonl",
+      "checksums.sha256"
+    ],
+    "configuration_hash": "canonical sorted compact JSON",
+    "hash_algorithm": "sha256",
+    "raw_output_policy": "immutable; summaries are derived and must name all input hashes",
+    "required_row_fields": [
+      "source_commit",
+      "protocol_id",
+      "protocol_version",
+      "contract_version",
+      "config_id",
+      "inferential_unit",
+      "split",
+      "model_id",
+      "integrator",
+      "dt_or_tolerance_profile",
+      "step",
+      "time"
+    ]
+  },
+  "secondary_hypotheses": [
+    {
+      "claim_level": "developmental secondary; cannot promote a scientific claim",
+      "comparison": [
+        "mp",
+        "mfp"
+      ],
+      "detect_threshold": 0.01,
+      "id": "H2_MP_MFP_INDIRECT_NODE_DIVERGENCE",
+      "observation_map": "x",
+      "prediction": "Same-state node derivatives agree, but retained s/q feedback produces later node-trajectory divergence."
+    },
+    {
+      "claim_level": "developmental secondary",
+      "comparison": [
+        "m0",
+        "mf"
+      ],
+      "detect_threshold": 0.02,
+      "id": "H3_M0_MF_FEEDBACK_EFFECT",
+      "observation_map": "full",
+      "prediction": "Collective feedback produces a trajectory difference above numerical error."
+    },
+    {
+      "claim_level": "developmental secondary",
+      "comparison": [
+        "m0",
+        "mp"
+      ],
+      "detect_threshold": 0.02,
+      "id": "H4_M0_MP_PROJECTION_EFFECT",
+      "observation_map": "full",
+      "prediction": "Projection produces a trajectory difference above numerical error while preserving the constraint."
+    },
+    {
+      "gate": "mandatory; any violation invalidates the affected run and blocks claim promotion",
+      "id": "H5_PROJECTED_CONSTRAINT_GATE",
+      "models": [
+        "mp",
+        "mfp"
+      ],
+      "prediction": "Post-retraction residual remains within the frozen contract tolerance for every accepted run."
+    },
+    {
+      "gate": "mandatory; any violation stops the pilot",
+      "id": "H6_SAME_STATE_NODE_IDENTITY_GATE",
+      "models": [
+        "mp",
+        "mfp"
+      ],
+      "prediction": "Evaluating MP and MFP at the same recorded regular full state gives node derivatives equal within 1e-12 normalized error."
+    }
+  ],
+  "status": "FROZEN_NO_DATA",
+  "time_and_sampling": {
+    "horizon": 10.0,
+    "include_initial_state": true,
+    "observation_count": 1001,
+    "observation_interval": 0.01,
+    "reference_rk4_dt": 0.001,
+    "refinement_dts": [
+      0.001,
+      0.0005,
+      0.00025
+    ]
+  }
+}

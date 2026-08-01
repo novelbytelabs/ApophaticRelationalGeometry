@@ -1,6 +1,6 @@
 # Apophatic Relational Geometry
 
-ARG is a candidate synthesis of nonlinear local dynamics, adaptive relational geometry, collective feedback, and projected constraint mechanisms.
+ARG is a candidate synthesis of nonlinear local dynamics, adaptive relational geometry, endogenous collective feedback, and projected constraint mechanisms.
 
 It is not a claim of a new fundamental geometry or a description of absolute reality.
 
@@ -24,19 +24,17 @@ Only $M_F$ supports the narrow description:
 
 ### $M_P$
 
-Software-verified constant-amplitude projection sandbox:
+Constant-amplitude projection sandbox:
 
 $$
 \Gamma(Z)=\frac13x^Tx-c_0=0,
-$$
-
-$$
+\qquad
 f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
 $$
 
 ### $M_{FP}$
 
-Software-verified feedback-followed-by-projection prototype:
+Feedback followed by projection:
 
 $$
 F_{\mathrm{proposal}}=F_0+F_F.
@@ -48,11 +46,9 @@ $$
 \boxed{f_{FP}=f_P},
 $$
 
-while $M_{FP}$ retains collective feedback in $s$ and $q$. The same-state identity therefore does not imply identical trajectories.
+while feedback remains in $s$ and $q$. Same-state node identity therefore does not imply trajectory identity.
 
-The projected models use projected RK4 stages, mandatory radial retraction, fail-closed singular handling, separate diagnostics, and independent software-reference parity.
-
-They are not the completed relational-admissibility geometry and have not been scientifically validated.
+The projected models use projected RK4 stages, mandatory radial retraction, fail-closed singular handling, separate diagnostics, and independent software-reference parity. They are mechanism sandboxes, not validated physical laws.
 
 ## Binding claim ceiling
 
@@ -64,6 +60,24 @@ M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
+## Frozen comparative protocol
+
+Phase 5 froze protocol `ARG-P5-COMP-v1` before generating trajectories. It fixes hypotheses, effect and equivalence thresholds, observation maps, 24 direction-level units, pilot/confirmatory separation, parameters, RK4 refinement, DOP853 replication, exclusions, stop rules, provenance, executable metrics, and a SHA-256 lock.
+
+Hosted verification reported **65 passing tests** on Python 3.10 and **65 passing tests** on Python 3.12.
+
+Current authorization:
+
+$$
+\boxed{
+\text{development pilot authorized};
+\quad
+\text{confirmatory execution and scientific claims blocked}.
+}
+$$
+
+No pilot has been executed.
+
 ## Foundations
 
 - [Scope and status](00_scope_and_status.md)
@@ -72,7 +86,7 @@ $$
 - [Formalism and mechanism split](03_formalism.md)
 - [Original minimal model: $M_F$](04_minimal_model.md)
 - [Proof obligations](05_proof_obligations.md)
-- [Four-model experimental plan](06_experimental_plan.md)
+- [Experimental plan](06_experimental_plan.md)
 
 ## Research grounding and execution
 
@@ -84,16 +98,15 @@ $$
 - [Falsification criteria](12_falsification_criteria.md)
 - [Canonical alignment and claim ceiling](13_alignment_and_claim_ceiling.md)
 - [Phase-gated roadmap](14_roadmap.md)
-- [Frozen four-model design contract v1.0](15_four_model_design_contract.md)
+- [Four-model design contract v1.0](15_four_model_design_contract.md)
 - [Phase 3 $M_P$ verification record](16_phase3_mp_verification.md)
 - [Phase 4 $M_{FP}$ verification record](17_phase4_mfp_verification.md)
+- [Phase 5 comparative protocol v1.0](18_phase5_comparative_protocol.md)
 
 ## Current roadmap position
 
-**Phases 0–4 are complete. Phase 5 is in progress.**
+**Phases 0–5 are complete. Phase 6 is active.**
 
-Phase 4 merged through PR `#7`. GitHub Actions reported **51 passing tests** on both Python 3.10 and Python 3.12.
+Phase 6 must implement and independently verify the pilot-only runner and immutable archival pipeline. Confirmatory configurations remain inaccessible and no pilot has run.
 
-The active task is to freeze the comparative experiment protocol. No development pilot is authorized until the hypotheses, observation maps, manifests, metrics, solver/refinement policy, stop rules, and provenance requirements are fixed.
-
-> Separate the mechanisms. Freeze the contracts. Prove the projection. Test the alternatives. Reify nothing.
+> Separate the mechanisms. Freeze the contracts. Test the alternatives. Reify nothing.

@@ -1,0 +1,30 @@
+{
+  "manifest_id": "ARG-P5-PARAM-v1",
+  "parameters": {
+    "alpha": 1.0,
+    "beta": 1.0,
+    "chi": 0.35,
+    "epsilon": 1e-06,
+    "eta_0": 0.25,
+    "eta_1": 1.0,
+    "eta_2": 0.2,
+    "gamma": 0.8,
+    "kappa": 0.4,
+    "rho": 0.15,
+    "tau_q": 1.0,
+    "tau_s": 1.0
+  },
+  "policy": {
+    "fitting": "none",
+    "model_specific_activation": {
+      "m0": "chi=eta_2=rho=0 by model definition",
+      "mf": "all listed feedback parameters active",
+      "mfp": "all listed feedback parameters active before projection",
+      "mp": "M0 proposal plus projection; feedback parameters inactive"
+    },
+    "pilot_changes": "prohibited; any parameter change creates a new protocol version and leaves the confirmatory split unexecuted.",
+    "tuning": "none"
+  },
+  "protocol_id": "ARG-P5-COMP-v1",
+  "status": "FROZEN_NO_FITTING"
+}

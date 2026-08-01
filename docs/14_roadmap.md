@@ -2,7 +2,7 @@
 
 ## Operating rule
 
-ARG advances by passed gates, not by calendar optimism. A phase is complete only when its exit criteria pass and the claim ledger is updated.
+ARG advances by passed gates, not by calendar optimism. A phase is complete only when its exit criteria pass and the claim ledger is aligned.
 
 ## Binding claim ceiling
 
@@ -14,6 +14,18 @@ M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
+## Execution authorization
+
+$$
+\boxed{
+\text{development pilot authorized};
+\quad
+\text{confirmatory execution and scientific claims blocked}.
+}
+$$
+
+No Phase 5 trajectory was generated. Authorization is not execution.
+
 ## Current position
 
 | Phase | Status | Result |
@@ -22,11 +34,12 @@ $$
 | Phase 1 — Four-model design contract | COMPLETE | Contract v1.0 frozen. |
 | Phase 2 — Implement and verify $M_0$ | COMPLETE | No-feedback baseline merged and independently parity-tested. |
 | Phase 3 — Implement and verify $M_P$ | COMPLETE | Projection sandbox merged and hosted-tested. |
-| Phase 4 — Implement and verify $M_{FP}$ | COMPLETE | Combined feedback-plus-projection model merged; 51 hosted tests passed on Python 3.10 and 3.12. |
-| Phase 5 — Freeze comparative experiment protocol | IN PROGRESS | Scientific protocol gate opened. |
-| Phase 6 onward | BLOCKED | Await the frozen Phase 5 protocol. |
+| Phase 4 — Implement and verify $M_{FP}$ | COMPLETE | Combined model merged; 51 tests passed on Python 3.10 and 3.12. |
+| Phase 5 — Freeze comparative experiment protocol | COMPLETE | Data-free protocol, manifests, executable metrics, decision rules, and lock frozen; 65 tests passed on Python 3.10 and 3.12. |
+| Phase 6 — Development pilot | IN PROGRESS | Pilot runner and archival pipeline are the active implementation gate; no pilot has run. |
+| Phase 7 onward | BLOCKED | Confirmatory execution remains unauthorized. |
 
-Software tests verify declared code contracts. They do not validate the scientific hypothesis.
+Software tests verify declared code and protocol contracts. They do not validate the scientific hypothesis.
 
 ---
 
@@ -34,181 +47,116 @@ Software tests verify declared code contracts. They do not validate the scientif
 
 ## Phase 0 — Alignment
 
-**PASS.**
+**PASS.** The repository uses the canonical $M_0/M_F/M_P/M_{FP}$ split and distinguishes collective feedback from global-admissibility projection.
 
-The repository uses the canonical $M_0/M_F/M_P/M_{FP}$ split and distinguishes collective feedback from global-admissibility projection.
+## Phase 1 — Frozen model contract
 
-## Phase 1 — Frozen contract
-
-**PASS.**
-
-`15_four_model_design_contract.md` freezes the shared substrate, equations, model ordering, RK4 and retraction policies, singular behavior, diagnostics, observation maps, and independent-reference boundary.
+**PASS.** `15_four_model_design_contract.md` freezes equations, ordering, RK4 and retraction policies, singular behavior, diagnostics, observation maps, and the independent-reference boundary.
 
 ## Phase 2 — $M_0$
 
-**PASS.**
-
-Implemented and unit-tested:
-
-- exact no-feedback $F_0$;
-- no $c(x)$ transition dependency;
-- exact zero-feedback reduction $M_F=M_0$;
-- independent derivative and RK4 parity.
+**PASS.** Exact no-feedback dynamics, no hidden $c(x)$ transition path, zero-feedback reduction from $M_F$, and independent derivative/RK4 parity were established at software level.
 
 ## Phase 3 — $M_P$
 
-**PASS.**
-
-Implemented:
+**PASS.** The constant-amplitude projector
 
 $$
-\Gamma(Z)=c(x)-c_0=\frac13x^Tx-c_0=0,
+\Gamma(Z)=\frac13x^Tx-c_0=0,
+\qquad
+f_P=f_0-x\frac{x^Tf_0}{x^Tx}
 $$
 
-$$
-f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
-$$
+was implemented with projected RK4 stages, mandatory retraction, fail-closed singular handling, and independent parity.
 
-Verification record:
-
-- PR `#5`;
-- merge `97a9f6b7222b4543ee8184fb8e42b47b53ddf92c`;
-- GitHub Actions run `30717582276`;
-- Python 3.10: 35 passed;
-- Python 3.12: 35 passed.
-
-See `16_phase3_mp_verification.md`.
+Verification: PR `#5`, merge `97a9f6b7222b4543ee8184fb8e42b47b53ddf92c`, Actions `30717582276`, 35 tests in each configured Python environment.
 
 ## Phase 4 — $M_{FP}$
 
-**PASS.**
-
-Implemented the frozen ordering
+**PASS.** The frozen ordering
 
 $$
-F_{\mathrm{proposal}}=F_0+F_F,
+F_{\mathrm{proposal}}=F_0+F_F
 $$
 
-followed by node-state projection and mandatory retraction.
-
-The same-state structural identity is verified:
+followed by projection was implemented. At the same regular full state,
 
 $$
 \boxed{f_{FP}=f_P},
 $$
 
-because the node-feedback term is radial and $P_Tx=0$.
+while feedback remains in $s$ and $q$; therefore same-state derivative identity does not imply trajectory identity.
 
-The identity does not imply trajectory equivalence. $M_{FP}$ retains feedback in $s$ and $q$, so its adaptive substrate can diverge from $M_P$ and alter later node proposals.
+Verification: PR `#7`, merge `205fb8c5bf1b832e241af230612e3d7056be05f5`, Actions `30718821666`, 51 tests in each configured Python environment.
 
-Verification record:
+## Phase 5 — Frozen comparative protocol
 
-- PR `#7`;
-- merge `205fb8c5bf1b832e241af230612e3d7056be05f5`;
-- GitHub Actions run `30718821666`;
-- Python 3.10: 51 passed;
-- Python 3.12: 51 passed.
+**PASS.** Protocol `ARG-P5-COMP-v1` was frozen before trajectory generation.
 
-See `17_phase4_mfp_verification.md`.
+The primary question is whether $M_F$ and $M_P$ are distinguishable under the full-state map. The protocol freezes:
 
-No physical-adequacy, novelty, equivalence, causal-autonomy, or scientific-performance claim was promoted.
+- symmetric normalized RMS trajectory distance;
+- detection threshold $0.02$;
+- scoped-equivalence margin $0.002$;
+- direction-level inferential units;
+- a deterministic 24-direction, five-amplitude design;
+- 10 pilot directions and 14 held-out confirmatory directions;
+- fixed parameters with no fitting;
+- RK4 refinement and segmented DOP853 replication;
+- numerical floors, exclusions, stop rules, and immutable provenance;
+- executable bootstrap and fail-closed decision logic;
+- a SHA-256 protocol lock.
 
----
+Hosted verification reported 65 passing tests on Python 3.10 and 65 on Python 3.12. These are protocol/software tests, not experimental observations.
 
-# Phase 5 — Freeze comparative experiment protocol
-
-## Objective
-
-Freeze a falsification-oriented protocol that can distinguish the four mechanisms without using exploratory results to choose the final test.
-
-## Required model comparisons
-
-$$
-M_0\leftrightarrow M_F,
-\qquad
-M_0\leftrightarrow M_P,
-\qquad
-M_P\leftrightarrow M_{FP},
-\qquad
-M_F\leftrightarrow M_P.
-$$
-
-The protocol must explicitly separate:
-
-- feedback effects;
-- projection effects;
-- adaptive-substrate effects;
-- state-dependent geometry;
-- numerical artifacts;
-- observation-map dependence.
-
-## Required frozen elements
-
-- primary and secondary hypotheses;
-- exact observation maps;
-- parameter manifest;
-- initial-condition manifest;
-- structural inferential units;
-- intervention and ablation schedule;
-- trajectory-distance and mechanism metrics;
-- numerical refinement and alternate-integrator policy;
-- uncertainty treatment;
-- exclusion and stop rules;
-- exploratory versus confirmatory separation;
-- raw-output schema, source commit, configuration hashes, and checksums;
-- claim-promotion and failure rules.
-
-## Central predictions to test
-
-1. $M_F$ and $M_P$ are not assumed dynamically equivalent.
-2. At the same full state under contract v1.0,
-
-   $$
-   f_{FP}=f_P.
-   $$
-
-3. $M_P$ and $M_{FP}$ may nevertheless develop different trajectories because $M_{FP}$ retains $s/q$ feedback.
-4. Any claim of equivalence must specify the observation map, domain, and tolerance.
-5. Projection may add no useful explanatory or predictive value; that remains an admissible outcome.
-
-## Exit criteria
-
-- protocol document is complete and versioned;
-- all hypotheses and metrics are executable;
-- manifests and seeds are frozen;
-- no unresolved implementation ambiguity remains;
-- development-pilot and confirmatory datasets/configurations are separated before execution;
-- claim ledger and falsification criteria agree with the protocol.
+See `18_phase5_comparative_protocol.md` and `protocol/phase5_v1/`.
 
 ---
 
 # Phase 6 — Development pilot
 
-Blocked until Phase 5 passes.
+## Objective
 
-Purpose:
+Implement and verify a runner that executes **pilot configurations only** and produces a complete immutable archive without allowing confirmatory access.
 
-- expose numerical failures;
-- test whether observables identify the mechanisms;
-- identify degeneracies;
-- determine whether the sphere projection is informative enough.
+## Required implementation
 
-Pilot results remain developmental and cannot support confirmatory claims.
+- load and verify `LOCK.json` before execution;
+- reject every configuration labeled `confirmatory`;
+- execute all four models on the 50 frozen pilot configurations;
+- run the three RK4 resolutions and alternate DOP853 policy;
+- record all observation maps and mechanism diagnostics;
+- implement exogenous-replay and frozen-$s/q$ controls exactly as declared;
+- run all permutation tripwires;
+- retain failures and singular runs without imputation;
+- produce `RUN_MANIFEST.json`, environment records, raw outputs, summaries, `failures.jsonl`, and `checksums.sha256`;
+- compute developmental summaries without changing thresholds, manifests, or the held-out split.
+
+## Phase 6 claim ceiling
+
+Pilot results may identify numerical defects, degeneracies, uninformative observables, or protocol amendments. They cannot support a confirmatory mechanism claim.
+
+Any substantive amendment creates protocol v1.1 or later and requires a fresh, still-unexecuted confirmatory set.
+
+## Exit criteria
+
+- runner and archive schema pass independent tests;
+- confirmatory-access tripwires fail closed;
+- deterministic replay and checksums agree;
+- pilot numerical gates are applied exactly;
+- every failure is retained;
+- pilot outcome is labeled developmental;
+- no confirmatory trajectory has been generated.
 
 # Phase 7 — Confirmatory four-model experiment
 
-Only a frozen held-out run may support comparative mechanism claims.
+Blocked. Only a separately authorized held-out execution may support scoped comparative claims.
 
-Permitted outcomes include:
-
-- $M_F\ne M_P$;
-- restricted observational equivalence;
-- same-state node identity without trajectory identity;
-- no useful value from projection beyond simpler controls.
+Permitted outcomes include detection, restricted observational equivalence, inconclusive, or invalid. None establishes a fundamental geometry.
 
 # Phase 8 — Relational projection v2
 
-A later constraint involving mismatch, $s$, $q$, intrinsic distance, or compatibility requires a new versioned contract.
+A constraint involving mismatch, $s$, $q$, intrinsic distance, or compatibility requires a new versioned model contract.
 
 # Phase 9 — Physical anchors
 
@@ -220,4 +168,4 @@ Initial order:
 
 ## Immediate next action
 
-Create and freeze the Phase 5 comparative experiment protocol before executing any pilot runs.
+Implement and independently verify the Phase 6 pilot runner without executing confirmatory configurations.
