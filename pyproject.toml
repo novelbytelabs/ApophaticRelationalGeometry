@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apophatic-relational-geometry"
-version = "0.3.0"
-description = "Reference implementations of ARG local, feedback, and projected-admissibility prototypes"
+version = "0.4.0"
+description = "Reference implementations of ARG local, feedback, projected, and combined-mechanism prototypes"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "Arqon Tech Research"}]
