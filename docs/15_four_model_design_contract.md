@@ -1,10 +1,26 @@
 # Four-Model Design Contract
 
-**Status:** Frozen for implementation, version 1.0.
+**Contract status:** Frozen, version 1.0.
 
-**Scientific status:** This contract freezes definitions and numerical policies. It does not establish that $M_P$ or $M_{FP}$ is implemented, validated, physically adequate, or equivalent to $M_F$.
+**Implementation status:** All four models are implemented and unit-tested.
 
-## Purpose
+**Scientific status:** The contract fixes definitions, ordering, numerical policies, diagnostics, and software-verification requirements. It does not establish physical adequacy, scientific superiority, macro-level causal autonomy, or equivalence between collective feedback and projection.
+
+## Binding claim ceiling
+
+$$
+\boxed{
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
+\quad
+M_F\equiv M_P\ \text{unverified}.
+}
+$$
+
+The constant-amplitude manifold in this contract is a deliberately minimal projection-mechanism sandbox. It is not the completed relational-admissibility geometry of ARG.
+
+---
+
+# 1. Purpose
 
 This contract defines the first directly comparable ARG model family:
 
@@ -12,27 +28,20 @@ $$
 M_0,\qquad M_F,\qquad M_P,\qquad M_{FP}.
 $$
 
-Its purpose is to separate endogenous collective feedback from explicit global-admissibility projection while holding the local adaptive substrate fixed.
+Its purpose is to separate:
 
-The constant-amplitude manifold used in version 1.0 is a deliberately minimal projection-mechanism sandbox. It is not presented as the completed relational-admissibility geometry of ARG.
+1. local/adaptive substrate dynamics;
+2. endogenous collective feedback;
+3. explicit tangent-space projection;
+4. feedback followed by projection;
 
-## Binding claim ceiling
-
-Until implementation and verification gates pass:
-
-$$
-\boxed{
-M_F\ \text{implemented and unit-tested};
-\quad
-M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
-}
-$$
+while holding the graph, state representation, local parameters, observation schedule, and reference integrator policy fixed.
 
 ---
 
-# 1. Shared substrate
+# 2. Shared substrate
 
-## 1.1 Graph and state
+## 2.1 Graph and state
 
 All four models use the complete undirected graph on three nodes with fixed edge order
 
@@ -64,7 +73,7 @@ $$
 
 In $M_0$ and $M_P$, $c(x)$ may be computed for diagnostics or constraint evaluation but may not enter the proposal equations as feedback.
 
-## 1.2 Edge activation and conductance
+## 2.2 Edge activation and conductance
 
 For edge $(i,j)$,
 
@@ -77,7 +86,7 @@ $$
 w_{ij}=a_{ij}e^{-q_{ij}}.
 $$
 
-## 1.3 Intrinsic geometry
+## 2.3 Intrinsic geometry
 
 For edge $(i,j)$,
 
@@ -90,11 +99,11 @@ $$
 
 The intrinsic distance $d_Z(i,j)$ is the shortest-path distance induced by these positive edge lengths.
 
-In the first four-model comparison, this geometry is an observable. It does not define the version 1.0 projection constraint.
+In contract v1.0, intrinsic geometry is an observable. It does not define the projection constraint.
 
-## 1.4 Fixed reference parameter set
+## 2.4 Reference parameter set
 
-The first implementation and software-verification slice uses the existing defaults without fitting:
+The software-reference parameters are
 
 $$
 \begin{aligned}
@@ -105,8 +114,6 @@ $$
 \end{aligned}
 $$
 
-No parameter sweep is licensed by this contract. Any exploratory or confirmatory range must be frozen in a later experiment protocol.
-
 Implementation validation requires all parameters to be finite and
 
 $$
@@ -114,12 +121,14 @@ $$
 $$
 
 $$
-\chi,\eta_0,\eta_2,\kappa,\rho\geq0.
+\chi,\eta_0,\eta_2,\kappa,\rho\ge0.
 $$
+
+No scientific parameter sweep is licensed by this contract. Exploratory and confirmatory manifests belong to a later experiment protocol.
 
 ---
 
-# 2. $M_0$: local/adaptive substrate baseline
+# 3. $M_0$: local/adaptive baseline
 
 $M_0$ contains local nonlinear dynamics, neighborhood coupling, adaptive edge activation, and metric deformation, but no collective feedback and no admissibility projection.
 
@@ -167,17 +176,13 @@ F_0(Z)
 \right).
 $$
 
-## $M_0$ dependency invariant
+## Dependency invariant
 
-No value computed from $c(x)$ may enter an $M_0$ transition equation.
-
-Logging $c(x)$ is allowed. Transition dependence is not.
+No value computed from $c(x)$ may enter an $M_0$ transition equation. Logging $c(x)$ is allowed; transition dependence is not.
 
 ---
 
-# 3. $M_F$: endogenous collective feedback
-
-$M_F$ is the current executable prototype.
+# 4. $M_F$: endogenous collective feedback
 
 Define the feedback vector
 
@@ -241,7 +246,7 @@ $$
 \chi=\eta_2=\rho=0
 $$
 
-must recover $M_0$ exactly.
+recovers $M_0$ exactly for the frozen equations.
 
 ## Licensed description
 
@@ -255,9 +260,9 @@ It does not establish macro-level causal autonomy, transport, counterfactual ade
 
 ---
 
-# 4. $M_P$: projected admissibility
+# 5. $M_P$: projected admissibility
 
-## 4.1 Constraint
+## 5.1 Constraint
 
 Version 1.0 constrains collective node amplitude:
 
@@ -276,7 +281,7 @@ $$
 c_0=c(x(0))>0.
 $$
 
-There are no inequality constraints in version 1.0:
+There are no inequality constraints:
 
 $$
 H=\varnothing.
@@ -292,7 +297,7 @@ $$
 
 The constraint acts only on $x$. The $s$ and $q$ proposal equations are those of $M_0$.
 
-## 4.2 Constraint Jacobian and regularity
+## 5.2 Jacobian and regularity
 
 In full state order $(x,s,q)$,
 
@@ -306,7 +311,7 @@ J_\Gamma(Z)
 \right).
 $$
 
-On the declared manifold,
+On the manifold,
 
 $$
 J_\Gamma J_\Gamma^T
@@ -318,17 +323,21 @@ $$
 
 Thus the rank-one projection is regular whenever $c_0>0$.
 
-## 4.3 State-space metric
+## 5.3 State-space metric and projector
 
-Version 1.0 uses the Euclidean metric
+Version 1.0 uses
 
 $$
 G=I_9.
 $$
 
-Because $\Gamma$ depends only on $x$, projection changes only the node-state derivative.
+The node tangent projector is
 
-## 4.4 Continuous-time projection
+$$
+P_T(x)
+=
+I_3-\frac{xx^T}{x^Tx}.
+$$
 
 Let
 
@@ -336,15 +345,7 @@ $$
 f_0(Z)=\dot x^{(0)}.
 $$
 
-The tangent projector is
-
-$$
-P_T(x)
-=
-I_3-rac{xx^T}{x^Tx}.
-$$
-
-The projected node derivative is
+Then
 
 $$
 \boxed{
@@ -353,7 +354,7 @@ f_P=P_Tf_0
 }
 $$
 
-The complete dynamics are
+The complete derivative is
 
 $$
 \dot Z_P
@@ -365,7 +366,11 @@ f_P,
 \right).
 $$
 
-Tangency follows exactly:
+Tangency follows:
+
+$$
+x^Tf_P=0,
+$$
 
 $$
 \frac{d}{dt}\Gamma(Z(t))
@@ -374,11 +379,11 @@ $$
 =0.
 $$
 
-This is a continuous-time result. Discrete preservation requires the numerical policy below.
+This is a continuous-time result. Discrete preservation follows the numerical policy below.
 
 ---
 
-# 5. $M_{FP}$: feedback followed by projection
+# 6. $M_{FP}$: feedback followed by projection
 
 Version 1.0 fixes the ordering
 
@@ -388,7 +393,13 @@ $$
 
 followed by node-state projection.
 
-The node derivative is
+The node proposal is
+
+$$
+f_0-\chi c(x)x,
+$$
+
+and the projected node derivative is
 
 $$
 f_{FP}
@@ -398,7 +409,7 @@ $$
 
 The $s$ and $q$ derivatives retain the $M_F$ feedback terms.
 
-Since
+Because
 
 $$
 P_Tx=0,
@@ -410,15 +421,13 @@ $$
 P_T[-\chi c(x)x]=0.
 $$
 
-Therefore version 1.0 requires the exact structural identity
+Therefore, at the same regular full state,
 
 $$
-\boxed{
-f_{FP}=f_P.
-}
+\boxed{f_{FP}=f_P}.
 $$
 
-This applies only to node derivatives. In general,
+This identity applies only to the node derivative at the same full state. In general,
 
 $$
 \dot s^{(FP)}\ne\dot s^{(P)},
@@ -426,19 +435,23 @@ $$
 \dot q^{(FP)}\ne\dot q^{(P)}.
 $$
 
-## Exact reductions
+Consequently, the $M_P$ and $M_{FP}$ trajectories need not remain equal: different $s/q$ trajectories can alter later conductances and node proposals.
 
-The implementation must satisfy:
+## Reduction requirements
 
-- $M_{FP}$ with projection disabled equals $M_F$;
+The implementation must establish:
+
+- the unprojected $F_0+F_F$ proposal agrees with $M_F$;
 - $M_{FP}$ with $\chi=\eta_2=\rho=0$ equals $M_P$;
-- disabling projection and setting $\chi=\eta_2=\rho=0$ equals $M_0$.
+- removing feedback and projection recovers $M_0$.
+
+These requirements are unit-tested at the software level.
 
 ---
 
-# 6. Numerical policy
+# 7. Numerical policy
 
-## 6.1 Shared integrator
+## 7.1 Shared integrator
 
 All four models use classical fixed-step fourth-order Runge--Kutta as the reference integrator:
 
@@ -460,15 +473,15 @@ $$
 T=10.
 $$
 
-Later experiment protocols may change these values only by an explicit versioned amendment.
+Later experiment protocols may change these values only through an explicit versioned amendment.
 
-## 6.2 Projected stages
+## 7.2 Projected stages
 
-For $M_P$ and $M_{FP}$, every RK4 stage evaluates the projected vector field using the same run-level constant $c_0$.
+For $M_P$ and $M_{FP}$, every RK4 stage evaluates the applicable projected vector field using the same run-level constant $c_0$.
 
-## 6.3 Mandatory retraction
+## 7.3 Mandatory retraction
 
-After every full RK4 step in $M_P$ and $M_{FP}$, retract the raw node state:
+After every complete $M_P$ or $M_{FP}$ RK4 step, retract the raw node state:
 
 $$
 x_{n+1}
@@ -480,7 +493,7 @@ $$
 
 The $s$ and $q$ components are not retracted.
 
-Record both the pre-retraction residual and
+Record the pre-retraction constraint residual, post-retraction residual, and
 
 $$
 r_n
@@ -488,14 +501,14 @@ r_n
 \|x_{n+1}-x_{n+1}^{\mathrm{raw}}\|.
 $$
 
-$M_0$ and $M_F$ use the same RK4 integrator but no retraction.
+$M_0$ and $M_F$ use the same RK4 integrator without retraction.
 
-## 6.4 Singular and nonfinite policy
+## 7.4 Singular and nonfinite policy
 
-Require
+The executable domain requires
 
 $$
-c_0\geq10^{-6}.
+c_0\ge10^{-6}.
 $$
 
 Let
@@ -506,37 +519,37 @@ r_*=\sqrt{3c_0},
 r_{\min}=\max(10^{-12},10^{-8}r_*).
 $$
 
-Fail closed if, at any projected stage or retraction:
+Fail closed if, at any projected stage or retraction,
 
 $$
-\|x\|\leq r_{\min},
+\|x\|\le r_{\min},
 $$
 
 or if any state, derivative, projection, distance, or diagnostic is nonfinite.
 
 No silent pseudoinverse replacement, denominator clipping, or arbitrary projection fallback is permitted.
 
-## 6.5 Numerical tolerances
+## 7.5 Tolerances
 
 Algebraic projector checks use
 
 $$
-\text{atol}=\text{rtol}=10^{-12}.
+\mathrm{atol}=\mathrm{rtol}=10^{-12}.
 $$
 
 The normalized tangency residual must satisfy
 
 $$
-\frac{|x^Tf_P|}
-{\|x\|\,\|f_P\|+10^{-30}}
-\leq10^{-12}.
+\frac{|x^Tf|}
+{\|x\|\,\|f\|+10^{-30}}
+\le10^{-12}.
 $$
 
 After retraction,
 
 $$
 |c(x)-c_0|
-\leq10^{-12}\max(1,c_0).
+\le10^{-12}\max(1,c_0).
 $$
 
 Before scientific use, every reported configuration must be rerun at
@@ -553,18 +566,16 @@ For every frozen observation map, the endpoint discrepancy at $\Delta t/2$ versu
 
 $$
 \|O_{\Delta t/2}-O_{\Delta t/4}\|_\infty
-\leq10^{-6}+10^{-5}\|O_{\Delta t/4}\|_\infty.
+\le10^{-6}+10^{-5}\|O_{\Delta t/4}\|_\infty.
 $$
 
 Failure blocks the run rather than being averaged away.
 
 ---
 
-# 7. Initial-condition contract
+# 8. Initial-condition contract
 
-## 7.1 Reference smoke state
-
-The existing reference state remains
+## 8.1 Reference state
 
 $$
 x_0=(0.8,-0.25,0.45),
@@ -582,9 +593,9 @@ $$
 c_0=c(x_0).
 $$
 
-## 7.2 Frozen development family
+## 8.2 Frozen development family
 
-For mechanism-development runs, use
+For mechanism-development runs,
 
 $$
 x_0=\sqrt{3c_0}\,u,
@@ -595,7 +606,7 @@ $$
 with
 
 $$
-c_0\in\{0.05,0.25,1.0\}
+c_0\in\{0.05,0.25,1.0\},
 $$
 
 and normalized directions generated from
@@ -611,13 +622,13 @@ v_6&=(1,0.2,-0.4).
 \end{aligned}
 $$
 
-Use the same $s_0$ and $q_0$ above for each model. Permutation-equivariance tests generate consistent permutations of $x,s,q$ separately from this family.
+Use the same $s_0$ and $q_0$ for each model. Permutation-equivariance tests generate consistent permutations of $x,s,q$.
 
 This is a development family, not a confirmatory sample.
 
 ---
 
-# 8. Observation maps
+# 9. Observation maps
 
 Every comparison must state the observation map under which equivalence or difference is claimed.
 
@@ -647,49 +658,53 @@ $$
 
 ## Mechanism diagnostics
 
-Record:
+Record, where applicable:
 
-- the local proposal $F_0$;
-- the feedback vector $F_F$;
-- the projection correction;
-- the pre- and post-retraction constraint residual;
+- local proposal $F_0$;
+- feedback vector $F_F$;
+- combined proposal $F_0+F_F$;
+- projection correction;
+- projected derivative;
+- feedback and correction norms;
+- pre- and post-retraction constraint residuals;
 - retraction magnitude;
 - normalized tangency residual;
 - projection denominator $x^Tx$.
 
-No unqualified claim of model equivalence is permitted. It must specify both the observation map and tolerance.
+No unqualified claim of model equivalence is permitted. It must specify the observation map, domain, and tolerance.
 
 ---
 
-# 9. Independent reference boundary
+# 10. Independent reference boundary
 
-The production implementation may share state and parameter data structures, but the independent reference path must:
+The production implementation may share immutable state, parameter, and target containers with the reference path. The reference path must:
 
-- live in a separate module or test-only module;
+- live in a separate test-only module;
 - write the equations directly from this contract;
 - not call production derivative, feedback, projector, retraction, or integrator helpers;
 - compare complete derivatives and one-step updates against production;
 - use separately written edge loops or explicit formulas.
 
-Agreement with code that calls the same helpers is not an independent reference test.
+Agreement with code that calls the same production helpers is not an independent reference test.
 
 ---
 
-# 10. Fairness and control policy
+# 11. Fairness and control policy
 
 - All models use the same graph, local parameters, initial $x,s,q$, observation schedule, and RK4 accuracy policy.
 - $c_0$ is derived from the shared initial state and is not fitted.
 - Projection adds no fitted parameter in version 1.0.
 - Feedback parameters are active only in $M_F$ and $M_{FP}$; parameter-count differences must be reported.
-- $M_0$ must contain no hidden collective transition path.
+- $M_0$ contains no hidden collective transition path.
 - $M_P$ version 1.0 projects only $x$.
-- A later projection involving $s$, $q$, mismatch, or intrinsic geometry must receive a new versioned contract.
-- The soft-penalty control is excluded from the first four-model experiment. It may be introduced later as a separately preregistered comparison.
-- Raw outputs must contain the model identifier, source commit, configuration hash, and contract version.
+- $M_{FP}$ applies feedback before projection.
+- A later projection involving $s$, $q$, mismatch, intrinsic geometry, or inequality constraints requires a new versioned contract.
+- The soft-penalty control is excluded from the first four-model experiment unless separately preregistered.
+- Raw outputs contain the model identifier, source commit, configuration hash, and contract version.
 
 ---
 
-# 11. State-safety tripwires
+# 12. State-safety tripwires
 
 A run fails if any condition occurs:
 
@@ -699,71 +714,78 @@ A run fails if any condition occurs:
 - normalized tangency residual above tolerance;
 - $|s_e|>50$ or $|q_e|>50$;
 - $\|x\|_\infty>10^6$;
-- integration refinement criterion fails;
+- integration-refinement criterion fails;
 - production/reference parity fails.
 
 These are software-safety bounds, not physical laws.
 
 ---
 
-# 12. Required verification gates
+# 13. Verification gates
 
 ## $M_0$
 
-- direct known-answer derivative test;
-- proof by dependency audit that $c(x)$ does not enter transitions;
-- exact reduction from $M_F$ at $\chi=\eta_2=\rho=0$;
+- known-answer derivative;
+- no-$c(x)$ dependency tripwire;
+- exact zero-feedback reduction from $M_F$;
 - permutation equivariance;
 - production/reference parity.
 
 ## $M_F$
 
-- preservation of the existing five tests;
-- direct known-answer test for all three feedback paths;
-- mutation tests for removed or sign-flipped feedback paths;
+- fixed regression derivative;
+- all three feedback paths;
+- zero-feedback reduction to $M_0$;
 - production/reference parity.
 
 ## $M_P$
 
-- hand-computed projection test;
+- hand-computed projection;
 - $P_T^T=P_T$ and $P_T^2=P_T$;
-- tangency test;
-- fail-closed singular test;
+- $P_Tx=0$ and tangency;
+- fail-closed singular behavior;
 - permutation equivariance;
-- mandatory retraction test;
-- step-refinement test;
+- mandatory retraction;
+- step refinement;
 - production/reference parity.
 
 ## $M_{FP}$
 
-- exact reductions to $M_0$, $M_F$, and $M_P$;
-- exact node radial-feedback annihilation test;
-- retained $s/q$ feedback test;
+- explicit $F_0$, $F_F$, and $F_0+F_F$ decomposition;
+- radial node-feedback annihilation;
+- same-state identity $f_{FP}=f_P$;
+- retained $s/q$ feedback;
+- zero-feedback reduction to $M_P$;
+- no-feedback/no-projection recovery of $M_0$;
 - separate feedback and projection diagnostics;
+- permutation equivariance;
+- fail-closed singular behavior;
+- retraction and refinement;
 - production/reference parity.
+
+All four software gates have passed. Their verification records are in `16_phase3_mp_verification.md`, `17_phase4_mfp_verification.md`, and the claim ledger.
 
 ---
 
-# 13. Frozen Phase 1 decisions
+# 14. Implementation records and scientific boundary
 
-Version 1.0 resolves the former open questions as follows:
+## Implementation records
 
-1. **Integrator:** fixed-step classical RK4 for all models.
-2. **Retraction:** mandatory after every full $M_P$ and $M_{FP}$ step.
-3. **Near singularity:** relative norm threshold with fail-closed behavior.
-4. **Projection scope:** $x$ only in version 1.0.
-5. **Second projection prototype:** deferred; any relational constraint receives a new contract.
-6. **Initial conditions:** reference state plus the frozen development family above.
-7. **Parameters:** existing defaults fixed for the first implementation; no sweep yet.
-8. **Independent implementation:** separate code path with no production equation helpers.
-9. **Observation maps:** full, node, adaptive-substrate, geometry, and mechanism maps frozen above.
-10. **Soft penalty:** excluded from the first comparison.
-11. **Interpretive scope:** sphere projection is a mechanism sandbox, not a claim about physical reality.
+- Phase 2: $M_0/M_F$ baseline and parity suite.
+- Phase 3: $M_P$, PR `#5`, merge `97a9f6b7222b4543ee8184fb8e42b47b53ddf92c`, 35 tests on Python 3.10 and 3.12.
+- Phase 4: $M_{FP}$, PR `#7`, merge `205fb8c5bf1b832e241af230612e3d7056be05f5`, 51 tests on Python 3.10 and 3.12.
 
-## Phase 1 exit decision
+## Scientific boundary
 
-**PASS — contract frozen for implementation.**
+The passed software gates establish that the declared mechanisms exist in code and satisfy the frozen implementation contracts at tested cases.
 
-The next implementation gate is $M_0$.
+They do not establish:
 
-The scientific claim ceiling remains unchanged until later gates pass.
+- that feedback and projection are scientifically equivalent;
+- that same-state node identity implies trajectory identity;
+- that any model predicts a physical system;
+- that the constant-amplitude constraint is physically correct;
+- that ARG defeats simpler alternatives;
+- that macro-level causal autonomy or strong emergence has been demonstrated.
+
+The next gate is the frozen Phase 5 comparative experiment protocol. No development pilot is authorized before that protocol passes review.
