@@ -56,6 +56,12 @@ class PilotArchiveWriter:
     """Write-once archive builder with deterministic files and final checksums."""
 
     def __init__(self, root: str | Path, run_manifest: Mapping[str, Any]) -> None:
+        if run_manifest.get("runner_id") != RUNNER_ID:
+            raise ValueError("run manifest has wrong runner_id")
+        if run_manifest.get("split") != PILOT_SPLIT:
+            raise ConfirmatoryAccessError("run manifest must be pilot-only")
+        if run_manifest.get("confirmatory_execution") != "BLOCKED":
+            raise ConfirmatoryAccessError("run manifest must block confirmatory execution")
         self.root = Path(root).resolve()
         if self.root.exists() and any(self.root.iterdir()):
             raise FileExistsError("pilot archive directory must not already contain files")
