@@ -2,9 +2,13 @@
 
 ## Status
 
-$M_0$, $M_F$, and the contract-v1.0 $M_P$ projection sandbox are implemented and unit-tested. $M_{FP}$ remains unimplemented.
+All four contract-v1.0 models are implemented and unit-tested:
 
-No comparative scientific experiment is authorized until $M_{FP}$ passes its implementation gate and the experiment protocol is frozen.
+$$
+M_0,\qquad M_F,\qquad M_P,\qquad M_{FP}.
+$$
+
+No comparative scientific experiment is authorized until the Phase 5 protocol is complete and frozen.
 
 ## Canonical models
 
@@ -21,31 +25,52 @@ $M_0$ plus endogenous collective feedback.
 $M_0$ proposal projected onto
 
 $$
-\Gamma(Z)=\frac13x^Tx-c_0=0.
+\Gamma(Z)=\frac13x^Tx-c_0=0,
 $$
 
-It includes projected RK4 stages and mandatory radial retraction.
+with projected RK4 stages and mandatory radial retraction.
 
 ### $M_{FP}$
 
-Feedback proposal followed by projection, with feedback and projection separately observable. This model remains the active implementation gate.
+The feedback proposal
+
+$$
+F_{\mathrm{proposal}}=F_0+F_F
+$$
+
+followed by node projection, with feedback and projection separately observable.
+
+At the same regular full state,
+
+$$
+\boxed{f_{FP}=f_P},
+$$
+
+while feedback remains in $s$ and $q$.
 
 ## Experiment 0: Code-equation alignment
 
-### Completed
+### Completed at software level
 
-- $M_0/M_F$ derivative and RK4 reference parity;
-- $M_F(\chi=\eta_2=\rho=0)=M_0$ reduction;
-- $M_P$ projector identities;
-- $M_P$ tangency, retraction, singular handling, and reference parity;
-- model, contract, source, and configuration labels where declared.
+- independent derivative and RK4 parity for $M_0/M_F$;
+- exact $M_F(\chi=\eta_2=\rho=0)=M_0$ reduction;
+- $M_P$ projector identities, tangency, retraction, singular handling, and independent parity;
+- $M_{FP}$ feedback/projection decomposition and independent parity;
+- same-state identity $f_{FP}=f_P$;
+- retained $s/q$ feedback in $M_{FP}$;
+- exact zero-feedback $M_{FP}=M_P$ reduction;
+- permutation tripwires for all four models;
+- model, contract, source, configuration, and mechanism output labels.
 
-### Remaining
+### Remaining before scientific execution
 
-- $M_{FP}$ implementation and independent parity;
-- exact combined-model reductions;
-- full four-model output schema parity;
-- final confirmatory configuration manifest.
+- frozen comparative hypotheses and metrics;
+- final parameter and initial-condition manifests;
+- alternate-integrator policy;
+- exploratory and confirmatory partition;
+- structural inferential units;
+- exclusion, stop, and failure rules;
+- raw-output checksum and archival manifest.
 
 ## Experiment 1: $M_0$ versus $M_F$
 
@@ -98,8 +123,6 @@ $$
 - solver-refinement behavior;
 - full-state and observation-map trajectory differences.
 
-Implementation tests have passed. The comparative scientific run remains blocked pending the frozen four-model protocol.
-
 ## Experiment 3: $M_F$ versus $M_P$
 
 ### Question
@@ -118,11 +141,11 @@ Required comparisons:
 
 Similar trajectories are not evidence of equivalence.
 
-## Experiment 4: $M_{FP}$ mechanism interaction
+## Experiment 4: $M_P$ versus $M_{FP}$
 
-### Binding structural prediction
+### Binding structural result
 
-For the contract-v1.0 sphere constraint,
+At the same regular full state,
 
 $$
 P_T[-\chi c(x)x]=0,
@@ -131,16 +154,18 @@ $$
 hence
 
 $$
-\boxed{f_{FP}=f_P}
+\boxed{f_{FP}=f_P}.
 $$
 
-for node derivatives.
+This does not imply trajectory identity because $M_{FP}$ retains feedback in $s$ and $q$, which can change later conductances and node proposals.
 
-The $s$ and $q$ derivatives retain $M_F$ feedback. The first task is to implement and verify this identity before measuring trajectory interaction.
+### Primary question
+
+Under which parameter regimes and observation maps does retained adaptive-substrate feedback make $M_{FP}$ distinguishable from $M_P$?
 
 ### Interaction residual
 
-After implementation, define under a preregistered comparison map
+Under a preregistered comparison map, define
 
 $$
 R_{FP}
@@ -152,7 +177,7 @@ R_{FP}
 \Delta(M_P,M_0).
 $$
 
-The exact $\Delta$ must be frozen before results are generated.
+The exact $\Delta$, aggregation, and tolerance must be frozen before results are generated.
 
 ## Experiment 5: Dynamic-geometry ablation
 
@@ -182,14 +207,14 @@ $$
 \Phi_t(PZ_0)=P\Phi_t(Z_0)
 $$
 
-after undoing the permutation. Software-level permutation tests pass for $M_0$, $M_F$, and $M_P$; $M_{FP}$ remains pending.
+after undoing the permutation. Software-level permutation tests pass for all four models.
 
 ## Experiment 9: Numerical tripwires
 
 Require:
 
 - decreasing discrepancy under step refinement;
-- agreement with an independently written reference path;
+- agreement with independently written reference paths;
 - deterministic replay;
 - finite-value checks;
 - explicit singular-projection failure;
@@ -219,7 +244,7 @@ Numerical resemblance alone is insufficient.
 - edge-activation trajectories;
 - metric-deformation trajectories;
 - intrinsic distance matrices;
-- feedback vector;
+- local proposal, feedback vector, and combined proposal;
 - projection correction;
 - constraint and tangency residuals;
 - retraction magnitude;
@@ -227,13 +252,29 @@ Numerical resemblance alone is insufficient.
 - computational cost;
 - singularity and failure logs.
 
+## Phase 5 protocol requirements
+
+Before a pilot, freeze:
+
+- primary and secondary hypotheses;
+- observation maps and equivalence tolerances;
+- parameter and initial-condition manifests;
+- intervention and ablation schedule;
+- structural inferential units;
+- metrics and uncertainty treatment;
+- refinement and alternate-integrator rules;
+- exclusion and stop rules;
+- pilot/confirmatory separation;
+- source-commit, configuration-hash, output-checksum, and archival policy;
+- claim-promotion and falsification rules.
+
 ## Execution authorization
 
 Current authorization:
 
-- $M_0/M_F/M_P$ software verification: complete;
-- $M_{FP}$ implementation and software verification: authorized;
-- exploratory four-model pilot: blocked;
+- all four software-verification programs: complete;
+- Phase 5 protocol design and review: authorized;
+- exploratory four-model pilot: blocked until protocol freeze;
 - confirmatory four-model run: blocked;
 - scientific feedback-versus-projection claims: blocked;
 - $M_F\equiv M_P$ claim: unverified;
