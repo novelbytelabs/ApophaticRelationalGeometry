@@ -1,4 +1,4 @@
-"""Command-line simulation for the minimal three-node model."""
+"""Command-line simulation for the ARG M_F three-node feedback prototype."""
 
 from __future__ import annotations
 
