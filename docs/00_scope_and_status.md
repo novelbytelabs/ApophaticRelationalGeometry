@@ -51,51 +51,62 @@ Contract v1.0 implements
 $$
 \Gamma(Z)=c(x)-c_0
 =\frac13x^Tx-c_0=0,
-\qquad
-c_0=c(x(0))\ge10^{-6},
 $$
 
 with
 
 $$
-\boxed{
 f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
-}
 $$
 
 The implementation projects every RK4 derivative stage, retracts each completed step radially to the manifold, records mechanism diagnostics, and fails closed near rank loss.
 
-This is a constant-amplitude projection-mechanism sandbox. It is not the final relational geometry and is not a validated physical model.
+### $M_{FP}$: feedback followed by projection
 
-### $M_{FP}$: combined target
+The model constructs
 
-Feedback followed by projection remains unimplemented and unverified.
+$$
+F_{\mathrm{proposal}}=F_0+F_F
+$$
+
+and projects the node proposal using the same $M_P$ policy.
+
+At the same regular full state,
+
+$$
+\boxed{f_{FP}=f_P},
+$$
+
+because the node-feedback term is radial. $M_{FP}$ nevertheless retains collective feedback in $s$ and $q$, so its later trajectory need not equal $M_P$.
+
+Both projected models are constant-amplitude mechanism sandboxes. They are not the final relational geometry and are not validated physical models.
 
 ## Current claim ceiling
 
 $$
 \boxed{
-M_0,M_F,M_P\ \text{implemented and unit-tested};
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
 \quad
-M_{FP}\ \text{and }M_F\equiv M_P\ \text{unverified}.
+M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
 ## What is currently claimed
 
+- All four contract-v1.0 prototypes are implemented through canonical dispatch.
 - $M_0$ implements the no-feedback local/adaptive baseline.
 - $M_F$ implements endogenous collective feedback through an explicit substrate path.
 - $M_P$ implements the frozen constant-amplitude tangent projection and numerical retraction policy.
-- $M_F(\chi=\eta_2=\rho=0)=M_0$ is unit-tested.
-- The $M_P$ projector identities, tangency, retraction, singular handling, permutation equivariance, and independent software-reference parity are unit-tested.
-- Intrinsic edge lengths and graph distances are state dependent in all three implemented prototypes.
+- $M_{FP}$ implements an explicit feedback proposal followed by node projection, with retained $s/q$ feedback.
+- The declared reduction paths, projector identities, tangency, retraction, singular handling, permutation equivariance, and independent software-reference parity are unit-tested.
+- Intrinsic edge lengths and graph distances are state dependent in all four prototypes.
 
 ## What is not currently claimed
 
-- That collective feedback is equivalent to tangent-space projection.
-- That $M_{FP}$ is implemented.
+- That collective feedback is dynamically or observationally equivalent to tangent-space projection.
+- That same-state node equality implies trajectory equality.
 - That prototype-level feedback or projection establishes macro-level causal autonomy.
-- That projection improves predictive performance.
+- That any mechanism improves predictive performance.
 - That constant amplitude is physically fundamental.
 - That any implemented model defeats scientific alternatives.
 - That organization dependence, counterfactual adequacy, transport, or empirical emergence has been demonstrated.
@@ -108,9 +119,11 @@ $$
 
 Phase 2 passed 20 local software tests for $M_0/M_F$.
 
-Phase 3 passed 35 hosted tests on Python 3.10 and the same 35 tests on Python 3.12 for $M_0/M_F/M_P$. These validate software and local mathematical contracts, not a scientific hypothesis.
+Phase 3 passed 35 hosted tests on Python 3.10 and Python 3.12 for $M_0/M_F/M_P$.
 
-No comparative scientific experiment has been executed.
+Phase 4 passed 51 hosted tests on Python 3.10 and Python 3.12 for the complete four-model implementation.
+
+These validate software and local mathematical contracts, not a scientific hypothesis. No comparative scientific experiment has been executed.
 
 ## Standard of progress
 
