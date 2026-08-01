@@ -8,33 +8,34 @@ No novelty claim is authorized until the relevant row contains primary-source su
 
 ## Current implementation boundary
 
-The current executable is $M_F$, not $M_P$:
+All four contract-v1.0 prototypes are implemented and unit-tested:
 
 $$
 \boxed{
-M_F\ \text{implemented and unit-tested};
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
 \quad
-M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
+M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-Novelty must therefore be assessed separately for collective feedback, projected admissibility, and their eventual combination.
+Implementation removes a software gap. It does not establish mathematical novelty, scientific utility, or physical adequacy.
 
 ## Initial matrix
 
 | Component | Established neighboring work to investigate | Shared structure | Candidate addition in ARG | Current status | Required evidence |
 |---|---|---|---|---|---|
-| Collective feedback | Mean-field models, order-parameter feedback, collective-coordinate dynamics, adaptive control | A system-derived statistic affects constituent dynamics. | Feedback is coupled to adaptive relational topology and intrinsic metric variables. | Implemented in $M_F$; novelty unassessed | Map the exact $c(x)$ paths to known feedback models and test reparameterization. |
-| Constraint projection | Projected dynamical systems, constrained mechanics, differential-algebraic equations, incompressible-flow projection | Proposed motion is corrected to satisfy explicit constraints. | Constraint geometry may coevolve with state and relation variables. | Proposed for $M_P$; unimplemented | Define $\Gamma/H$, implement projection, and derive exact overlap with standard methods. |
-| Feedback-projection combination | Constrained mean-field systems, projected adaptive control, feedback under algebraic constraints | Feedback modifies a proposal that is also constrained. | Separately measurable $F_F$ and $F_P$ on dynamic relational geometry. | Proposed for $M_{FP}$; unimplemented | Show exact reductions and test whether the combination already exists. |
-| Feedback-projection equivalence | Model reduction, conjugacy, observational equivalence | Distinct formulations may generate equivalent dynamics. | Determine whether $M_F$ approximates or equals $M_P$ in a restricted domain. | Unverified | Exact conjugacy, reparameterization, bounded approximation, or scoped observation-map result. |
-| Adaptive topology | Adaptive networks, rewiring systems, temporal graphs | Node states and connection strengths coevolve. | Edge activation contributes directly to intrinsic geometry. | Implemented in $M_F$; novelty unassessed | Compare with state-dependent weighted-network formulations. |
-| State-dependent metric | Metric graphs, dynamic metric spaces, graph Ricci flow | Distances or geometric quantities evolve. | Metric depends jointly on mismatch, activation, and deformation variables. | Implemented specialization in $M_F$ | Determine whether it is reducible to standard weighted shortest paths. |
-| Local-to-global compatibility | Cellular sheaves, bundles, consensus systems, distributed constraint satisfaction | Local assignments must agree on overlaps or relations. | Compatibility may participate in nonlinear coevolving metric and projected dynamics. | Target-family concept; unimplemented generally | Formalize restriction structure and compare with nonlinear sheaf models. |
+| Collective feedback | Mean-field models, order-parameter feedback, collective-coordinate dynamics, adaptive control | A system-derived statistic affects constituent dynamics. | Feedback is coupled to adaptive relational topology and intrinsic metric variables. | Implemented in $M_F$ and $M_{FP}$; novelty unassessed | Map the exact $c(x)$ paths to known feedback models and test reparameterization. |
+| Constraint projection | Projected dynamical systems, constrained mechanics, differential-algebraic equations, incompressible-flow projection | Proposed motion is corrected to satisfy explicit constraints. | Constraint geometry may eventually involve coevolving state and relation variables. | Constant-amplitude sandbox implemented in $M_P$ and $M_{FP}$; novelty unassessed | Derive exact overlap with standard projected systems and identify what, if anything, is distinct. |
+| Feedback-projection combination | Constrained mean-field systems, projected adaptive control, feedback under algebraic constraints | Feedback modifies a proposal that is also constrained. | Separately measurable $F_0$, $F_F$, combined proposal, and projection correction on adaptive relational geometry. | Implemented in $M_{FP}$; novelty unassessed | Search for exact precedents, map equations, and test reparameterization. |
+| Same-state node identity | Orthogonal projection of radial fields | A radial component is annihilated by projection onto a sphere tangent space. | $f_{FP}=f_P$ at the same regular full state while $s/q$ feedback remains. | Proved under the frozen assumptions and unit-tested | Determine whether the trajectory-level consequence offers any nontrivial or useful distinction. |
+| Feedback-projection equivalence | Model reduction, conjugacy, observational equivalence | Distinct formulations may generate equivalent dynamics. | Determine whether $M_F$ approximates or equals $M_P$ on a restricted domain or observation map. | Unverified | Exact conjugacy, reparameterization, bounded approximation, or scoped observation-map result. |
+| Adaptive topology | Adaptive networks, rewiring systems, temporal graphs | Node states and connection strengths coevolve. | Edge activation contributes directly to intrinsic geometry. | Implemented in all four prototypes; novelty unassessed | Compare with state-dependent weighted-network formulations. |
+| State-dependent metric | Metric graphs, dynamic metric spaces, graph Ricci flow | Distances or geometric quantities evolve. | Metric depends jointly on mismatch, activation, and deformation variables. | Implemented scalar specialization in all four prototypes | Determine whether it is reducible to standard weighted shortest paths. |
+| Local-to-global compatibility | Cellular sheaves, bundles, consensus systems, distributed constraint satisfaction | Local assignments must agree on overlaps or relations. | Compatibility may participate in nonlinear coevolving metric and projected dynamics. | Target-family concept; not implemented generally | Formalize restriction structure and compare with nonlinear sheaf models. |
 | Prototype-level downward feedback | Multiscale feedback, order-parameter control, causal coarse-graining | Aggregate substrate information changes constituent transitions. | Explicit path $x\to c(x)\to(\dot x,\dot s,\dot q)$. | Implemented; stronger causal status unverified | Test organization dependence, counterfactual adequacy, invariance, transport, and alternatives. |
 | Non-collapse barrier | Singular potentials, hard-core repulsion, collision avoidance | Energy diverges near forbidden contact. | Barrier acts on intrinsic relational edge length rather than fixed ambient distance. | Proposed; theorem absent | Derive reduction to or distinction from existing singular interaction models. |
-| Presentation invariance | Gauge symmetry, equivariant dynamics, quotient state spaces | Labels and coordinates are not physical observables. | Applied to adaptive graph, metric, feedback, and projection structures. | Partially unit-tested; general proof absent | State the transformation groupoid and prove per-model equivariance. |
-| Mechanism influence ratios | Influence decomposition, constraint-force analysis, causal contribution measures | Separate baseline, feedback, and corrective terms. | Distinct $\chi_i^F$ and $\chi_i^P$ diagnostics. | Feedback diagnostic design available; projection blocked | Demonstrate robustness and discriminating value against baselines. |
+| Presentation invariance | Gauge symmetry, equivariant dynamics, quotient state spaces | Labels and coordinates are not physical observables. | Applied to adaptive graph, metric, feedback, and projection structures. | Permutation equivariance unit-tested for all four; general proof absent | State the transformation groupoid and prove per-model equivariance. |
+| Mechanism influence diagnostics | Influence decomposition, constraint-force analysis, causal contribution measures | Separate baseline, feedback, and corrective terms. | Distinct local proposal, feedback, combined-proposal, projection, and retraction diagnostics. | Implemented; discriminating value untested | Demonstrate robustness and usefulness against matched alternatives. |
 | One-many interpretation | Relational mechanics, systems theory, process ontology | Global organization and local parts are mutually dependent descriptions. | Pluralistic-monist interpretation governed by a non-reification schema. | Philosophical synthesis | Keep separate from mathematical novelty claims. |
 | Prime substrate | Number-theoretic physics, arithmetic dynamics, prime graphs | Arithmetic structure is proposed as generative. | Primes would generate a relational computational substrate. | Undefined and quarantined | Supply a precise object, lawful dynamics, and unique prediction. |
 
@@ -57,7 +58,7 @@ $$
 }
 $$
 
-Only a subset is currently implemented. This remains a **candidate synthesis**, not an established innovation.
+The first five ingredients have concrete contract-v1.0 prototypes. General compatibility constraints, non-collapse theorems, broad presentation invariance, scientific utility, and physical grounding remain open. ARG remains a **candidate synthesis**, not an established innovation.
 
 ## Closest-framework procedure
 
@@ -96,8 +97,8 @@ Do not describe ARG as:
 - a proof of pluralistic monism;
 - a replacement for existing geometry;
 - a discovery of the computational fabric of reality;
-- an implemented projected geometry while only $M_F$ exists.
+- scientifically validated merely because all four prototypes are implemented.
 
 Permitted language:
 
-> ARG investigates a candidate synthesis of endogenous collective feedback, adaptive relational geometry, and target projected-admissibility mechanisms.
+> ARG implements and studies a candidate synthesis of endogenous collective feedback, adaptive relational geometry, and constant-amplitude projected-admissibility mechanisms. Novelty and scientific adequacy remain open.
