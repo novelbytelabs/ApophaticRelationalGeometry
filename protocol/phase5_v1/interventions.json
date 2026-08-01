@@ -1,0 +1,67 @@
+{
+  "adaptive_substrate_ablations": [
+    {
+      "id": "freeze_s",
+      "rule": "set ds/dt=0 and hold s(t)=s0 while x and q evolve"
+    },
+    {
+      "id": "freeze_q",
+      "rule": "set dq/dt=0 and hold q(t)=q0 while x and s evolve"
+    },
+    {
+      "id": "freeze_sq",
+      "rule": "hold both s(t)=s0 and q(t)=q0"
+    }
+  ],
+  "canonical_mechanism_removals": [
+    {
+      "id": "remove_feedback",
+      "implementation": "mfp -> mp and mf -> m0",
+      "inferential_role": "isolates collective feedback"
+    },
+    {
+      "id": "remove_projection",
+      "implementation": "mfp -> mf and mp -> m0",
+      "inferential_role": "isolates projection"
+    },
+    {
+      "id": "remove_both",
+      "implementation": "mfp -> m0",
+      "inferential_role": "mechanism-free baseline"
+    }
+  ],
+  "collective_statistic_control": {
+    "definition": "For each configuration, generate c_ref(t) from the paired MF reference trajectory at RK4 dt/4, then replace endogenous c(x) in a control run with piecewise-linear interpolation of c_ref(t) on the 0.01 observation grid.",
+    "id": "exogenous_replay",
+    "restrictions": [
+      "The replay signal is generated independently within each split and configuration.",
+      "No smoothing, phase shifting, rescaling, or fitted lag is allowed.",
+      "The control is paired and descriptive; it is not one of the four canonical models."
+    ]
+  },
+  "graph_structure_manifest": {
+    "allowed_now": "pure node relabeling only",
+    "future_requirement": "A physical graph-incidence intervention requires a versioned contract amendment and cannot be added after pilot inspection.",
+    "reason": "The frozen model family uses the complete three-node graph; it has no non-isomorphic three-node structural variant without changing the model contract.",
+    "status": "EXCLUDED_BY_CONTRACT_V1"
+  },
+  "manifest_id": "ARG-P5-INTERVENTIONS-v1",
+  "protocol_id": "ARG-P5-COMP-v1",
+  "relabeling_tripwire": {
+    "pass_rule": "after inverse permutation, every recorded observation agrees within the numerical convergence threshold",
+    "permutations": [
+      [0,1,2],
+      [0,2,1],
+      [1,0,2],
+      [1,2,0],
+      [2,0,1],
+      [2,1,0]
+    ],
+    "role": "software invariance tripwire only; permutations are not independent inferential units"
+  },
+  "soft_penalty_control": {
+    "future_requirement": "May be introduced only by a versioned protocol amendment before confirmatory execution.",
+    "status": "EXCLUDED_BY_CONTRACT_V1"
+  },
+  "status": "FROZEN_NO_EXECUTION"
+}
