@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "apophatic-relational-geometry"
 version = "0.1.0"
-description = "Reference implementation of a nonlinear dynamic relational constraint geometry"
+description = "Reference implementation of the ARG MF collective-feedback prototype"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "Arqon Tech Research"}]
