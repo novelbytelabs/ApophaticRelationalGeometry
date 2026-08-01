@@ -1,0 +1,30 @@
+{
+  "environment_id": "ARG-P6-EXEC-ENV-v1",
+  "status": "FROZEN_NO_EXECUTION",
+  "protocol_id": "ARG-P5-COMP-v1",
+  "runner_id": "ARG-P6-PILOT-RUNNER-v1",
+  "execution_python": {
+    "implementation": "CPython",
+    "version": "3.12.13"
+  },
+  "runtime_distributions": {
+    "numpy": "2.5.1",
+    "scipy": "1.18.0",
+    "apophatic-relational-geometry": "0.6.0"
+  },
+  "platform_policy": {
+    "operating_system": "Linux",
+    "machine": "x86_64",
+    "blas_and_compiler": "record_and_hash_at_execution"
+  },
+  "fingerprint_policy": {
+    "python_executable_sha256": "record_at_execution",
+    "installed_distribution_tree_sha256": "record_at_execution",
+    "tracked_source_tree_sha256": "record_at_execution",
+    "protocol_lock_sha256": "record_at_execution",
+    "implementation_file_sha256": "record_at_execution"
+  },
+  "confirmatory_execution": "BLOCKED",
+  "pilot_execution": "BLOCKED_PENDING_PHASE6A1_EXTERNAL_AUDIT",
+  "notes": "This file freezes the intended Phase 6B execution substrate. It does not authorize execution. Hosted compatibility tests continue on Python 3.10 and 3.12, but scientific pilot execution is restricted to this exact environment after Phase 6A.1 external clearance."
+}
