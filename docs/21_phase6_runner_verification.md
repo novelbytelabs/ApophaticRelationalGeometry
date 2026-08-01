@@ -63,18 +63,14 @@ Pull request:
 #11
 ```
 
-The runner and its final claim-control alignment repeatedly passed the complete hosted matrix. A representative full verification run is:
-
-```text
-30723065931
-```
+The runner and claim-control alignment passed the complete hosted matrix repeatedly. The verification record preserves representative run `30723065931`; the merge decision additionally requires the latest pull-request check to pass.
 
 Environments:
 
 - Python 3.10 — **100 passed**;
 - Python 3.12 — **100 passed**.
 
-These are 100 unique software tests executed in two Python environments, not 200 independent experimental observations. The pull request's latest check must also pass before merge.
+These are 100 unique software tests executed in two Python environments, not 200 independent experimental observations.
 
 ## No-pilot-data verification
 
