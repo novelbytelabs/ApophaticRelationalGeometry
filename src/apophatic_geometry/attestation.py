@@ -1,0 +1,235 @@
+"""Fail-closed source, runtime, and execution attestation utilities.
+
+No caller-supplied environment variable is accepted as provenance. Scientific
+artifacts must derive identity from a clean Git checkout, tracked source bytes,
+the frozen protocol lock, the declared integrator, and installed runtime files.
+"""
+
+from __future__ import annotations
+
+from contextlib import redirect_stdout
+import hashlib
+import importlib.metadata
+import io
+import json
+from pathlib import Path
+import platform
+import re
+import subprocess
+import sys
+from typing import Any, Iterable, Mapping
+
+import numpy as np
+
+from .protocol import canonical_json_sha256, file_sha256, load_json
+
+_COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
+
+
+class AttestationError(RuntimeError):
+    """Raised when execution provenance cannot be established fail closed."""
+
+
+def _run_git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", "-C", str(root), *args],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+
+def _require_repo_root(repo_root: str | Path) -> Path:
+    root = Path(repo_root).resolve(strict=True)
+    result = _run_git(root, "rev-parse", "--show-toplevel")
+    if result.returncode != 0:
+        raise AttestationError("attestation requires a Git checkout")
+    top = Path(result.stdout.strip()).resolve(strict=True)
+    if top != root:
+        raise AttestationError("repo_root must be the Git checkout root")
+    return root
+
+
+def require_clean_tracked_tree(repo_root: str | Path) -> tuple[Path, str]:
+    """Return ``(root, commit)`` for a clean tracked checkout.
+
+    Untracked files are not accepted as provenance and are not included in the
+    source hash. Modified, deleted, staged, or conflicted tracked files fail.
+    """
+
+    root = _require_repo_root(repo_root)
+    status = _run_git(root, "status", "--porcelain", "--untracked-files=no")
+    if status.returncode != 0 or status.stdout.strip():
+        raise AttestationError("attested execution requires a clean tracked tree")
+    head = _run_git(root, "rev-parse", "HEAD")
+    commit = head.stdout.strip()
+    if head.returncode != 0 or _COMMIT_RE.fullmatch(commit) is None:
+        raise AttestationError("unable to derive a canonical 40-character source commit")
+    return root, commit
+
+
+def _root_confined_file(root: Path, relative: str) -> Path:
+    candidate = (root / relative).resolve(strict=True)
+    try:
+        candidate.relative_to(root)
+    except ValueError as exc:
+        raise AttestationError(f"tracked path escapes repository root: {relative}") from exc
+    if candidate.is_symlink() or not candidate.is_file():
+        raise AttestationError(f"tracked source must be a regular non-symlink file: {relative}")
+    return candidate
+
+
+def tracked_source_sha256(repo_root: str | Path) -> str:
+    """Hash every tracked regular file with path and length framing."""
+
+    root = _require_repo_root(repo_root)
+    listed = subprocess.run(
+        ["git", "-C", str(root), "ls-files", "-z"],
+        check=False,
+        capture_output=True,
+    )
+    if listed.returncode != 0:
+        raise AttestationError("unable to enumerate tracked source files")
+    relative_paths = [
+        item.decode("utf-8", errors="strict")
+        for item in listed.stdout.split(b"\0")
+        if item
+    ]
+    if not relative_paths:
+        raise AttestationError("tracked source set is empty")
+
+    digest = hashlib.sha256()
+    for relative in sorted(relative_paths):
+        path = _root_confined_file(root, relative)
+        path_bytes = relative.encode("utf-8")
+        content = path.read_bytes()
+        digest.update(len(path_bytes).to_bytes(8, "big"))
+        digest.update(path_bytes)
+        digest.update(len(content).to_bytes(8, "big"))
+        digest.update(content)
+    return digest.hexdigest()
+
+
+def _distribution_tree_sha256(name: str) -> str:
+    """Hash installed files declared by one Python distribution."""
+
+    try:
+        distribution = importlib.metadata.distribution(name)
+    except importlib.metadata.PackageNotFoundError as exc:
+        raise AttestationError(f"required distribution is unavailable: {name}") from exc
+    files = distribution.files
+    if not files:
+        raise AttestationError(f"distribution does not expose an installed-file manifest: {name}")
+
+    digest = hashlib.sha256()
+    file_count = 0
+    for entry in sorted(files, key=lambda value: str(value)):
+        path = Path(distribution.locate_file(entry))
+        if not path.is_file():
+            continue
+        relative = str(entry).replace("\\", "/")
+        path_bytes = relative.encode("utf-8")
+        content = path.read_bytes()
+        digest.update(len(path_bytes).to_bytes(8, "big"))
+        digest.update(path_bytes)
+        digest.update(len(content).to_bytes(8, "big"))
+        digest.update(content)
+        file_count += 1
+    if file_count == 0:
+        raise AttestationError(f"distribution has no hashable installed files: {name}")
+    return digest.hexdigest()
+
+
+def runtime_environment() -> dict[str, Any]:
+    """Return version and installed-byte fingerprints for execution dependencies."""
+
+    stream = io.StringIO()
+    with redirect_stdout(stream):
+        np.show_config()
+    distributions: dict[str, dict[str, str]] = {}
+    for name in ("apophatic-relational-geometry", "numpy", "scipy"):
+        distributions[name] = {
+            "version": importlib.metadata.version(name),
+            "installed_tree_sha256": _distribution_tree_sha256(name),
+        }
+    return {
+        "python_version": platform.python_version(),
+        "python_implementation": platform.python_implementation(),
+        "python_build": list(platform.python_build()),
+        "python_executable_sha256": file_sha256(Path(sys.executable).resolve(strict=True)),
+        "platform": platform.platform(),
+        "machine": platform.machine(),
+        "processor": platform.processor(),
+        "numpy_configuration": stream.getvalue(),
+        "distributions": distributions,
+    }
+
+
+def protocol_lock_attestation(repo_root: str | Path) -> dict[str, str]:
+    root = _require_repo_root(repo_root)
+    path = root / "protocol" / "phase5_v1" / "LOCK.json"
+    manifest = load_json(path)
+    if not isinstance(manifest, Mapping):
+        raise AttestationError("protocol lock is not a JSON object")
+    return {
+        "path": str(path.relative_to(root)),
+        "file_sha256": file_sha256(path),
+        "canonical_sha256": canonical_json_sha256(manifest),
+        "lock_id": str(manifest.get("lock_id", "")),
+    }
+
+
+def implementation_hashes(
+    repo_root: str | Path,
+    relative_paths: Iterable[str],
+) -> dict[str, str]:
+    root = _require_repo_root(repo_root)
+    hashes: dict[str, str] = {}
+    for relative in sorted(set(relative_paths)):
+        path = _root_confined_file(root, relative)
+        hashes[relative] = file_sha256(path)
+    if not hashes:
+        raise AttestationError("implementation hash set is empty")
+    return hashes
+
+
+def build_attestation(
+    repo_root: str | Path,
+    *,
+    integrator: str,
+    implementation_paths: Iterable[str],
+) -> dict[str, Any]:
+    """Construct a complete attestation derived from the execution substrate."""
+
+    if not integrator:
+        raise ValueError("integrator identifier is required")
+    root, source_commit = require_clean_tracked_tree(repo_root)
+    environment = runtime_environment()
+    attestation = {
+        "attestation_version": "ARG-ATTEST-v1",
+        "artifact_kind": "clean_git_checkout",
+        "source_commit": source_commit,
+        "source_tree_sha256": tracked_source_sha256(root),
+        "protocol_lock": protocol_lock_attestation(root),
+        "integrator": integrator,
+        "implementation_files": implementation_hashes(root, implementation_paths),
+        "runtime_environment": environment,
+        "runtime_environment_sha256": canonical_json_sha256(environment),
+    }
+    attestation["attestation_sha256"] = canonical_json_sha256(attestation)
+    return attestation
+
+
+def write_canonical_json_bytes(value: Any) -> bytes:
+    """Serialize strict canonical JSON with one terminating newline."""
+
+    return (
+        json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+            allow_nan=False,
+        )
+        + "\n"
+    ).encode("utf-8")
