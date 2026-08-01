@@ -25,6 +25,7 @@ nav:
       - Falsification Criteria: 12_falsification_criteria.md
       - Canonical Alignment: 13_alignment_and_claim_ceiling.md
       - Roadmap: 14_roadmap.md
+      - Four-Model Design Contract: 15_four_model_design_contract.md
   - Decisions:
       - Separate Mathematics from Ontology: adr/0001-separate-math-from-ontology.md
   - History:
