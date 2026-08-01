@@ -14,7 +14,7 @@ from typing import Any, Mapping
 import numpy as np
 
 from apophatic_geometry.model import Parameters, State
-from reference_equations import reference_rk4_step
+from tests.reference_equations import reference_rk4_step
 
 _PROTOCOL_ID = "ARG-P5-COMP-v1"
 
