@@ -1,13 +1,11 @@
-"""Frozen-manifest loading, pilot reconstruction, and source authorization."""
+"""Frozen-manifest loading, pilot reconstruction, and execution authorization."""
 
 from __future__ import annotations
 
 from dataclasses import asdict
-import importlib.metadata
 from pathlib import Path
-import platform
+import re
 import subprocess
-import sys
 from typing import Any, Mapping, Sequence
 
 import numpy as np
@@ -37,6 +35,15 @@ from .protocol import (
     validate_protocol_manifest,
     verify_lock,
 )
+
+INTEGRITY_BASELINE_PATH = Path(
+    "protocol/phase6_runner_v1/INTEGRITY_BASELINE.json"
+)
+EXECUTION_ENVIRONMENT_PATH = Path(
+    "protocol/phase6_runner_v1/EXECUTION_ENVIRONMENT.json"
+)
+_HEX_40 = re.compile(r"^[0-9a-f]{40}$")
+_HEX_64 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _strict_json(path: Path) -> Mapping[str, Any]:
@@ -157,7 +164,9 @@ def configuration_payload(
     }
 
 
-def build_pilot_configurations(bundle: FrozenProtocolBundle) -> tuple[PilotConfiguration, ...]:
+def build_pilot_configurations(
+    bundle: FrozenProtocolBundle,
+) -> tuple[PilotConfiguration, ...]:
     """Reconstruct exactly the 50 pilot configurations and no others."""
 
     manifest = bundle.initial_conditions
@@ -276,36 +285,78 @@ def _run_git(repo_root: Path, *args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _verify_integrity_baseline(root: Path, phase4_commit: str) -> Mapping[str, Any]:
+    path = root / INTEGRITY_BASELINE_PATH
+    if not path.is_file():
+        raise ProtocolIntegrityError("remediated integrity baseline is missing")
+    baseline = _strict_json(path)
+    required = {
+        "baseline_id": "ARG-P6-INTEGRITY-BASELINE-v1",
+        "status": "FROZEN_NO_EXECUTION",
+        "protocol_id": PROTOCOL_ID,
+        "protocol_version": PROTOCOL_VERSION,
+        "phase4_model_implementation_commit": phase4_commit,
+        "scientific_equations_changed": False,
+        "trajectory_data_generated": False,
+        "confirmatory_execution": "BLOCKED",
+    }
+    for key, expected in required.items():
+        if baseline.get(key) != expected:
+            raise ProtocolIntegrityError(f"integrity baseline mismatch: {key}")
+    files = baseline.get("files")
+    if not isinstance(files, Mapping) or not files:
+        raise ProtocolIntegrityError("integrity baseline file set is missing")
+    if any(
+        not isinstance(path_name, str)
+        or not isinstance(digest, str)
+        or _HEX_64.fullmatch(digest) is None
+        for path_name, digest in files.items()
+    ):
+        raise ProtocolIntegrityError("integrity baseline contains an invalid path or digest")
+    try:
+        verify_lock(root, {"protocol_id": PROTOCOL_ID, "files": dict(files)})
+    except (OSError, ValueError, TypeError) as exc:
+        raise ProtocolIntegrityError(f"integrity baseline verification failed: {exc}") from exc
+    return baseline
+
+
 def verify_model_baseline(repo_root: str | Path, protocol: Mapping[str, Any]) -> str:
-    """Require a clean Git tree and unchanged model files relative to Phase 4."""
+    """Verify unchanged canonical equations plus the remediated integrity baseline."""
 
     root = Path(repo_root).resolve()
-    baseline = str(protocol.get("model_implementation_commit", ""))
-    if len(baseline) != 40:
+    phase4_commit = str(protocol.get("model_implementation_commit", ""))
+    if _HEX_40.fullmatch(phase4_commit) is None:
         raise ProtocolIntegrityError("model implementation commit is missing")
     top = _run_git(root, "rev-parse", "--show-toplevel")
     if top.returncode != 0 or Path(top.stdout.strip()).resolve() != root:
         raise ProtocolIntegrityError("runner requires the repository root of a Git checkout")
-    present = _run_git(root, "cat-file", "-e", f"{baseline}^{{commit}}")
+    present = _run_git(root, "cat-file", "-e", f"{phase4_commit}^{{commit}}")
     if present.returncode != 0:
         raise ProtocolIntegrityError("model baseline commit is unavailable; fetch full history")
-    changed = _run_git(
+
+    # The canonical four-model equations remain byte-identical to Phase 4.
+    # model.py may differ only through the separately frozen integrity baseline,
+    # because Phase 6A.1 adds domain guards and immutable state handling there.
+    changed_equations = _run_git(
         root,
         "diff",
         "--quiet",
-        baseline,
+        phase4_commit,
         "--",
-        "src/apophatic_geometry/model.py",
         "src/apophatic_geometry/models.py",
     )
-    if changed.returncode != 0:
-        raise ProtocolIntegrityError("model equations differ from the frozen Phase 4 baseline")
+    if changed_equations.returncode != 0:
+        raise ProtocolIntegrityError(
+            "canonical model equations differ from the frozen Phase 4 baseline"
+        )
+    _verify_integrity_baseline(root, phase4_commit)
+
     dirty = _run_git(root, "status", "--porcelain", "--untracked-files=no")
     if dirty.returncode != 0 or dirty.stdout.strip():
         raise ProtocolIntegrityError("pilot execution requires a clean tracked working tree")
     head = _run_git(root, "rev-parse", "HEAD")
     source_commit = head.stdout.strip()
-    if head.returncode != 0 or len(source_commit) != 40:
+    if head.returncode != 0 or _HEX_40.fullmatch(source_commit) is None:
         raise ProtocolIntegrityError("unable to resolve source commit")
     return source_commit
 
@@ -314,13 +365,7 @@ def validate_execution_authorization(
     repo_root: str | Path,
     source_commit: str,
 ) -> Mapping[str, Any]:
-    """Require a committed authorization for an already verified runner commit.
-
-    The authorization records the prior runner commit rather than attempting a
-    self-referential hash of the commit that contains the authorization file.
-    Only the fixed authorization path may differ between the authorized runner
-    commit and the execution commit.
-    """
+    """Require a committed authorization for an already verified runner commit."""
 
     root = Path(repo_root).resolve()
     path = root / EXECUTION_AUTHORIZATION_PATH
@@ -347,8 +392,10 @@ def validate_execution_authorization(
             raise ProtocolIntegrityError(f"execution authorization lacks {key}")
 
     runner_commit = str(authorization.get("runner_source_commit", ""))
-    if len(runner_commit) != 40:
+    if _HEX_40.fullmatch(runner_commit) is None:
         raise ProtocolIntegrityError("execution authorization lacks runner_source_commit")
+    if _HEX_40.fullmatch(source_commit) is None:
+        raise ProtocolIntegrityError("execution source commit is invalid")
     present = _run_git(root, "cat-file", "-e", f"{runner_commit}^{{commit}}")
     if present.returncode != 0:
         raise ProtocolIntegrityError("authorized runner commit is unavailable")
@@ -360,6 +407,7 @@ def validate_execution_authorization(
         "src/apophatic_geometry/model.py",
         "src/apophatic_geometry/models.py",
         "src/apophatic_geometry/protocol.py",
+        "src/apophatic_geometry/attestation.py",
         "src/apophatic_geometry/pilot_types.py",
         "src/apophatic_geometry/pilot_manifest.py",
         "src/apophatic_geometry/pilot_mechanisms.py",
@@ -370,11 +418,21 @@ def validate_execution_authorization(
         "src/apophatic_geometry/pilot.py",
         "src/apophatic_geometry/pilot_cli.py",
         "protocol/phase5_v1",
+        str(INTEGRITY_BASELINE_PATH),
+        str(EXECUTION_ENVIRONMENT_PATH),
     )
-    changed = _run_git(root, "diff", "--quiet", runner_commit, source_commit, "--", *protected_paths)
+    changed = _run_git(
+        root,
+        "diff",
+        "--quiet",
+        runner_commit,
+        source_commit,
+        "--",
+        *protected_paths,
+    )
     if changed.returncode != 0:
         raise ProtocolIntegrityError(
-            "runner or frozen protocol changed after the authorized runner commit"
+            "runner, integrity baseline, environment policy, or frozen protocol changed after authorization"
         )
     tracked = _run_git(
         root,
@@ -387,17 +445,55 @@ def validate_execution_authorization(
     return authorization
 
 
-def runtime_environment() -> dict[str, Any]:
-    distributions = {
-        distribution.metadata["Name"]: distribution.version
-        for distribution in importlib.metadata.distributions()
-        if distribution.metadata.get("Name")
+def validate_execution_environment_policy(
+    repo_root: str | Path,
+    runtime: Mapping[str, Any],
+    *,
+    require_execution_clearance: bool,
+) -> Mapping[str, Any]:
+    """Validate exact execution versions and the explicit external-clearance state."""
+
+    root = Path(repo_root).resolve()
+    policy = _strict_json(root / EXECUTION_ENVIRONMENT_PATH)
+    required = {
+        "environment_id": "ARG-P6-EXEC-ENV-v1",
+        "protocol_id": PROTOCOL_ID,
+        "runner_id": RUNNER_ID,
+        "confirmatory_execution": "BLOCKED",
     }
-    return {
-        "python": sys.version,
-        "implementation": platform.python_implementation(),
-        "platform": platform.platform(),
-        "numpy": np.__version__,
-        "scipy": importlib.metadata.version("scipy"),
-        "packages": dict(sorted(distributions.items(), key=lambda item: item[0].lower())),
-    }
+    for key, expected in required.items():
+        if policy.get(key) != expected:
+            raise ProtocolIntegrityError(f"execution environment policy mismatch: {key}")
+
+    python_policy = policy.get("execution_python")
+    distributions_policy = policy.get("runtime_distributions")
+    distributions_runtime = runtime.get("distributions")
+    if not isinstance(python_policy, Mapping):
+        raise ProtocolIntegrityError("execution Python policy is missing")
+    if not isinstance(distributions_policy, Mapping):
+        raise ProtocolIntegrityError("execution distribution policy is missing")
+    if not isinstance(distributions_runtime, Mapping):
+        raise ProtocolIntegrityError("runtime distribution attestation is missing")
+
+    if runtime.get("python_implementation") != python_policy.get("implementation"):
+        raise ProtocolIntegrityError("Python implementation differs from execution policy")
+    if runtime.get("python_version") != python_policy.get("version"):
+        raise ProtocolIntegrityError("Python version differs from execution policy")
+    for name, expected_version in distributions_policy.items():
+        entry = distributions_runtime.get(name)
+        if not isinstance(entry, Mapping) or entry.get("version") != expected_version:
+            raise ProtocolIntegrityError(
+                f"runtime distribution differs from execution policy: {name}"
+            )
+        digest = entry.get("installed_tree_sha256")
+        if not isinstance(digest, str) or _HEX_64.fullmatch(digest) is None:
+            raise ProtocolIntegrityError(
+                f"runtime distribution lacks an installed-byte fingerprint: {name}"
+            )
+
+    if require_execution_clearance:
+        if policy.get("status") != "CLEARED_AFTER_PHASE6A1_EXTERNAL_AUDIT":
+            raise ProtocolIntegrityError("Phase 6A.1 external audit clearance is absent")
+        if policy.get("pilot_execution") != "AUTHORIZED_ONLY_WITH_EXECUTION_RECORD":
+            raise ProtocolIntegrityError("pilot execution remains blocked by environment policy")
+    return policy
