@@ -1,0 +1,18 @@
+{
+  "files": {
+    "protocol/phase5_v1/README.md": "9c7d56aa7b4a3d96bd0d99510904922d64033f937a7b54c4ba6c4b4dedd3de69",
+    "protocol/phase5_v1/initial_conditions.json": "2d9a9c323d27962ecdfb0adcb111bb7852ea3e4f76f524037f2b54b7faedd870",
+    "protocol/phase5_v1/interventions.json": "65bbffef086d5cd3509417dd88c5052a40a4c7923a0e2e384f69ed0fca2e8e47",
+    "protocol/phase5_v1/parameters.json": "d287fd6a199318a55d2f3b45652ce778d69b84f981b02b3dbd534be6ddf6e8c1",
+    "protocol/phase5_v1/protocol.json": "d4b02568b8dacf019e71e728ccc87797d8cd48cdfe373e97d585e6a9aecf985b",
+    "src/apophatic_geometry/protocol.py": "5c35e4d2ca88f55280c3fc29c68e0691eee047dbb6efe3f311687d6c017a260f",
+    "tests/test_phase5_protocol.py": "a859f9c29384f577bbbe2875af1670dac916620c8536653379e446a5f0af4561"
+  },
+  "hash_algorithm": "sha256",
+  "json_hashing": "canonical sorted compact UTF-8 JSON",
+  "lock_id": "ARG-P5-LOCK-v1",
+  "model_implementation_commit": "205fb8c5bf1b832e241af230612e3d7056be05f5",
+  "protocol_id": "ARG-P5-COMP-v1",
+  "protocol_version": "1.0.0",
+  "status": "FROZEN"
+}
