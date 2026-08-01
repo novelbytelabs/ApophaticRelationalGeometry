@@ -2,52 +2,56 @@
 
 ## Status
 
-The current executable is $M_F$, the collective-feedback prototype. The projected variants $M_P$ and $M_{FP}$ are not yet implemented and cannot yet be experimentally compared.
+$M_0$, $M_F$, and the contract-v1.0 $M_P$ projection sandbox are implemented and unit-tested. $M_{FP}$ remains unimplemented.
 
-No projected-geometry result may be reported until the fail-closed projection gate passes.
+No comparative scientific experiment is authorized until $M_{FP}$ passes its implementation gate and the experiment protocol is frozen.
 
 ## Canonical models
 
-### $M_0$ — local/adaptive substrate baseline
+### $M_0$
 
-- local nonlinear dynamics;
-- neighborhood coupling;
-- adaptive edge and metric dynamics where declared;
-- no collective-feedback terms;
-- no admissibility projection.
+Local/adaptive substrate without collective feedback or projection.
 
-### $M_F$ — collective feedback
+### $M_F$
 
-- $M_0$ substrate;
-- endogenous statistic $c(x)$;
-- explicit feedback into constituent transitions;
-- no projection.
+$M_0$ plus endogenous collective feedback.
 
-### $M_P$ — global admissibility projection
+### $M_P$
 
-- explicit $\Gamma/H$ admissible set;
-- implemented projection of the local proposal;
-- no feedback unless separately declared.
+$M_0$ proposal projected onto
 
-### $M_{FP}$ — feedback plus projection
+$$
+\Gamma(Z)=\frac13x^Tx-c_0=0.
+$$
 
-- both mechanisms;
-- separate feedback and projection diagnostics.
+It includes projected RK4 stages and mandatory radial retraction.
+
+### $M_{FP}$
+
+Feedback proposal followed by projection, with feedback and projection separately observable. This model remains the active implementation gate.
 
 ## Experiment 0: Code-equation alignment
 
-Before mechanism experiments:
+### Completed
 
-- verify each model against a frozen equation contract;
-- retain an independently written right-hand side;
-- verify exact reduction paths among models;
-- fail closed on unrecognized parameters or undeclared dependencies.
+- $M_0/M_F$ derivative and RK4 reference parity;
+- $M_F(\chi=\eta_2=\rho=0)=M_0$ reduction;
+- $M_P$ projector identities;
+- $M_P$ tangency, retraction, singular handling, and reference parity;
+- model, contract, source, and configuration labels where declared.
+
+### Remaining
+
+- $M_{FP}$ implementation and independent parity;
+- exact combined-model reductions;
+- full four-model output schema parity;
+- final confirmatory configuration manifest.
 
 ## Experiment 1: $M_0$ versus $M_F$
 
 ### Question
 
-Does endogenous collective feedback create behavior not reproduced by the no-feedback substrate?
+Does endogenous collective feedback produce behavior not reproduced by the no-feedback substrate?
 
 ### Feedback ratio
 
@@ -68,11 +72,13 @@ $$
 
 ### Claim limit
 
-A difference between $M_0$ and $M_F$ supports only a prototype-level feedback result. It does not establish macro-level causal autonomy.
+A difference supports only a scoped feedback result. It does not establish macro-level causal autonomy.
 
 ## Experiment 2: $M_0$ versus $M_P$
 
-This experiment is blocked until $M_P$ passes the projected-claim implementation gate.
+### Question
+
+What behavior is produced by constant-amplitude projection relative to the unprojected local/adaptive substrate?
 
 ### Projection ratio
 
@@ -85,12 +91,14 @@ $$
 
 ### Required outputs
 
-- equality-constraint error;
-- inequality active-set trace where applicable;
+- constraint residual;
 - tangent and normal components;
-- projection-system condition number;
-- retraction or integrator correction;
-- solver-refinement behavior.
+- projection denominator;
+- retraction magnitude;
+- solver-refinement behavior;
+- full-state and observation-map trajectory differences.
+
+Implementation tests have passed. The comparative scientific run remains blocked pending the frozen four-model protocol.
 
 ## Experiment 3: $M_F$ versus $M_P$
 
@@ -101,23 +109,38 @@ Are collective feedback and global admissibility projection dynamically distinct
 Required comparisons:
 
 - full-state trajectory distance;
-- observable trajectory distance;
-- local linearization and Jacobian comparison;
+- observation-map distance;
+- local Jacobian comparison;
 - fixed points and stability;
-- bifurcation structure;
 - perturbation response;
 - parameter sensitivity;
 - partial-observation identifiability.
 
-Similar plots are not evidence of equivalence.
+Similar trajectories are not evidence of equivalence.
 
-## Experiment 4: $M_{FP}$ interaction
+## Experiment 4: $M_{FP}$ mechanism interaction
 
-### Question
+### Binding structural prediction
 
-Do feedback and projection combine additively, redundantly, or nonlinearly?
+For the contract-v1.0 sphere constraint,
 
-Define an interaction residual under a declared comparison map:
+$$
+P_T[-\chi c(x)x]=0,
+$$
+
+hence
+
+$$
+\boxed{f_{FP}=f_P}
+$$
+
+for node derivatives.
+
+The $s$ and $q$ derivatives retain $M_F$ feedback. The first task is to implement and verify this identity before measuring trajectory interaction.
+
+### Interaction residual
+
+After implementation, define under a preregistered comparison map
 
 $$
 R_{FP}
@@ -129,7 +152,7 @@ R_{FP}
 \Delta(M_P,M_0).
 $$
 
-The exact form of $\Delta$ must be preregistered for each experiment.
+The exact $\Delta$ must be frozen before results are generated.
 
 ## Experiment 5: Dynamic-geometry ablation
 
@@ -141,11 +164,11 @@ Within each applicable model compare:
 4. frozen $q$ and $s$;
 5. static graph with parameter-matched node dynamics.
 
-This determines whether “geometry” contributes beyond adaptive weights or extra state variables.
+This tests whether geometry contributes beyond adaptive weights or extra state variables.
 
 ## Experiment 6: Structural intervention
 
-Permute graph incidence while holding node states and parameters fixed. Treat independently sampled structures, not nested solver runs, as the inferential units for structural claims.
+Permute graph incidence while holding node states and parameters fixed. Independently sampled structures, not nested solver steps or seeds, are the inferential units for structural claims.
 
 ## Experiment 7: State intervention
 
@@ -153,25 +176,25 @@ Permute or perturb initial states while holding graph structure and parameters f
 
 ## Experiment 8: Relabeling tripwire
 
-Randomly relabel nodes and require identical invariant trajectories after undoing the permutation:
+Require
 
 $$
-\Phi_t(PZ_0)=P\Phi_t(Z_0).
+\Phi_t(PZ_0)=P\Phi_t(Z_0)
 $$
 
-Run this independently for $M_0$, $M_F$, $M_P$, and $M_{FP}$ as they become available.
+after undoing the permutation. Software-level permutation tests pass for $M_0$, $M_F$, and $M_P$; $M_{FP}$ remains pending.
 
 ## Experiment 9: Numerical tripwires
 
 Require:
 
-- convergence under decreasing step size or tighter tolerance;
-- agreement across at least two appropriate integrators;
-- independently written reference equations;
+- decreasing discrepancy under step refinement;
+- agreement with an independently written reference path;
 - deterministic replay;
 - finite-value checks;
-- explicit failure on singular projection systems;
-- configuration and output hashes.
+- explicit singular-projection failure;
+- configuration and output hashes;
+- a second appropriate integrator before strong scientific conclusions.
 
 ## Experiment 10: Equivalence test
 
@@ -186,7 +209,7 @@ requires one of:
 - exact conjugacy;
 - exact reparameterization;
 - a proved approximation with an error bound;
-- observational equivalence under a specified observation map and domain.
+- observational equivalence under a specified map, domain, and tolerance.
 
 Numerical resemblance alone is insufficient.
 
@@ -196,22 +219,22 @@ Numerical resemblance alone is insufficient.
 - edge-activation trajectories;
 - metric-deformation trajectories;
 - intrinsic distance matrices;
-- coherence or mismatch measures where defined;
-- feedback contribution $F_F$;
-- projection contribution $F_P$;
-- constraint residuals;
-- Lyapunov or local stability estimates;
-- intervention response;
+- feedback vector;
+- projection correction;
+- constraint and tangency residuals;
+- retraction magnitude;
+- perturbation response;
 - computational cost;
-- failure and singularity logs.
+- singularity and failure logs.
 
 ## Execution authorization
 
 Current authorization:
 
-- $M_F$ software tests: authorized;
-- $M_0$ design and implementation: authorized;
-- $M_P$ mathematical design: authorized;
-- $M_P$ scientific claims: not authorized;
-- $M_{FP}$ experiments: blocked pending implementation;
-- feedback-projection equivalence claim: unverified.
+- $M_0/M_F/M_P$ software verification: complete;
+- $M_{FP}$ implementation and software verification: authorized;
+- exploratory four-model pilot: blocked;
+- confirmatory four-model run: blocked;
+- scientific feedback-versus-projection claims: blocked;
+- $M_F\equiv M_P$ claim: unverified;
+- physical or ontological claims: not authorized.
