@@ -2,9 +2,22 @@
 
 ## Purpose
 
-This document defines how the project will ground its mathematical and scientific claims in primary research.
+This document defines how ARG will ground its mathematical and scientific claims in primary research.
 
-It is a search and evidence plan. It does not yet claim that the listed neighboring fields validate the proposed geometry.
+It is a search and evidence plan. It does not claim that the neighboring fields validate ARG.
+
+## Current mechanism boundary
+
+The current executable is $M_F$, the collective-feedback prototype. $M_P$ and $M_{FP}$ remain unimplemented.
+
+Literature review must therefore distinguish:
+
+- endogenous collective feedback;
+- explicit projected admissibility;
+- feedback under constraints;
+- penalties and multiplier forces;
+- adaptive geometry;
+- claims of equivalence among these mechanisms.
 
 ## Source standards
 
@@ -16,16 +29,48 @@ Priority order:
 4. independent reproductions;
 5. secondary explanations only for orientation.
 
-For technical claims, summaries, social posts, and promotional pages are not sufficient evidence.
+Technical claims cannot rest on summaries, social posts, or promotional pages.
 
-## Research track 1: Constrained nonlinear dynamics
+## Research track 1: Collective variables and endogenous feedback
+
+### Questions
+
+- Which systems compute an order parameter, mean field, collective coordinate, or macrovariable and feed it back into constituent dynamics?
+- When is that feedback merely a reparameterization of local interactions?
+- How are organization dependence and counterfactual influence tested?
+- Which models combine mean-field feedback with adaptive topology or metric variables?
+- What mathematical conditions make the macrovariable dynamically informative rather than redundant?
+
+### Search vocabulary
+
+- mean-field feedback;
+- order-parameter feedback;
+- collective-coordinate dynamics;
+- adaptive mean-field systems;
+- macro-to-micro feedback;
+- causal coarse-graining;
+- slaving principle;
+- synergetics;
+- feedback through global observables.
+
+### Project relevance
+
+This track is the closest literature base for the current $M_F$ path
+
+$$
+x\to c(x)\to(\dot x,\dot s,\dot q).
+$$
+
+It tests whether the implemented mechanism is standard, reducible, or distinctive only through its coupling to adaptive relational geometry.
+
+## Research track 2: Constrained nonlinear dynamics
 
 ### Questions
 
 - When does projection onto a constraint manifold define a unique vector field?
 - How are rank changes and nonsmooth boundaries handled?
 - When is a projected ordinary differential equation equivalent to a differential-algebraic equation?
-- What stabilization methods are needed under numerical integration?
+- What stabilization or retraction methods are needed numerically?
 - How are constraint forces separated from unconstrained motion?
 
 ### Search vocabulary
@@ -35,28 +80,51 @@ For technical claims, summaries, social posts, and promotional pages are not suf
 - differential-algebraic equations;
 - constrained Hamiltonian systems;
 - Lagrange multipliers;
-- SHAKE and RATTLE methods;
+- SHAKE and RATTLE;
 - viability theory;
 - incompressible-flow projection.
 
 ### Project relevance
 
-This track tests whether
+This track tests whether target $M_P$
 
 $$
 \dot Z=\Pi_{T_Z\mathcal M}F(Z)
 $$
 
-is standard constrained dynamics, a state-dependent extension, or mathematically ill-posed in the proposed regime.
+is standard constrained dynamics, a state-dependent extension, or ill-posed in the proposed regime.
 
-## Research track 2: Adaptive and coevolving networks
+## Research track 3: Feedback under constraints
+
+### Questions
+
+- Which models combine global feedback with holonomic, algebraic, or viability constraints?
+- Does projection act on a proposal that already contains feedback?
+- When do feedback and projection commute?
+- What exact reductions recover feedback-only and projection-only models?
+- Are there existing frameworks equivalent to target $M_{FP}$?
+
+### Search vocabulary
+
+- constrained feedback systems;
+- projected control systems;
+- mean-field differential-algebraic equations;
+- feedback on manifolds;
+- constrained adaptive control;
+- projected gradient systems with global coupling.
+
+### Project relevance
+
+This track assesses whether $M_{FP}$ is already known and whether $M_F\equiv M_P$ can hold in any nontrivial domain.
+
+## Research track 4: Adaptive and coevolving networks
 
 ### Questions
 
 - Which systems jointly evolve node state and edge structure?
 - When can adaptive weights be interpreted as geometry?
 - What continuum, mean-field, or graph-limit results exist?
-- Which adaptive-network behaviors require topology change rather than state change alone?
+- Which behaviors require topology change rather than state change alone?
 - How is causality separated when state and topology update one another?
 
 ### Search vocabulary
@@ -72,17 +140,17 @@ is standard constrained dynamics, a state-dependent extension, or mathematically
 
 ### Project relevance
 
-This track tests whether the variables $s_e$ and $q_e$ add anything beyond ordinary dynamic edge weights.
+This track tests whether $s_e$ and $q_e$ add anything beyond ordinary dynamic edge weights.
 
-## Research track 3: Local-to-global compatibility
+## Research track 5: Local-to-global compatibility
 
 ### Questions
 
 - How are local states glued into globally consistent assignments?
 - Which sheaf or bundle structures allow nonlinear restriction maps?
 - How are inconsistency and global sections quantified?
-- Can the restriction maps themselves evolve?
-- How do sheaf Laplacians compare with the proposed coherence energy?
+- Can restriction maps themselves evolve?
+- How do sheaf Laplacians compare with ARG mismatch energies?
 
 ### Search vocabulary
 
@@ -97,7 +165,7 @@ This track tests whether the variables $s_e$ and $q_e$ add anything beyond ordin
 
 ### Project relevance
 
-This track determines whether the mismatch maps
+This track determines whether
 
 $$
 \delta_e
@@ -109,15 +177,15 @@ $$
 
 should be formalized as a sheaf, bundle, groupoid, or more general compatibility system.
 
-## Research track 4: Dynamic discrete geometry
+## Research track 6: Dynamic discrete geometry
 
 ### Questions
 
 - When does a weighted graph define a meaningful intrinsic metric?
-- Which discrete curvature notions remain stable under changing topology?
+- Which curvature notions remain stable under changing topology?
 - How do graph Ricci flows and metric adaptation interact with node dynamics?
 - What continuity results exist for time-dependent metric graphs?
-- Which geometric quantities are invariant under graph presentation changes?
+- Which geometric quantities are invariant under presentation changes?
 
 ### Search vocabulary
 
@@ -132,14 +200,14 @@ should be formalized as a sheaf, bundle, groupoid, or more general compatibility
 
 ### Project relevance
 
-This track tests whether the proposed edge lengths define genuine geometry and whether curvature supplies useful observables.
+This track tests whether the implemented and target edge lengths define useful geometry rather than merely dynamic weights.
 
-## Research track 5: Invariance and relational descriptions
+## Research track 7: Invariance and relational descriptions
 
 ### Questions
 
 - What is the correct class of admissible presentation changes?
-- Should the symmetry structure be a group, group action, or groupoid?
+- Should the symmetry structure be a group, action, or groupoid?
 - Which observables descend to quotient descriptions?
 - How should topology-changing systems be compared under relabeling?
 - What distinguishes gauge redundancy from physical symmetry?
@@ -156,14 +224,14 @@ This track tests whether the proposed edge lengths define genuine geometry and w
 
 ### Project relevance
 
-This track makes the phrase “no privileged presentation” mathematically operational.
+This track makes “no privileged presentation” operational for each of $M_0,M_F,M_P,M_{FP}$.
 
-## Research track 6: Singular barriers and non-collision
+## Research track 8: Singular barriers and noncollision
 
 ### Questions
 
 - Under what conditions do singular potentials prevent collision?
-- What bounds follow from finite conserved or dissipative energy?
+- What bounds follow from conserved or dissipative energy?
 - How do singularities affect existence and continuation?
 - Can barrier forces be defined on intrinsic graph distances?
 - When do numerical methods falsely cross a singular barrier?
@@ -173,14 +241,14 @@ This track makes the phrase “no privileged presentation” mathematically oper
 - singular interaction potentials;
 - hard-core repulsion;
 - collision avoidance;
-- non-collision theorems;
+- noncollision theorems;
 - inverse-power potentials;
 - barrier methods;
 - singular ordinary differential equations.
 
 ### Project relevance
 
-This track grounds the claim that
+This track grounds any claim that
 
 $$
 U_{\mathrm{barrier}}
@@ -190,27 +258,25 @@ $$
 
 creates an unreachable finite-energy boundary.
 
-## Research track 7: Physical anchor systems
-
-Initial anchor families:
-
-### Incompressible flow
-
-Reason: a local provisional update followed by a global compatibility correction is already physically meaningful and mathematically developed.
+## Research track 9: Physical anchor systems
 
 ### Constrained mechanics
 
-Reason: constraint manifolds, multiplier forces, and energy behavior can be checked exactly.
+Reason: constraint manifolds, multiplier forces, projection, and energy behavior can be checked against established solutions.
+
+### Incompressible flow
+
+Reason: a provisional local update followed by a global compatibility correction is mathematically and physically developed.
 
 ### Adaptive synchronization and flocking
 
-Reason: local state, neighborhood structure, and effective geometry genuinely interact.
+Reason: local state, neighborhood structure, collective observables, and effective geometry interact.
 
-For each anchor, the project must first reproduce a standard result before testing an extension.
+For each anchor, reproduce a standard result before testing an ARG extension.
 
-## Research track 8: Philosophical and interpretive neighbors
+## Research track 10: Philosophical and interpretive neighbors
 
-This track is kept separate from mathematical validation.
+This track remains separate from mathematical validation.
 
 Topics include:
 
@@ -221,11 +287,9 @@ Topics include:
 - apophatic non-reification;
 - limits of formal representation.
 
-These sources may clarify interpretation. They cannot establish the equations or physical validity of the model.
+These sources may clarify interpretation. They cannot establish equations, implementation, novelty, or physical validity.
 
 ## Paper intake template
-
-Each source note must use the following structure.
 
 ### Citation
 
@@ -243,9 +307,25 @@ State the theorem, equation, algorithm, or result actually used.
 
 List mathematical, numerical, and physical assumptions.
 
-### Mapping to project notation
+### Mapping to ARG models
 
-Map source variables and equations into the project formalism where possible.
+Map the source into one or more of:
+
+$$
+M_0,\qquad M_F,\qquad M_P,\qquad M_{FP}.
+$$
+
+### Mechanism classification
+
+Label each relevant term as:
+
+- local dynamics;
+- adaptive relation or metric;
+- collective feedback;
+- explicit projection;
+- multiplier force;
+- penalty;
+- compatibility condition.
 
 ### Overlap
 
@@ -261,31 +341,34 @@ Record whether the source strengthens, narrows, or eliminates a candidate novelt
 
 ### Reproducibility
 
-Record code, data, parameter settings, and whether reproduction has been attempted.
+Record code, data, parameters, and reproduction status.
 
 ### Open questions
 
-List unresolved issues that affect this project.
+List unresolved issues affecting ARG.
 
 ## Initial collection target
 
 The first evidence set should contain at least:
 
-- five primary sources on constrained or projected dynamics;
+- five primary sources on collective-variable or mean-field feedback;
+- five on constrained or projected dynamics;
+- three on systems combining feedback and constraints;
 - five on adaptive networks;
 - five on local-to-global or sheaf-based systems;
-- five on discrete evolving geometry;
-- three on singular non-collision mechanisms;
+- five on dynamic discrete geometry;
+- three on singular noncollision mechanisms;
 - three physical anchor papers with reproducible equations or code.
 
-The count is an intake target, not a quality substitute.
+The count is an intake target, not a substitute for quality.
 
 ## Completion criterion
 
-This landscape is complete enough for the first novelty decision when:
+This landscape is sufficient for the first novelty decision when:
 
 1. every row in `09_novelty_matrix.md` has primary-source support;
-2. the three closest frameworks have been reproduced in common notation;
+2. the closest feedback, projection, and combined frameworks are reproduced in common notation;
 3. equivalence and reparameterization have been actively tested;
 4. unsupported novelty language has been removed;
-5. the remaining candidate contribution can be stated in one precise paragraph.
+5. the remaining candidate contribution can be stated precisely;
+6. the current $M_F$ result is not used as evidence for unimplemented $M_P$ or $M_{FP}$.
