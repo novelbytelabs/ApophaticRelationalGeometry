@@ -2,9 +2,11 @@
 
 ## Status
 
-Phase 3 is complete for the contract-v1.0 constant-amplitude projected-admissibility sandbox $M_P$.
+Phase 3 completed the contract-v1.0 constant-amplitude projected-admissibility sandbox $M_P$.
 
 This is a software and mathematical-mechanism verification result. It is not a scientific validation of ARG, a proof of physical adequacy, or evidence that $M_F$ and $M_P$ are equivalent.
+
+Phase 4 subsequently implemented $M_{FP}$. The present project ceiling is maintained in `13_alignment_and_claim_ceiling.md`; this document preserves the Phase 3 verification record.
 
 ## Implemented constraint
 
@@ -99,7 +101,7 @@ These are 35 unique tests executed in two Python environments, not 70 independen
 
 ## Licensed claim
 
-The strongest licensed statement is:
+The strongest Phase 3 statement is:
 
 > ARG implements and unit-tests the contract-v1.0 $M_P$ constant-amplitude projection sandbox, including stage projection, mandatory retraction, fail-closed singular handling, and independent software-reference parity.
 
@@ -112,15 +114,16 @@ This result does not establish:
 - that projection improves scientific prediction;
 - that feedback and projection are equivalent;
 - that macro-level causal autonomy or strong emergence has been demonstrated;
-- that $M_{FP}$ is implemented;
 - that the four-model comparative experiment has been executed.
 
-## Next gate
+## Subsequent gate
 
-Phase 4 must implement $M_{FP}$ as feedback followed by projection and verify the exact version-1.0 identity
+Phase 4 implemented $M_{FP}$ and verified the same-state node identity
 
 $$
 \boxed{f_{FP}=f_P}
 $$
 
-for node derivatives while retaining the $M_F$ feedback terms in $s$ and $q$.
+while retaining feedback in $s$ and $q$.
+
+See `17_phase4_mfp_verification.md`. The active gate is now the Phase 5 comparative experiment protocol.
