@@ -49,7 +49,7 @@ $$
 - [Model-specific proof obligations](05_proof_obligations.md)
 - [Four-model experimental plan](06_experimental_plan.md)
 
-## Research grounding
+## Research grounding and execution
 
 - [Research grounding plan](07_research_grounding_plan.md)
 - [Claim ledger](08_claim_ledger.md)
@@ -59,6 +59,7 @@ $$
 - [Falsification criteria](12_falsification_criteria.md)
 - [Canonical alignment and claim ceiling](13_alignment_and_claim_ceiling.md)
 - [Phase-gated roadmap](14_roadmap.md)
+- [Four-model design contract](15_four_model_design_contract.md)
 
 ## Decisions and history
 
@@ -67,14 +68,23 @@ $$
 
 ## Current roadmap position
 
-ARG is at **Phase 0: alignment and claim control**.
+**Phase 0 is complete. Phase 1 is in progress.**
+
+The five existing software tests passed in a clean local run. This verifies the software checks, not the scientific hypothesis.
+
+The active Phase 1 artifact proposes a minimal projected model using
+
+$$
+\Gamma(Z)=c(x)-c_0=0,
+\qquad
+c_0=c(x(0))>0.
+$$
 
 Immediate priorities:
 
-1. complete documentation alignment;
-2. rerun and record existing software tests;
-3. freeze the four-model design contract;
-4. implement the true $M_0$ baseline;
-5. design and prove $M_P$ before production implementation.
+1. review and freeze or reject the v0.1 design contract;
+2. select the projection-preserving numerical method;
+3. implement the true $M_0$ baseline after contract freeze;
+4. prove $M_P$ before production implementation.
 
 > Separate the mechanisms. Freeze the contracts. Prove the projection. Test the alternatives. Reify nothing.
