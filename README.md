@@ -76,7 +76,7 @@ Phase 6 now implements and software-verifies a fail-closed runner for exactly th
 - writes a checksummed, write-once archive;
 - requires a separate committed execution authorization naming a previously verified runner commit.
 
-Hosted verification reported **100 passing tests** on Python 3.10 and **100 passing tests** on Python 3.12.
+The runner code passed **100 tests** on Python 3.10 and **100 tests** on Python 3.12 in GitHub Actions run `30722763003`. Final documentation-only alignment is subject to the pull request's final hosted check before merge.
 
 Current execution state:
 
