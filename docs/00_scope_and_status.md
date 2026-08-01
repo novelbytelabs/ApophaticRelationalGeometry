@@ -20,7 +20,7 @@ $$
 \text{global admissibility projection}.
 $$
 
-These ingredients are distinct mechanisms and must be tested separately.
+These are distinct mechanisms and must be defined, implemented, and tested separately.
 
 ## Implemented mechanism split
 
@@ -32,9 +32,7 @@ Local nonlinear dynamics, neighborhood coupling, adaptive edge activation, and m
 
 $$
 c(x)=\frac13\sum_i x_i^2,
-$$
-
-$$
+\qquad
 x\to c(x)\to(\dot x,\dot s,\dot q).
 $$
 
@@ -49,35 +47,28 @@ This does not establish macro-level causal autonomy.
 Contract v1.0 implements
 
 $$
-\Gamma(Z)=c(x)-c_0
-=\frac13x^Tx-c_0=0,
+\Gamma(Z)=\frac13x^Tx-c_0=0,
 $$
-
-with
 
 $$
 f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
 $$
 
-The implementation projects every RK4 derivative stage, retracts each completed step radially to the manifold, records mechanism diagnostics, and fails closed near rank loss.
+Every RK4 derivative stage is projected, each completed step is radially retracted, mechanism diagnostics are recorded, and near-rank-loss paths fail closed.
 
 ### $M_{FP}$: feedback followed by projection
-
-The model constructs
 
 $$
 F_{\mathrm{proposal}}=F_0+F_F
 $$
 
-and projects the node proposal using the same $M_P$ policy.
-
-At the same regular full state,
+is projected using the same $M_P$ policy. At the same regular full state,
 
 $$
 \boxed{f_{FP}=f_P},
 $$
 
-because the node-feedback term is radial. $M_{FP}$ nevertheless retains collective feedback in $s$ and $q$, so its later trajectory need not equal $M_P$.
+because the node-feedback term is radial. Feedback remains in $s$ and $q$, so later trajectories need not agree.
 
 Both projected models are constant-amplitude mechanism sandboxes. They are not the final relational geometry and are not validated physical models.
 
@@ -91,51 +82,62 @@ M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
+## Protocol and execution status
+
+Phase 5 froze protocol `ARG-P5-COMP-v1` before any trajectory generation. The human-readable protocol and machine-readable bundle fix:
+
+- primary and secondary hypotheses;
+- observation maps and decision thresholds;
+- direction-level inferential units;
+- deterministic pilot/confirmatory separation;
+- parameters and initial conditions;
+- RK4 refinement and alternate-integrator replication;
+- exclusions, stop rules, failure retention, and provenance;
+- executable metric, bootstrap, hashing, validation, and decision code.
+
+Hosted verification reported 65 passing tests on Python 3.10 and 65 on Python 3.12.
+
+Current authorization is:
+
+$$
+\boxed{
+\text{development pilot authorized};
+\quad
+\text{confirmatory execution and scientific claims blocked}.
+}
+$$
+
+The development pilot has not run. Authorization is not execution.
+
 ## What is currently claimed
 
 - All four contract-v1.0 prototypes are implemented through canonical dispatch.
 - $M_0$ implements the no-feedback local/adaptive baseline.
 - $M_F$ implements endogenous collective feedback through an explicit substrate path.
-- $M_P$ implements the frozen constant-amplitude tangent projection and numerical retraction policy.
-- $M_{FP}$ implements an explicit feedback proposal followed by node projection, with retained $s/q$ feedback.
-- The declared reduction paths, projector identities, tangency, retraction, singular handling, permutation equivariance, and independent software-reference parity are unit-tested.
-- Intrinsic edge lengths and graph distances are state dependent in all four prototypes.
+- $M_P$ implements the frozen constant-amplitude tangent projection and retraction policy.
+- $M_{FP}$ implements feedback followed by projection with retained $s/q$ feedback.
+- Declared reductions, projector identities, tangency, retraction, singular handling, permutation equivariance, and independent software-reference parity are unit-tested.
+- The Phase 5 protocol is frozen, machine-readable, executable at the metric/decision level, and locked before data generation.
 
 ## What is not currently claimed
 
 - That collective feedback is dynamically or observationally equivalent to tangent-space projection.
 - That same-state node equality implies trajectory equality.
 - That prototype-level feedback or projection establishes macro-level causal autonomy.
-- That any mechanism improves predictive performance.
+- That any mechanism improves prediction or defeats scientific alternatives.
 - That constant amplitude is physically fundamental.
-- That any implemented model defeats scientific alternatives.
-- That organization dependence, counterfactual adequacy, transport, or empirical emergence has been demonstrated.
+- That a pilot or confirmatory experiment has been executed.
+- That organization dependence, transport, strong emergence, or physical adequacy has been demonstrated.
 - That ARG is mathematically novel or a new fundamental geometry.
-- That the universe literally is a graph, constraint manifold, or computational structure.
-- That the implemented prototypes reproduce known physical laws.
-- That the apophatic principle proves any religion or metaphysics.
+- That reality literally is a graph, constraint manifold, or computational structure.
 
 ## Verification scope
 
-Phase 2 passed 20 local software tests for $M_0/M_F$.
+- Phase 2: 20 local software tests for $M_0/M_F$.
+- Phase 3: 35 hosted tests in each configured Python environment for $M_0/M_F/M_P$.
+- Phase 4: 51 hosted tests in each configured environment for the four-model implementation.
+- Phase 5: 65 hosted tests in each configured environment for models plus frozen protocol and decision machinery.
 
-Phase 3 passed 35 hosted tests on Python 3.10 and Python 3.12 for $M_0/M_F/M_P$.
+These validate software and local mathematical/protocol contracts, not a scientific hypothesis.
 
-Phase 4 passed 51 hosted tests on Python 3.10 and Python 3.12 for the complete four-model implementation.
-
-These validate software and local mathematical contracts, not a scientific hypothesis. No comparative scientific experiment has been executed.
-
-## Standard of progress
-
-Progress requires:
-
-- precise mechanism definitions;
-- code-equation parity;
-- mathematical proofs or explicit domain restrictions;
-- matched baselines and ablations;
-- independent reference implementations;
-- falsifiable predictions;
-- primary-source comparison;
-- fail-closed claim control.
-
-The binding alignment statement is `13_alignment_and_claim_ceiling.md`. The execution plan is `14_roadmap.md`.
+The binding alignment statement is `13_alignment_and_claim_ceiling.md`. The active roadmap is `14_roadmap.md`.
