@@ -391,6 +391,10 @@ def verify_lock(repo_root: str | Path, lock_manifest: Mapping[str, Any]) -> None
 
     root = Path(repo_root)
     for relative_path, expected_digest in files.items():
-        actual = file_sha256(root / str(relative_path))
+        path = root / str(relative_path)
+        if path.suffix.lower() == ".json":
+            actual = canonical_json_sha256(load_json(path))
+        else:
+            actual = file_sha256(path)
         if actual != expected_digest:
             raise ValueError(f"lock mismatch for {relative_path}")
