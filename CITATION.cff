@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+message: "If you use this research code, please cite the repository."
+title: "Apophatic Relational Geometry"
+type: software
+version: 0.1.0
+date-released: 2026-08-01
+abstract: "A nonlinear dynamic relational constraint geometry with an apophatic non-reification schema."
