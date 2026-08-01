@@ -2,7 +2,7 @@ name: tests
 
 on:
   push:
-    branches: [main, phase2-m0]
+    branches: [main, phase2-m0, phase6a1-integrity-remediation]
   pull_request:
     branches: [main]
 
@@ -11,11 +11,17 @@ permissions:
 
 jobs:
   pytest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.12"]
+        include:
+          - python-version: "3.10.20"
+            numpy-version: "2.2.6"
+            scipy-version: "1.15.3"
+          - python-version: "3.12.13"
+            numpy-version: "2.5.1"
+            scipy-version: "1.18.0"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,7 +30,34 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-      - name: Install
-        run: python -m pip install -e '.[dev]'
+      - name: Install exact compatibility environment
+        run: |
+          python -m pip install \
+            'setuptools==80.9.0' \
+            'wheel==0.45.1' \
+            'pytest==9.1.1' \
+            'numpy==${{ matrix.numpy-version }}' \
+            'scipy==${{ matrix.scipy-version }}'
+          python -m pip install --no-build-isolation --no-deps -e .
+      - name: Record integrity fingerprints
+        run: |
+          python --version
+          python - <<'PY'
+          import numpy, scipy, pytest
+          print('numpy', numpy.__version__)
+          print('scipy', scipy.__version__)
+          print('pytest', pytest.__version__)
+          PY
+          sha256sum \
+            src/apophatic_geometry/model.py \
+            src/apophatic_geometry/protocol.py \
+            src/apophatic_geometry/attestation.py \
+            src/apophatic_geometry/simulate.py \
+            tests/test_phase5_protocol.py \
+            tests/test_phase6a1_integrity.py
+      - name: Assert no execution authorization or pilot data
+        run: |
+          test ! -e protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
+          test ! -d artifacts/phase6_pilot
       - name: Test
         run: python -m pytest
