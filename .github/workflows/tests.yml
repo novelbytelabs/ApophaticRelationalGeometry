@@ -50,10 +50,25 @@ jobs:
           PY
           sha256sum \
             src/apophatic_geometry/model.py \
+            src/apophatic_geometry/models.py \
             src/apophatic_geometry/protocol.py \
             src/apophatic_geometry/attestation.py \
-            src/apophatic_geometry/simulate.py \
+            src/apophatic_geometry/pilot_types.py \
+            src/apophatic_geometry/pilot_manifest.py \
+            src/apophatic_geometry/pilot_mechanisms.py \
+            src/apophatic_geometry/pilot_integrators.py \
+            src/apophatic_geometry/pilot_gates.py \
+            src/apophatic_geometry/pilot_integrate.py \
+            src/apophatic_geometry/pilot_archive.py \
+            src/apophatic_geometry/pilot.py \
+            src/apophatic_geometry/pilot_cli.py \
+            protocol/phase5_v1/LOCK.json \
+            protocol/phase6_runner_v1/EXECUTION_ENVIRONMENT.json \
+            tests/reference_equations.py \
+            tests/reference_pilot.py \
             tests/test_phase5_protocol.py \
+            tests/test_phase6_numerics.py \
+            tests/test_phase6_planning.py \
             tests/test_phase6a1_integrity.py
       - name: Assert no execution authorization or pilot data
         run: |
