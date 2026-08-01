@@ -1,8 +1,9 @@
 """Contract-v1.0 implementations for the current ARG roadmap gate.
 
-M0 and MF retain the verified Phase 2 equations. Phase 3 adds the explicit
-constant-amplitude projected-admissibility sandbox MP. MFP remains fail-closed
-until its separate roadmap gate.
+M0 and MF retain the verified Phase 2 equations. MP retains the verified
+Phase 3 constant-amplitude projection sandbox. Phase 4 adds MFP as an explicit
+collective-feedback proposal followed by the same node-state projection and
+retraction policy used by MP.
 """
 
 from __future__ import annotations
@@ -40,7 +41,7 @@ class ModelId(str, Enum):
 
 @dataclass(frozen=True)
 class ProjectionTarget:
-    """Run-level constant defining the MP manifold ``c(x) = c0``."""
+    """Run-level constant defining the projected manifold ``c(x) = c0``."""
 
     c0: float
 
@@ -86,6 +87,36 @@ class ProjectionDiagnostics:
 
 
 @dataclass(frozen=True)
+class CombinedProjectionDiagnostics:
+    """Inspectable decomposition of one MFP derivative evaluation."""
+
+    local_proposal: State
+    feedback: State
+    proposal: State
+    correction: State
+    projected: State
+    constraint_residual: float
+    normalized_tangency_residual: float
+    denominator: float
+
+    @property
+    def feedback_norm(self) -> float:
+        """Norm of the complete declared feedback vector in state space."""
+
+        return float(np.linalg.norm(self.feedback.pack()))
+
+    @property
+    def node_feedback_norm(self) -> float:
+        """Norm of the radial node-feedback component before projection."""
+
+        return float(np.linalg.norm(self.feedback.x))
+
+    @property
+    def correction_norm(self) -> float:
+        return float(np.linalg.norm(self.correction.x))
+
+
+@dataclass(frozen=True)
 class RetractionResult:
     """Result and diagnostics from one mandatory radial retraction."""
 
@@ -97,7 +128,7 @@ class RetractionResult:
 
 @dataclass(frozen=True)
 class ProjectedStepResult:
-    """One projected RK4 step with all four stage diagnostics."""
+    """One MP projected RK4 step with all four stage diagnostics."""
 
     state: State
     raw_state: State
@@ -106,6 +137,23 @@ class ProjectedStepResult:
         ProjectionDiagnostics,
         ProjectionDiagnostics,
         ProjectionDiagnostics,
+    ]
+    raw_constraint_residual: float
+    post_constraint_residual: float
+    retraction_magnitude: float
+
+
+@dataclass(frozen=True)
+class CombinedProjectedStepResult:
+    """One MFP projected RK4 step with all four stage diagnostics."""
+
+    state: State
+    raw_state: State
+    stage_diagnostics: tuple[
+        CombinedProjectionDiagnostics,
+        CombinedProjectionDiagnostics,
+        CombinedProjectionDiagnostics,
+        CombinedProjectionDiagnostics,
     ]
     raw_constraint_residual: float
     post_constraint_residual: float
@@ -166,21 +214,42 @@ def local_adaptive_derivatives(state: State, params: Parameters) -> State:
 
 
 def feedback_vector(state: State, params: Parameters) -> State:
-    """Return the explicit MF feedback contribution ``F_F``."""
+    """Return the explicit MF/MFP feedback contribution ``F_F``."""
 
     _validate_finite_parameters(params)
     params.validate()
     c = collective_mode(state.x)
-    return State(
+    feedback = State(
         x=-params.chi * c * state.x,
         s=np.full(3, params.eta_2 * c / params.tau_s, dtype=np.float64),
         q=np.full(3, -params.rho * c / params.tau_q, dtype=np.float64),
     )
+    if not np.all(np.isfinite(feedback.pack())):
+        raise FloatingPointError("non-finite feedback vector encountered")
+    return feedback
+
+
+def combined_feedback_proposal(
+    state: State,
+    params: Parameters,
+) -> tuple[State, State, State]:
+    """Return ``(F0, FF, F0 + FF)`` for the unprojected MFP proposal."""
+
+    local = local_adaptive_derivatives(state, params)
+    feedback = feedback_vector(state, params)
+    proposal = State(
+        x=local.x + feedback.x,
+        s=local.s + feedback.s,
+        q=local.q + feedback.q,
+    )
+    if not np.all(np.isfinite(proposal.pack())):
+        raise FloatingPointError("non-finite combined feedback proposal encountered")
+    return local, feedback, proposal
 
 
 def _require_projection_target(target: ProjectionTarget | None) -> ProjectionTarget:
     if target is None:
-        raise ValueError("MP requires an explicit ProjectionTarget")
+        raise ValueError("projected models require an explicit ProjectionTarget")
     if not isinstance(target, ProjectionTarget):
         raise TypeError("target must be a ProjectionTarget")
     return target
@@ -291,13 +360,46 @@ def projected_derivative(
     )
 
 
+def combined_projected_derivative(
+    state: State,
+    params: Parameters,
+    target: ProjectionTarget,
+) -> CombinedProjectionDiagnostics:
+    """Evaluate MFP as feedback proposal followed by node-state projection."""
+
+    local, feedback, proposal = combined_feedback_proposal(state, params)
+    projected_x, correction_x, tangency_residual, denominator = (
+        project_node_derivative(state.x, proposal.x, target)
+    )
+    correction = State(
+        x=correction_x,
+        s=np.zeros(3, dtype=np.float64),
+        q=np.zeros(3, dtype=np.float64),
+    )
+    projected = State(
+        x=projected_x,
+        s=proposal.s.copy(),
+        q=proposal.q.copy(),
+    )
+    return CombinedProjectionDiagnostics(
+        local_proposal=local,
+        feedback=feedback,
+        proposal=proposal,
+        correction=correction,
+        projected=projected,
+        constraint_residual=constraint_residual(state, target),
+        normalized_tangency_residual=tangency_residual,
+        denominator=denominator,
+    )
+
+
 def derivatives_for_model(
     state: State,
     params: Parameters,
     model: ModelId | str,
     target: ProjectionTarget | None = None,
 ) -> State:
-    """Dispatch implemented models and fail closed for MFP."""
+    """Dispatch all four frozen contract-v1.0 model derivatives."""
 
     model_id = parse_model_id(model)
     if model_id is ModelId.M0:
@@ -311,10 +413,11 @@ def derivatives_for_model(
             params,
             _require_projection_target(target),
         ).projected
-    raise NotImplementedError(
-        f"{model_id.value} is defined by contract v{CONTRACT_VERSION} "
-        "but is not implemented at the current roadmap gate"
-    )
+    return combined_projected_derivative(
+        state,
+        params,
+        _require_projection_target(target),
+    ).projected
 
 
 def retract_to_constraint(state: State, target: ProjectionTarget) -> RetractionResult:
@@ -354,6 +457,15 @@ def _validate_dt(dt: float) -> None:
         raise ValueError("dt must be finite and positive")
 
 
+def _require_initial_constraint(state: State, target: ProjectionTarget) -> None:
+    initial_residual = constraint_residual(state, target)
+    initial_tolerance = PROJECTOR_TOLERANCE * max(1.0, target.c0)
+    if abs(initial_residual) > initial_tolerance:
+        raise ValueError(
+            "initial state does not lie on the declared projected constraint manifold"
+        )
+
+
 def projected_rk4_step(
     state: State,
     params: Parameters,
@@ -364,12 +476,7 @@ def projected_rk4_step(
 
     _validate_dt(dt)
     target = _require_projection_target(target)
-    initial_residual = constraint_residual(state, target)
-    initial_tolerance = PROJECTOR_TOLERANCE * max(1.0, target.c0)
-    if abs(initial_residual) > initial_tolerance:
-        raise ValueError(
-            "initial state does not lie on the declared MP constraint manifold"
-        )
+    _require_initial_constraint(state, target)
 
     y0 = state.pack()
     diagnostics: list[ProjectionDiagnostics] = []
@@ -408,6 +515,57 @@ def projected_rk4_step(
     )
 
 
+def combined_projected_rk4_step(
+    state: State,
+    params: Parameters,
+    dt: float,
+    target: ProjectionTarget,
+) -> CombinedProjectedStepResult:
+    """Advance MFP with projected RK4 stages and mandatory retraction."""
+
+    _validate_dt(dt)
+    target = _require_projection_target(target)
+    _require_initial_constraint(state, target)
+
+    y0 = state.pack()
+    diagnostics: list[CombinedProjectionDiagnostics] = []
+
+    def rhs(vector: FloatArray) -> FloatArray:
+        stage = State.unpack(vector)
+        stage_diagnostics = combined_projected_derivative(stage, params, target)
+        diagnostics.append(stage_diagnostics)
+        return stage_diagnostics.projected.pack()
+
+    k1 = rhs(y0)
+    k2 = rhs(y0 + 0.5 * dt * k1)
+    k3 = rhs(y0 + 0.5 * dt * k2)
+    k4 = rhs(y0 + dt * k3)
+    raw_vector = y0 + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+    if not np.all(np.isfinite(raw_vector)):
+        raise FloatingPointError("non-finite combined projected RK4 state")
+
+    raw_state = State.unpack(raw_vector)
+    retraction = retract_to_constraint(raw_state, target)
+    if len(diagnostics) != 4:
+        raise RuntimeError(
+            "combined projected RK4 did not produce exactly four stage diagnostics"
+        )
+
+    return CombinedProjectedStepResult(
+        state=retraction.state,
+        raw_state=raw_state,
+        stage_diagnostics=(
+            diagnostics[0],
+            diagnostics[1],
+            diagnostics[2],
+            diagnostics[3],
+        ),
+        raw_constraint_residual=retraction.raw_constraint_residual,
+        post_constraint_residual=retraction.post_constraint_residual,
+        retraction_magnitude=retraction.magnitude,
+    )
+
+
 def rk4_step(
     state: State,
     params: Parameters,
@@ -415,7 +573,7 @@ def rk4_step(
     model: ModelId | str = ModelId.MF,
     target: ProjectionTarget | None = None,
 ) -> State:
-    """Advance one classical fixed-step RK4 step for an implemented model."""
+    """Advance one classical fixed-step RK4 step for a frozen model."""
 
     _validate_dt(dt)
     model_id = parse_model_id(model)
@@ -428,10 +586,12 @@ def rk4_step(
             _require_projection_target(target),
         ).state
     if model_id is ModelId.MFP:
-        raise NotImplementedError(
-            f"{model_id.value} is defined by contract v{CONTRACT_VERSION} "
-            "but is not implemented at the current roadmap gate"
-        )
+        return combined_projected_rk4_step(
+            state,
+            params,
+            dt,
+            _require_projection_target(target),
+        ).state
 
     y0 = state.pack()
 
