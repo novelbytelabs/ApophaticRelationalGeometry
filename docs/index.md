@@ -34,17 +34,33 @@ $$
 f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
 $$
 
-It uses projected RK4 stages, mandatory radial retraction, fail-closed singular handling, and independent software-reference parity.
+### $M_{FP}$
 
-It is not the completed relational-admissibility geometry and has not been scientifically validated.
+Software-verified feedback-followed-by-projection prototype:
+
+$$
+F_{\mathrm{proposal}}=F_0+F_F.
+$$
+
+At the same regular full state,
+
+$$
+\boxed{f_{FP}=f_P},
+$$
+
+while $M_{FP}$ retains collective feedback in $s$ and $q$. The same-state identity therefore does not imply identical trajectories.
+
+The projected models use projected RK4 stages, mandatory radial retraction, fail-closed singular handling, separate diagnostics, and independent software-reference parity.
+
+They are not the completed relational-admissibility geometry and have not been scientifically validated.
 
 ## Binding claim ceiling
 
 $$
 \boxed{
-M_0,M_F,M_P\ \text{implemented and unit-tested};
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
 \quad
-M_{FP}\ \text{and }M_F\equiv M_P\ \text{unverified}.
+M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
@@ -70,26 +86,14 @@ $$
 - [Phase-gated roadmap](14_roadmap.md)
 - [Frozen four-model design contract v1.0](15_four_model_design_contract.md)
 - [Phase 3 $M_P$ verification record](16_phase3_mp_verification.md)
+- [Phase 4 $M_{FP}$ verification record](17_phase4_mfp_verification.md)
 
 ## Current roadmap position
 
-**Phases 0–3 are complete. Phase 4 is in progress.**
+**Phases 0–4 are complete. Phase 5 is in progress.**
 
-Phase 3 merged the $M_P$ implementation through PR `#5`. GitHub Actions reported **35 passing tests** on both Python 3.10 and Python 3.12.
+Phase 4 merged through PR `#7`. GitHub Actions reported **51 passing tests** on both Python 3.10 and Python 3.12.
 
-The active target is
-
-$$
-M_{FP}:\quad
-F_{\mathrm{proposal}}=F_0+F_F,
-$$
-
-followed by the existing projection. Contract v1.0 predicts
-
-$$
-\boxed{f_{FP}=f_P}
-$$
-
-for node derivatives, while $s$ and $q$ retain collective-feedback terms.
+The active task is to freeze the comparative experiment protocol. No development pilot is authorized until the hypotheses, observation maps, manifests, metrics, solver/refinement policy, stop rules, and provenance requirements are fixed.
 
 > Separate the mechanisms. Freeze the contracts. Prove the projection. Test the alternatives. Reify nothing.
