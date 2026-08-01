@@ -98,9 +98,9 @@ $$
 
 ## Relationship to $M_P$
 
-$M_F$ defines no $\Gamma$, $H$, tangent space, or projection operator. It remains a feedback model even though $M_P$ is now implemented elsewhere.
+$M_F$ defines no $\Gamma$, $H$, tangent space, or projection operator. It remains a feedback model even though $M_P$ is implemented separately.
 
-$M_P$ uses the separate constant-amplitude constraint
+$M_P$ uses the constant-amplitude constraint
 
 $$
 \Gamma(Z)=\frac13x^Tx-c_0=0
@@ -112,13 +112,23 @@ $$
 M_F\equiv M_P.
 $$
 
+## Relationship to $M_{FP}$
+
+$M_{FP}$ combines the explicit $M_F$ feedback proposal with the $M_P$ node projection. At the same regular full state, its radial node-feedback contribution is removed, so
+
+$$
+\boxed{f_{FP}=f_P}.
+$$
+
+However, $M_{FP}$ retains the $M_F$ feedback terms in $s$ and $q$. The same-state node identity therefore does not imply identical $M_P$ and $M_{FP}$ trajectories.
+
 ## Current ceiling
 
 $$
 \boxed{
-M_0,M_F,M_P\ \text{implemented and unit-tested};
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
 \quad
-M_{FP}\ \text{and }M_F\equiv M_P\ \text{unverified}.
+M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
