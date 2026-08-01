@@ -17,6 +17,15 @@ from apophatic_geometry.model import (
     intrinsic_edge_lengths,
     sigmoid,
 )
+from apophatic_geometry.models import (
+    ModelId,
+    ProjectionTarget,
+    derivatives_for_model,
+    rk4_step,
+)
+from apophatic_geometry.pilot_manifest import (
+    validate_execution_environment_policy,
+)
 from apophatic_geometry.protocol import (
     PROTOCOL_ID,
     file_sha256,
@@ -24,6 +33,7 @@ from apophatic_geometry.protocol import (
     verify_lock,
 )
 from apophatic_geometry import simulate
+from reference_equations import reference_derivative, reference_rk4_step
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -139,6 +149,21 @@ def test_lock_verification_accepts_only_root_confined_regular_files(
             verify_lock(root, symlink_escape)
 
 
+def test_phase5_integrity_lock_records_no_scientific_design_change() -> None:
+    lock = load_json(REPO_ROOT / "protocol/phase5_v1/LOCK.json")
+    assert lock["lock_id"] == "ARG-P5-LOCK-v1.1-INTEGRITY"
+    assert lock["status"] == "FROZEN_NO_DATA_INTEGRITY_REMEDIATED"
+    scope = lock["remediation_scope"]
+    assert scope["scientific_design_changed"] is False
+    assert scope["parameters_changed"] is False
+    assert scope["initial_conditions_changed"] is False
+    assert scope["pilot_confirmatory_split_changed"] is False
+    assert scope["metrics_changed"] is False
+    assert scope["thresholds_changed"] is False
+    assert scope["decision_rules_changed"] is False
+    assert scope["trajectory_data_generated"] is False
+
+
 def test_attestation_derives_commit_and_ignores_source_environment(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -156,11 +181,103 @@ def test_attestation_derives_commit_and_ignores_source_environment(
     assert len(str(attestation["attestation_sha256"])) == 64
 
 
+def test_execution_environment_policy_is_exact_and_still_blocks_execution() -> None:
+    runtime = {
+        "python_implementation": "CPython",
+        "python_version": "3.12.13",
+        "distributions": {
+            "numpy": {"version": "2.5.1", "installed_tree_sha256": "1" * 64},
+            "scipy": {"version": "1.18.0", "installed_tree_sha256": "2" * 64},
+            "apophatic-relational-geometry": {
+                "version": "0.6.0",
+                "installed_tree_sha256": "3" * 64,
+            },
+        },
+    }
+    policy = validate_execution_environment_policy(
+        REPO_ROOT,
+        runtime,
+        require_execution_clearance=False,
+    )
+    assert policy["status"] == "FROZEN_NO_EXECUTION"
+    with pytest.raises(
+        Exception, match="external audit clearance is absent"
+    ):
+        validate_execution_environment_policy(
+            REPO_ROOT,
+            runtime,
+            require_execution_clearance=True,
+        )
+
+
+def test_300_randomized_states_match_independent_equations_and_rk4() -> None:
+    """Differential test over moderate states; no stored expected trajectories."""
+
+    generator = np.random.Generator(np.random.PCG64(20260801))
+    params = Parameters()
+    for _ in range(300):
+        x = generator.uniform(-1.5, 1.5, size=3)
+        if float(np.dot(x, x)) < 1.0e-4:
+            x[0] += 0.5
+        state = State(
+            x=x,
+            s=generator.uniform(-1.5, 1.5, size=3),
+            q=generator.uniform(-1.0, 1.0, size=3),
+        )
+        c0 = float(np.dot(state.x, state.x) / 3.0)
+        target = ProjectionTarget(c0=c0)
+        dt = float(generator.uniform(1.0e-5, 1.0e-3))
+        for model in ModelId:
+            production_derivative = derivatives_for_model(
+                state,
+                params,
+                model,
+                target if model in {ModelId.MP, ModelId.MFP} else None,
+            )
+            independent_derivative = reference_derivative(
+                state,
+                params,
+                model.value,
+                c0=c0 if model in {ModelId.MP, ModelId.MFP} else None,
+            )
+            np.testing.assert_allclose(
+                production_derivative.pack(),
+                independent_derivative.pack(),
+                rtol=1.0e-13,
+                atol=5.0e-14,
+            )
+
+            production_step = rk4_step(
+                state,
+                params,
+                dt,
+                model=model,
+                target=target if model in {ModelId.MP, ModelId.MFP} else None,
+            )
+            independent_step = reference_rk4_step(
+                state,
+                params,
+                dt,
+                model.value,
+                c0=c0 if model in {ModelId.MP, ModelId.MFP} else None,
+            )
+            np.testing.assert_allclose(
+                production_step.pack(),
+                independent_step.pack(),
+                rtol=1.0e-13,
+                atol=5.0e-14,
+            )
+
+
 def test_failed_simulation_leaves_no_final_artifact(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(simulate, "build_attestation", lambda *args, **kwargs: _fake_attestation())
+    monkeypatch.setattr(
+        simulate,
+        "build_attestation",
+        lambda *args, **kwargs: _fake_attestation(),
+    )
     output = tmp_path / "failed.csv"
     completion = Path(f"{output}.complete.json")
 
