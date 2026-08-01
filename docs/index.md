@@ -34,10 +34,10 @@ $$
 
 ## Canonical model family
 
-- $M_0$: local/adaptive baseline without collective feedback or projection.
+- $M_0$: local/adaptive baseline without collective feedback or projection; next implementation gate.
 - $M_F$: endogenous collective feedback; current executable.
-- $M_P$: explicit projected admissibility; unimplemented.
-- $M_{FP}$: feedback plus projection with separate diagnostics; unimplemented.
+- $M_P$: explicit constant-amplitude projection sandbox; frozen but unimplemented.
+- $M_{FP}$: feedback plus projection with separate diagnostics; frozen but unimplemented.
 
 ## Foundations
 
@@ -59,7 +59,7 @@ $$
 - [Falsification criteria](12_falsification_criteria.md)
 - [Canonical alignment and claim ceiling](13_alignment_and_claim_ceiling.md)
 - [Phase-gated roadmap](14_roadmap.md)
-- [Four-model design contract](15_four_model_design_contract.md)
+- [Frozen four-model design contract v1.0](15_four_model_design_contract.md)
 
 ## Decisions and history
 
@@ -68,23 +68,17 @@ $$
 
 ## Current roadmap position
 
-**Phase 0 is complete. Phase 1 is in progress.**
+**Phase 0 and Phase 1 are complete. Phase 2 is in progress.**
 
-The five existing software tests passed in a clean local run. This verifies the software checks, not the scientific hypothesis.
+The design contract now freezes:
 
-The active Phase 1 artifact proposes a minimal projected model using
+- exact equations for all four models;
+- shared RK4 integration;
+- mandatory retraction for projected models;
+- fail-closed singular handling;
+- reference parameters and development initial conditions;
+- observation maps, parity tests, and fairness rules.
 
-$$
-\Gamma(Z)=c(x)-c_0=0,
-\qquad
-c_0=c(x(0))>0.
-$$
-
-Immediate priorities:
-
-1. review and freeze or reject the v0.1 design contract;
-2. select the projection-preserving numerical method;
-3. implement the true $M_0$ baseline after contract freeze;
-4. prove $M_P$ before production implementation.
+The active task is implementation and independent verification of the true $M_0$ baseline while preserving current $M_F$ behavior.
 
 > Separate the mechanisms. Freeze the contracts. Prove the projection. Test the alternatives. Reify nothing.
