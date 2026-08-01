@@ -2,17 +2,15 @@
 
 ## Status
 
-**Runner implementation passed its software gate. No pilot has been executed.**
+**Runner implementation and software verification passed. No pilot has been executed.**
 
 The runner implements protocol `ARG-P5-COMP-v1` for the 50 frozen pilot configurations. Confirmatory trajectory generation is blocked in the planner, batch authorizer, RK4 path, DOP853 path, archive writer, execution authorization, and archive contamination scan.
 
-Runner-code verification:
+Final hosted verification:
 
-- GitHub Actions run `30722763003`;
+- GitHub Actions run `30723005085`;
 - Python 3.10: 100 passed;
 - Python 3.12: 100 passed.
-
-Final documentation-only alignment remains subject to the pull request's last hosted check before merge.
 
 ## Data-free commands
 
