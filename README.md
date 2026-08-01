@@ -31,6 +31,8 @@ where local dynamics propose change and the global admissible geometry removes t
 
 ## Repository map
 
+### Foundations
+
 - `docs/00_scope_and_status.md` — what the project claims and does not claim.
 - `docs/01_apophatic_meta_axiom.md` — the interpretive non-reification schema.
 - `docs/02_design_requirements.md` — requirements the geometry must satisfy.
@@ -38,6 +40,18 @@ where local dynamics propose change and the global admissible geometry removes t
 - `docs/04_minimal_model.md` — the first explicit three-node system.
 - `docs/05_proof_obligations.md` — theorems and checks required before strong claims.
 - `docs/06_experimental_plan.md` — falsification-oriented experiments and ablations.
+
+### Research grounding
+
+- `docs/07_research_grounding_plan.md` — staged path from proposal to evidence.
+- `docs/08_claim_ledger.md` — status and evidence requirements for every major claim.
+- `docs/09_novelty_matrix.md` — comparison framework for established neighboring work.
+- `docs/10_literature_landscape.md` — primary-source research tracks and intake protocol.
+- `docs/11_benchmark_specification.md` — fixed baselines, measurements, and fairness rules.
+- `docs/12_falsification_criteria.md` — conditions that weaken, narrow, or reject the hypotheses.
+
+### Decisions, implementation, and tests
+
 - `docs/adr/0001-separate-math-from-ontology.md` — architectural decision record.
 - `docs/history/negation_operator_path.md` — archived path that motivated the meta-axiom.
 - `src/apophatic_geometry/` — executable reference implementation.
@@ -55,7 +69,7 @@ python -m apophatic_geometry.simulate --steps 2000 --dt 0.005 --output run.csv
 
 ## Current status
 
-The repository begins with a fully specified minimal model and executable tests. It does **not** yet establish that the geometry describes physical reality. The immediate goals are mathematical consistency, numerical stability, identifiable mechanisms, and falsifiable predictions.
+The repository begins with a fully specified minimal model and executable tests. It does **not** yet establish that the geometry describes physical reality. The immediate goals are mathematical consistency, numerical stability, identifiable mechanisms, falsifiable predictions, and a primary-source novelty audit.
 
 ## Research maxim
 
