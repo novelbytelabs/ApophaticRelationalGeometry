@@ -6,7 +6,7 @@ ARG advances by passed gates, not by calendar optimism.
 
 A phase is complete only when its exit criteria are satisfied and the claim ledger is updated. Failed results narrow or stop the program; they do not automatically trigger a more complicated model.
 
-## Current claim ceiling
+## Binding claim ceiling
 
 $$
 \boxed{
@@ -20,326 +20,201 @@ $$
 
 | Phase | Status | Result |
 |---|---|---|
-| Phase 0 — Alignment and claim control | COMPLETE | Core docs, metadata, model labels, claim ledger, benchmark plan, and falsification rules now use the same $M_0/M_F/M_P/M_{FP}$ split. |
-| Phase 1 — Four-model design contract | IN PROGRESS | Draft v0.1 created in `15_four_model_design_contract.md`. |
-| Phase 2 onward | BLOCKED | Await Phase 1 freeze. |
+| Phase 0 — Alignment and claim control | COMPLETE | Public and internal descriptions now match the executable evidence. |
+| Phase 1 — Four-model design contract | COMPLETE | `15_four_model_design_contract.md` frozen as version 1.0. |
+| Phase 2 — Implement and verify $M_0$ | IN PROGRESS | First code gate opened. |
+| Phase 3 onward | BLOCKED | Await $M_0$ exit gate. |
 
-Verification note: the five existing software tests passed in a clean local run using the current source logic. This is a software verification result, not a scientific result or hosted-CI attestation.
+Software-test results validate code contracts only. They do not validate the scientific hypothesis.
 
 ---
 
-## Phase 0 — Alignment and claim control
+# Phase 0 — Alignment and claim control
 
-### Objective
-
-Make every public and internal project description agree with the executable evidence.
-
-### Completed deliverables
-
-- canonical mechanism definitions;
-- canonical model family $M_0,M_F,M_P,M_{FP}$;
-- explicit claim ceiling;
-- README and documentation split between target formalism and current implementation;
-- claim-ledger entries for feedback, projection, equivalence, and downward-causation scope;
-- prohibition against calling $M_F$ projected geometry;
-- package and citation metadata aligned with the $M_F$ prototype;
-- software test rerun: five tests passed.
-
-### Exit decision
+## Exit decision
 
 **PASS.**
 
-The claim ceiling remains unchanged.
+Completed:
+
+- canonical $M_0/M_F/M_P/M_{FP}$ split;
+- explicit claim ceiling;
+- feedback/projection documentation separation;
+- package and citation metadata alignment;
+- claim-ledger and falsification alignment;
+- existing software tests retained.
 
 ---
 
-## Phase 1 — Freeze the four-model design contract
+# Phase 1 — Freeze the four-model contract
 
-### Objective
+## Exit decision
 
-Define all four models precisely enough that implementation choices cannot move after results are seen.
+**PASS.**
 
-### Active artifact
+The frozen contract now specifies:
 
-`15_four_model_design_contract.md`
+- exact equations for $M_0,M_F,M_P,M_{FP}$;
+- fixed nine-dimensional substrate;
+- constant-amplitude projection sandbox for $M_P$;
+- project-after-feedback ordering for $M_{FP}$;
+- exact radial-feedback annihilation prediction;
+- shared RK4 integrator;
+- mandatory retraction for projected models;
+- fail-closed singular behavior;
+- fixed reference parameters and development initial conditions;
+- observation maps and equivalence language;
+- independent-reference boundary;
+- fairness and safety tripwires.
 
-### Current v0.1 proposal
-
-- $M_0$: exact no-feedback local/adaptive baseline.
-- $M_F$: current feedback implementation, expressed as $F_0+F_F$.
-- $M_P$: constant-amplitude projection on
-
-$$
-\Gamma(Z)=c(x)-c_0=0,
-\qquad
-c_0=c(x(0))>0.
-$$
-
-- $M_{FP}$: feedback proposal followed by projection.
-
-The v0.1 projection is deliberately minimal, state-dimension matched, and analytically tractable.
-
-### Preregistered structural consequence
-
-For the node-state projection
-
-$$
-P_T=I-\frac{xx^T}{x^Tx},
-$$
-
-the radial node-feedback term satisfies
-
-$$
-P_T\left(-\chi c(x)x\right)=0.
-$$
-
-Therefore, under the v0.1 constraint and project-after-feedback ordering,
-
-$$
-f_{FP}=f_P
-$$
-
-for node-state derivatives, while $s$ and $q$ feedback may still distinguish $M_{FP}$ from $M_P$.
-
-This consequence must be understood and accepted before implementation.
-
-### Remaining design decisions
-
-1. Select the reference integrator and tolerance policy.
-2. Decide whether post-step retraction is mandatory.
-3. Freeze the near-singular norm threshold and fail-closed behavior.
-4. Confirm that $M_P$ v0.1 projects only node states.
-5. Define the initial-condition family with $c_0>0$.
-6. Freeze parameter ranges and boundedness checks.
-7. Define the independent reference implementation boundary.
-8. Freeze full-state and partial-observation comparison maps.
-9. Decide whether the soft-penalty control is included in the first experiment.
-10. Review whether the constant-amplitude manifold is sufficiently nontrivial for the intended mechanism test.
-
-### Exit criteria
-
-- equations for all four models are frozen;
-- state dimensions and observables are explicit;
-- exact reductions are specified;
-- fairness and parameter-sharing rules are fixed;
-- singular cases have declared behavior;
-- the numerical preservation method is selected;
-- an independent reviewer can implement each model from the contract alone;
-- the contract is explicitly versioned as frozen.
-
-### Stop condition
-
-Do not implement $M_P$ if review finds that the selected constraint is circular, trivial for the research question, or incapable of distinguishing projection from feedback.
+The sphere constraint is accepted only as a minimal projection-mechanism testbed. It is not the completed relational geometry.
 
 ---
 
-## Phase 2 — Implement and verify $M_0$
+# Phase 2 — Implement and verify $M_0$
 
-### Objective
+## Objective
 
-Create a genuine no-collective comparison substrate.
+Create a true no-feedback local/adaptive baseline without altering the current $M_F$ behavior.
 
-### Deliverables
+## Required implementation
 
-- executable $M_0$;
-- exact mapping between $M_0$ and $M_F$ parameters;
-- tests proving that $c(x)$ does not enter $M_0$ transitions;
-- deterministic initial-condition and configuration manifests;
-- independently written right-hand sides for $M_0$ and $M_F$;
-- exact reduction test from $M_F$ at $\chi=\eta_2=\rho=0$.
+- expose a model identifier or dispatch mechanism;
+- implement $F_0$ directly from the frozen contract;
+- keep $c(x)$ diagnostic-only in $M_0$;
+- preserve the current state representation and intrinsic geometry;
+- add shared fixed-step RK4 integration without changing the legacy equations;
+- retain explicit Euler only as a transparent low-level test helper if needed;
+- label every output with model ID and contract version.
 
-### Exit criteria
+## Required tests
 
-- $M_0$ and $M_F$ differ only by declared feedback paths;
-- all software tests pass under at least two appropriate integration methods;
-- deliberate feedback mutations trip the relevant tests;
-- no hidden collective path exists in $M_0$.
-
----
-
-## Phase 3 — Prove the $M_P$ prototype
-
-### Objective
-
-Establish mathematical coherence before treating numerical output as evidence.
-
-### Obligations
-
-- regularity and rank of $\Gamma$;
-- existence and uniqueness of projection on the declared domain;
-- continuous-time tangency and constraint preservation;
+- hand-computed $M_0$ derivative;
+- no-feedback dependency audit;
+- $M_F(\chi=\eta_2=\rho=0)=M_0$ exactly;
 - permutation equivariance;
-- explicit singularity exclusions;
-- distinction from feedback and soft penalties;
-- boundedness or continuation conditions where possible.
+- finite-state and parameter validation;
+- independent-reference derivative parity;
+- independent-reference RK4 one-step parity;
+- regression test proving unchanged $M_F$ derivatives at the reference state.
 
-### Exit criteria
+## Exit criteria
 
-- checked derivation of the projector;
-- explicit domain of validity;
-- counterexamples and excluded regimes documented;
-- no claim beyond the proved domain.
+- all existing tests pass;
+- all new $M_0$ tests pass;
+- no hidden $c(x)$ transition path exists in $M_0$;
+- current $M_F$ behavior remains unchanged;
+- source and raw outputs identify the selected model;
+- implementation and reference paths agree within frozen tolerances;
+- claim ledger updated to mark $M_0$ implemented and unit-tested.
+
+## Claim ceiling after completion
+
+Expected ceiling:
+
+$$
+M_0,M_F\ \text{implemented and unit-tested};
+\quad
+M_P,M_{FP},M_F\equiv M_P\ \text{unverified}.
+$$
+
+No scientific mechanism claim is promoted merely by implementing $M_0$.
 
 ---
 
-## Phase 4 — Implement and verify $M_P$
+# Phase 3 — Implement and verify $M_P$
 
-### Objective
+Blocked until Phase 2 passes.
 
-Implement projection with fail-closed code-equation parity.
+Required elements:
 
-### Required gate
-
-$$
-\operatorname{PROJECTED\_CLAIM}
-=
-D_{\Gamma,H}
-\land_{FC}
-I_{\Pi}
-\land_{FC}
-T_{\mathrm{preserve}}
-\land_{FC}
-E_{\mathrm{code}}
-\land_{FC}
-S_{\mathrm{path}}.
-$$
-
-All terms must pass before the label `IMPLEMENTED_PROTOTYPE` is permitted.
-
-### Deliverables
-
-- tangent and normal decomposition;
-- constraint-preserving integrator or declared retraction;
-- independent projector implementation;
-- constraint-error, condition-number, and retraction traces;
-- singular cases that fail closed;
-- permutation and convergence tests.
+- tangent projector;
+- projected RK4 stages;
+- mandatory radial retraction;
+- constraint and tangency diagnostics;
+- singular fail-closed path;
+- independent implementation parity;
+- step-refinement evidence.
 
 ---
 
-## Phase 5 — Implement and verify $M_{FP}$
+# Phase 4 — Implement and verify $M_{FP}$
 
-### Objective
+Blocked until Phase 3 passes.
 
-Combine feedback and projection without losing mechanism identifiability.
+Required elements:
 
-### Deliverables
-
-- separate $F_0$, $F_F$, and $F_P$ outputs;
-- frozen ordering convention;
-- exact reductions to $M_0$, $M_F$, and $M_P$;
-- radial node-feedback annihilation test for v0.1;
-- retained $s/q$ feedback tests;
-- no double counting.
+- feedback proposal followed by projection;
+- exact $f_{FP}=f_P$ node-derivative identity;
+- retained $s/q$ feedback;
+- exact reduction tests;
+- separate feedback and projection diagnostics.
 
 ---
 
-## Phase 6 — Comparative mechanism experiment
+# Phase 5 — Freeze comparative experiment protocol
 
-### Objective
+Blocked until all four models pass software and mathematical verification.
 
-Determine whether feedback and projection are distinct, restrictedly equivalent, complementary, or redundant.
+The protocol must freeze:
 
-### Canonical comparison
-
-$$
-M_0,\qquad M_F,\qquad M_P,\qquad M_{FP}.
-$$
-
-### Primary diagnostics
-
-$$
-\chi_i^F(t)
-=
-\frac{\|F_{F,i}(t)\|}
-{\|F_{0,i}(t)\|+\epsilon},
-$$
-
-$$
-\chi_i^P(t)
-=
-\frac{\|F_{P,i}(t)\|}
-{\|F_{0,i}(t)+F_{F,i}(t)\|+\epsilon},
-$$
-
-$$
-\epsilon_\Gamma(t)=\|\Gamma(Z(t))\|.
-$$
-
-### Equivalence standard
-
-Similar plots do not establish
-
-$$
-M_F\equiv M_P.
-$$
-
-An equivalence claim requires exact mathematics, a bounded approximation, or a precisely scoped observational equivalence.
-
-### Exit criteria
-
-- preregistered protocol executed;
-- all four models evaluated fairly;
-- structural and exogenous controls completed;
-- raw outputs and hashes retained;
-- claim ledger updated for positive, null, or negative results.
+- hypotheses;
+- observation maps;
+- parameter and initial-condition manifests;
+- structural inferential units;
+- metrics and uncertainty treatment;
+- solver and refinement policy;
+- exclusions and stop rules;
+- raw-output and checksum policy.
 
 ---
 
-## Phase 7 — Research grounding and known-system anchors
+# Phase 6 — Development pilot
 
-### Objective
+Purpose:
 
-Determine whether ARG is a repackaging, useful synthesis, or broader formalism.
+- find numerical failures;
+- test whether observables identify mechanisms;
+- expose degeneracies;
+- determine whether the sphere projection is informative enough.
 
-### Anchor systems
+Pilot results remain developmental.
+
+---
+
+# Phase 7 — Confirmatory four-model experiment
+
+Only a frozen held-out run may support comparative mechanism claims.
+
+Permitted outcomes include:
+
+- $M_F\ne M_P$;
+- restricted observational equivalence;
+- $M_{FP}=M_P$ for node dynamics but not geometry;
+- no useful value from projection beyond simpler controls.
+
+Negative results narrow the project.
+
+---
+
+# Phase 8 — Relational projection v2
+
+Only after the projection machinery is verified may ARG introduce constraints involving relational mismatch, $s$, $q$, intrinsic distance, or compatibility structure.
+
+Such a model requires a new design contract and may not silently replace version 1.0.
+
+---
+
+# Phase 9 — Physical anchors
+
+Initial anchor order:
 
 1. constrained mechanics;
 2. incompressible-flow projection;
 3. adaptive synchronization or flocking.
 
-### Continuation gate
+ARG must reproduce an established result before claiming an extension.
 
-At least one of:
+## Immediate next action
 
-- a new theorem;
-- strict generalization of an established family;
-- a useful invariant or decomposition;
-- a robust signature unavailable to matched alternatives;
-- improved performance on an established physical problem.
-
-Otherwise ARG remains a documented candidate synthesis.
-
----
-
-## Phase 8 — Narrow scientific evaluation
-
-### Entry requirements
-
-- Phases 0–7 passed or explicitly narrowed;
-- primary-source novelty audit complete;
-- domain-specific hypothesis and data justified;
-- development and confirmatory protocols separated;
-- independent audit of code, configuration, and statistics;
-- claim ceiling fixed before confirmatory execution.
-
-### Possible outcomes
-
-- supported within a narrow domain;
-- equivalent to an established method;
-- no advantage over alternatives;
-- mathematical or numerical failure requiring claim reduction.
-
-No outcome establishes an absolute ontology.
-
-## Immediate execution queue
-
-1. Review the v0.1 design contract.
-2. Resolve its ten open decisions.
-3. Freeze Phase 1 as version 1.0 or reject the sphere-constraint prototype.
-4. Implement $M_0$ only after contract freeze.
-5. Do not implement or test $M_P$ scientifically before its mathematical obligations pass.
-
-## Roadmap maxim
-
-> Separate the mechanisms. Freeze the contracts. Prove the projection. Test the alternatives. Raise the claim only after the gate passes.
+Implement the exact $M_0$ baseline and its independent verification suite under the frozen version 1.0 contract.
