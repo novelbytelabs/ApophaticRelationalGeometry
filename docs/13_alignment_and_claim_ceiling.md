@@ -18,14 +18,14 @@ $$
 x\longrightarrow c(x)\longrightarrow(\dot x,\dot s,\dot q).
 $$
 
-This is implemented by $M_F$.
+This is implemented by $M_F$ and retained inside $M_{FP}$.
 
 ### Global admissibility projection
 
 A proposed vector field is projected onto the tangent space of an explicit admissible manifold:
 
 $$
-\dot Z=\Pi_{T_Z\mathcal M}F_0(Z).
+\dot Z=\Pi_{T_Z\mathcal M}F(Z).
 $$
 
 Contract v1.0 implements the minimal constant-amplitude sandbox
@@ -35,10 +35,10 @@ $$
 $$
 
 $$
-f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
+P_T=I-\frac{xx^T}{x^Tx}.
 $$
 
-This is implemented by $M_P$.
+This is implemented by $M_P$ and $M_{FP}$.
 
 The mechanisms are not assumed equivalent:
 
@@ -68,35 +68,44 @@ This does not establish macro-level causal autonomy.
 
 Implemented and unit-tested contract-v1.0 constant-amplitude projected-admissibility sandbox.
 
-It includes:
-
-- an explicit equality constraint;
-- Euclidean tangent projection;
-- projected RK4 stages;
-- mandatory radial retraction;
-- fail-closed singular handling;
-- independent reference parity;
-- constraint, tangency, correction, denominator, and retraction diagnostics.
-
-It is a projection-mechanism sandbox, not ARG's completed relational-admissibility geometry and not a validated physical law.
+It includes an explicit equality constraint, Euclidean tangent projection, projected RK4 stages, mandatory radial retraction, fail-closed singular handling, separate projection diagnostics, and independent reference parity.
 
 ### $M_{FP}$
 
-Feedback followed by projection remains unimplemented and unverified.
+Implemented and unit-tested feedback-followed-by-projection prototype.
+
+It exposes separately:
+
+- the local/adaptive proposal $F_0$;
+- the feedback vector $F_F$;
+- the combined proposal $F_0+F_F$;
+- the projection correction;
+- the projected derivative;
+- the numerical retraction.
+
+For the same regular full state, contract v1.0 satisfies
+
+$$
+\boxed{f_{FP}=f_P}
+$$
+
+because the node-feedback term is radial and $P_Tx=0$.
+
+This same-state identity is not trajectory equivalence. $M_{FP}$ retains feedback in $s$ and $q$, which can change later conductances and node proposals.
 
 ## Current claim ceiling
 
 $$
 \boxed{
-M_0,M_F,M_P\ \text{implemented and unit-tested};
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
 \quad
-M_{FP}\ \text{and }M_F\equiv M_P\ \text{unverified}.
+M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-## Projected-implementation gate
+## Implementation gates
 
-For the specific $M_P$ v1.0 implementation:
+### $M_P$ v1.0
 
 | Gate | Status |
 |---|---|
@@ -104,7 +113,7 @@ For the specific $M_P$ v1.0 implementation:
 | Projection implementation | PASS |
 | Constraint-preservation tests | PASS at software/mechanism level |
 | Code-equation equivalence | PASS at tested cases against an independent reference path |
-| Substrate path | PASS — $F_0\to$ normal correction $\to f_P$, followed by numerical retraction |
+| Substrate path | PASS — proposal, correction, projected derivative, and retraction are explicit |
 
 Therefore:
 
@@ -112,32 +121,48 @@ $$
 \operatorname{MP\_V1\_IMPLEMENTATION\_CLAIM}=\text{PASS}.
 $$
 
-This does **not** promote the broader scientific claim:
+### $M_{FP}$ v1.0
+
+| Gate | Status |
+|---|---|
+| Feedback proposal $F_0+F_F$ | PASS |
+| Projection after feedback | PASS |
+| Same-state identity $f_{FP}=f_P$ | PASS at tested regular states |
+| Retained $s/q$ feedback | PASS |
+| Exact zero-feedback reduction to $M_P$ | PASS |
+| Independent derivative and step parity | PASS at tested cases |
+| Constraint preservation and singular handling | PASS at software/mechanism level |
+
+Therefore:
 
 $$
-\operatorname{PROJECTED\_GEOMETRY\_SCIENTIFIC\_CLAIM}=\text{UNVERIFIED}.
+\operatorname{MFP\_V1\_IMPLEMENTATION\_CLAIM}=\text{PASS}.
 $$
 
-The implementation gate establishes that the declared mechanism exists in code and satisfies its frozen software contracts. It does not establish predictive utility, physical adequacy, novelty, transport, or macro-level causal autonomy.
+The broader scientific claim remains:
+
+$$
+\operatorname{ARG\_COMPARATIVE\_SCIENTIFIC\_CLAIM}=\text{UNVERIFIED}.
+$$
 
 ## Current non-claims
 
 ARG has not established:
 
 - that $M_F$ and $M_P$ are dynamically or observationally equivalent;
-- that either mechanism defeats simpler scientific alternatives;
-- that projection improves prediction;
+- that same-state node identity implies trajectory identity;
+- that any mechanism defeats simpler scientific alternatives;
+- that projection or feedback improves prediction;
 - that constant amplitude is a law of nature;
-- that $M_P$ is the final relational geometry;
-- that $M_{FP}$ is implemented;
+- that the v1.0 sandbox is the final relational geometry;
 - that the four-model comparative experiment has been run;
 - that macro-level causal autonomy or strong emergence has been demonstrated;
 - that ARG is a fundamental physical theory.
 
 ## Verification references
 
-- Phase 2 record: `08_claim_ledger.md`
 - Phase 3 record: `16_phase3_mp_verification.md`
+- Phase 4 record: `17_phase4_mfp_verification.md`
 - Frozen equations and policies: `15_four_model_design_contract.md`
 - Current execution plan: `14_roadmap.md`
 
@@ -147,4 +172,4 @@ NeoEmergenics remains an independent fail-closed harness and claim evaluator. It
 
 ## Change-control rule
 
-Every claim must name the model and evidence level. “Projected geometry” may now refer to the implemented $M_P$ v1.0 sandbox, but must not be used without the qualifiers **constant-amplitude**, **prototype**, and **software-verified** when scientific or ontological interpretation could otherwise be inferred.
+Every claim must name the model and evidence level. “Projected geometry” must be qualified as **constant-amplitude**, **prototype**, and **software-verified** when scientific or ontological interpretation could otherwise be inferred.
