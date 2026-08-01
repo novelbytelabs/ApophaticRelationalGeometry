@@ -4,12 +4,24 @@ from __future__ import annotations
 
 import argparse
 import csv
+from dataclasses import asdict
+import hashlib
+import json
+import os
 from pathlib import Path
 
 import numpy as np
 
 from .model import Parameters, State, collective_mode, intrinsic_distance_matrix
-from .models import CONTRACT_VERSION, ModelId, parse_model_id, rk4_step
+from .models import (
+    CONTRACT_VERSION,
+    ModelId,
+    ProjectionTarget,
+    parse_model_id,
+    projected_derivative,
+    projected_rk4_step,
+    rk4_step,
+)
 
 
 def reference_initial_state() -> State:
@@ -22,6 +34,29 @@ def reference_initial_state() -> State:
     )
 
 
+def _configuration_hash(
+    model_id: ModelId,
+    params: Parameters,
+    state: State,
+    steps: int,
+    dt: float,
+) -> str:
+    payload = {
+        "contract_version": CONTRACT_VERSION,
+        "model_id": model_id.value,
+        "parameters": asdict(params),
+        "initial_state": {
+            "x": state.x.tolist(),
+            "s": state.s.tolist(),
+            "q": state.q.tolist(),
+        },
+        "steps": steps,
+        "dt": dt,
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def run(
     steps: int,
     dt: float,
@@ -30,16 +65,35 @@ def run(
 ) -> None:
     if steps <= 0:
         raise ValueError("steps must be positive")
+    if not np.isfinite(dt) or dt <= 0.0:
+        raise ValueError("dt must be finite and positive")
 
     model_id = parse_model_id(model)
+    if model_id is ModelId.MFP:
+        raise NotImplementedError("mfp is not implemented at the current roadmap gate")
+
     params = Parameters()
     state = reference_initial_state()
+    target = ProjectionTarget.from_state(state) if model_id is ModelId.MP else None
+    configuration_hash = _configuration_hash(model_id, params, state, steps, dt)
+    source_commit = os.environ.get("ARG_SOURCE_COMMIT", "unavailable")
+
+    last_raw_residual: float | str = ""
+    last_post_residual: float | str = ""
+    last_retraction_magnitude: float | str = ""
+    if target is not None:
+        initial = projected_derivative(state, params, target)
+        last_raw_residual = initial.constraint_residual
+        last_post_residual = initial.constraint_residual
+        last_retraction_magnitude = 0.0
 
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)
         writer.writerow(
             [
+                "source_commit",
+                "configuration_hash",
                 "model_id",
                 "contract_version",
                 "step",
@@ -57,13 +111,36 @@ def run(
                 "d01",
                 "d02",
                 "d12",
+                "constraint_residual",
+                "normalized_tangency_residual",
+                "projection_correction_norm",
+                "projection_denominator",
+                "pre_retraction_constraint_residual",
+                "post_retraction_constraint_residual",
+                "retraction_magnitude",
             ]
         )
 
         for step in range(steps + 1):
             distance = intrinsic_distance_matrix(state, params)
+            if target is not None:
+                projection = projected_derivative(state, params, target)
+                projection_fields: list[float | str] = [
+                    projection.constraint_residual,
+                    projection.normalized_tangency_residual,
+                    projection.correction_norm,
+                    projection.denominator,
+                    last_raw_residual,
+                    last_post_residual,
+                    last_retraction_magnitude,
+                ]
+            else:
+                projection_fields = ["", "", "", "", "", "", ""]
+
             writer.writerow(
                 [
+                    source_commit,
+                    configuration_hash,
                     model_id.value,
                     CONTRACT_VERSION,
                     step,
@@ -75,10 +152,19 @@ def run(
                     distance[0, 1],
                     distance[0, 2],
                     distance[1, 2],
+                    *projection_fields,
                 ]
             )
+
             if step < steps:
-                state = rk4_step(state, params, dt, model=model_id)
+                if target is not None:
+                    result = projected_rk4_step(state, params, dt, target)
+                    state = result.state
+                    last_raw_residual = result.raw_constraint_residual
+                    last_post_residual = result.post_constraint_residual
+                    last_retraction_magnitude = result.retraction_magnitude
+                else:
+                    state = rk4_step(state, params, dt, model=model_id)
 
 
 def main() -> None:
@@ -87,7 +173,7 @@ def main() -> None:
     parser.add_argument("--dt", type=float, default=0.005)
     parser.add_argument(
         "--model",
-        choices=[ModelId.M0.value, ModelId.MF.value],
+        choices=[ModelId.M0.value, ModelId.MF.value, ModelId.MP.value],
         default=ModelId.MF.value,
         help="implemented model identifier",
     )
