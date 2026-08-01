@@ -2,43 +2,45 @@
 
 ## Purpose
 
-This document defines the path from a coherent mathematical proposal to a research-grounded and falsifiable program.
+This document defines the path from an executable prototype to a research-grounded and falsifiable program.
 
-The project must not move directly from philosophical motivation to claims about physical reality. Work proceeds through four distinct levels:
+ARG must not move directly from philosophical motivation or software tests to scientific or ontological claims.
+
+## Evidence levels
+
+Work proceeds through four distinct levels:
 
 1. **Interpretive principle** — the apophatic non-reification schema.
-2. **Mathematical hypothesis** — a well-posed nonlinear dynamic relational constraint geometry.
-3. **Scientific hypothesis** — the full geometry explains or predicts selected systems better than simpler alternatives.
+2. **Mathematical hypothesis** — a coherent family of local, feedback, and projected relational dynamics.
+3. **Scientific hypothesis** — one or more ARG mechanisms explain or predict selected systems better than simpler alternatives.
 4. **Ontological conjecture** — objective reality has a pluralistic-monist organization.
 
-Only the first level is currently formulated. The second is partially implemented. The third and fourth remain unestablished.
+The first level is formulated. The current executable supports only a narrow part of the second.
 
-## Core mathematical hypothesis
-
-The working dynamical form is
+## Canonical current status
 
 $$
-\dot Z
-=
-\Pi_{T_Z\mathcal M(Z)}F_{\mathrm{local}}(Z),
+\boxed{
+M_F\ \text{implemented and unit-tested};
+\quad
+M_P,\ M_{FP},\ \text{and }M_F\equiv M_P\ \text{unverified}.
+}
 $$
 
-or equivalently,
+The current implementation is a prototype of endogenous collective feedback, not yet a projected-admissibility model.
+
+## Canonical model family
 
 $$
-\dot Z
-=
-F_{\mathrm{local}}(Z)
--
-\Pi_{N_Z\mathcal M(Z)}F_{\mathrm{local}}(Z).
+M_0,\qquad M_F,\qquad M_P,\qquad M_{FP}.
 $$
 
-The intended interpretation is:
+- $M_0$: local/adaptive substrate without collective feedback or projection.
+- $M_F$: endogenous collective feedback; current executable.
+- $M_P$: explicit $\Gamma/H$ admissibility projection; unimplemented.
+- $M_{FP}$: separately measurable feedback and projection; unimplemented.
 
-- local states and local relations propose change;
-- the admissible geometry excludes incoherent motion;
-- state, topology, metric, rule parameters, and collective modes may coevolve;
-- no presentation is granted ontological privilege.
+The detailed model and gate definitions are fixed in `13_alignment_and_claim_ceiling.md`. Execution phases are fixed in `14_roadmap.md`.
 
 ## Research principles
 
@@ -46,13 +48,17 @@ The intended interpretation is:
 
 Every strong claim must be paired with a result that would weaken or reject it.
 
+### Separate mechanisms before comparison
+
+Collective feedback and tangent-space projection must be implemented and measured separately before any equivalence or combined-mechanism claim.
+
 ### Baselines before novelty
 
-The full model must be compared against simpler systems with matched parameter budgets.
+The full model must be compared against simpler systems with matched information, parameter budgets, initial conditions, and tuning effort.
 
 ### Recover known limits
 
-A credible framework should reproduce established special cases when components are frozen or removed.
+A credible framework should reproduce established special cases when mechanisms are removed or frozen.
 
 ### Separate evidence levels
 
@@ -60,28 +66,45 @@ Every statement must be labeled as one of:
 
 - definition;
 - assumption;
+- implemented;
+- unit-tested;
+- proof obligation;
 - proved;
 - numerically supported;
 - empirically supported;
 - conjectured;
-- philosophical.
+- philosophical;
+- rejected.
 
 ### No ontological promotion
 
-Mathematical success does not by itself establish that the model is reality.
+Mathematical or empirical success does not by itself establish that the model is absolute reality.
 
-## Workstream 1: Novelty audit
+## Workstream 1: Alignment and design contracts
+
+Required outputs:
+
+- canonical model definitions;
+- exact current claim ceiling;
+- frozen equations for $M_0,M_F,M_P,M_{FP}$;
+- complete substrate dependency paths;
+- exact reduction relationships;
+- declared singular and failure behavior.
+
+No comparative experiment begins until these contracts are frozen.
+
+## Workstream 2: Novelty audit
 
 Determine whether the proposed synthesis already exists in substantially equivalent form.
 
-The comparison target is not any single ingredient. It is the conjunction
+The comparison target is the conjunction
 
 $$
 \begin{aligned}
 &\text{state-dependent metric}\\
 +{}&\text{adaptive relational topology}\\
++{}&\text{collective feedback and/or projection}\\
 +{}&\text{local-to-global compatibility}\\
-+{}&\text{constraint projection}\\
 +{}&\text{non-collapse barrier}\\
 +{}&\text{presentation invariance}.
 \end{aligned}
@@ -91,204 +114,210 @@ Required outputs:
 
 - a novelty matrix;
 - the three closest existing frameworks;
-- a list of components that are standard;
+- a list of standard ingredients;
+- an explicit equivalence analysis;
 - a precise statement of any remaining candidate novelty;
-- an explicit no-novelty conclusion if the system is equivalent to known methods.
+- a no-novelty conclusion if appropriate.
 
-## Workstream 2: Mathematical foundation
+## Workstream 3: Mathematical foundation
 
-The following obligations must be discharged before strong scientific claims:
+### Shared obligations
 
-1. **Metric validity** — positivity, symmetry, path finiteness, and the triangle inequality.
-2. **Well-posedness** — local existence, uniqueness, and continuation conditions.
-3. **Constraint preservation** — admissible initial states remain admissible.
-4. **Projection regularity** — the tangent or normal projection exists and is sufficiently regular.
-5. **Equivariance** — relabeling or coordinate changes do not alter observables.
-6. **Non-collapse** — finite energy prevents intrinsic edge length from reaching zero.
-7. **Reduction limits** — fixed-graph, fixed-metric, unconstrained, and linear compatibility limits are recovered.
-8. **Identifiability** — the proposed mechanisms are distinguishable from one another.
+- positivity and validity of intrinsic distance;
+- local existence and uniqueness;
+- boundedness or blow-up classification;
+- permutation equivariance;
+- numerical convergence;
+- mechanism identifiability.
 
-Failed proofs and counterexamples must be preserved as research results.
+### Projection-specific obligations
 
-## Workstream 3: Literature landscape
+- explicit $\Gamma/H$ definitions;
+- rank and regularity conditions;
+- projection existence and uniqueness;
+- continuous-time constraint preservation;
+- active inequality handling;
+- numerical preservation or retraction;
+- code-equation parity;
+- fail-closed singular behavior.
+
+Failed proofs and counterexamples are preserved as research results.
+
+## Workstream 4: Literature landscape
 
 Primary research tracks:
 
 1. constrained nonlinear dynamics and differential-algebraic systems;
 2. projected dynamical systems and tangent-cone dynamics;
 3. adaptive and state-dependent networks;
-4. cellular sheaves and local-to-global consistency;
-5. discrete curvature and evolving metric graphs;
-6. gauge invariance, equivariance, and quotient descriptions;
-7. relational mechanics and relational physical theories;
-8. physical anchor systems such as incompressible flow, constrained mechanics, synchronization, and flocking.
+4. collective-variable and mean-field feedback;
+5. cellular sheaves and local-to-global consistency;
+6. discrete curvature and evolving metric graphs;
+7. gauge invariance, equivariance, and quotient descriptions;
+8. singular barriers and noncollision;
+9. physical anchor systems such as incompressible flow, constrained mechanics, synchronization, and flocking.
 
-Each paper note must record:
+Each paper note records:
 
 - exact result used;
 - assumptions;
-- mathematical overlap;
-- differences from this project;
-- implications for novelty;
+- mapping into ARG notation;
+- overlap and difference;
+- novelty implications;
 - code or dataset availability;
+- reproduction status;
 - unresolved questions.
 
-## Workstream 4: Benchmark ladder
+## Workstream 5: Benchmark ladder
 
-### Stage A: Exact synthetic systems
+### Stage A: Software and equation verification
 
-Use small systems where correctness can be independently checked:
+- current three-node $M_F$;
+- true no-feedback $M_0$;
+- independent right-hand sides;
+- exact reductions;
+- permutation and numerical tripwires.
 
-- three-node scalar model;
-- constrained pendulum or linkage;
-- divergence-free lattice flow;
-- adaptive synchronization network;
-- compatibility or consensus network.
+### Stage B: Projection verification
 
-### Stage B: Mechanism isolation
+- mathematically specified $M_P$;
+- constraint preservation;
+- singularity handling;
+- code-equation parity;
+- comparison with penalty and multiplier controls.
 
-Compare:
+### Stage C: Mechanism comparison
+
+Compare
 
 $$
-\begin{aligned}
-M_0&:\text{ fixed graph with local dynamics},\\
-M_1&:\text{ adaptive graph without global projection},\\
-M_2&:\text{ fixed geometry with global projection},\\
-M_3&:\text{ dynamic geometry with soft penalties},\\
-M_4&:\text{ complete proposed geometry}.
-\end{aligned}
+M_0,\qquad M_F,\qquad M_P,\qquad M_{FP}.
 $$
 
-### Stage C: Established physical anchors
+Determine whether feedback and projection are distinct, approximately equivalent in a restricted regime, complementary, or redundant.
+
+### Stage D: Established physical anchors
 
 Initial targets:
 
-1. incompressible-flow projection;
-2. constrained mechanical dynamics;
+1. constrained mechanical dynamics;
+2. incompressible-flow projection;
 3. adaptive synchronization or flocking.
 
-The full model must first reproduce established behavior before it is evaluated for additional explanatory value.
+ARG must first reproduce established behavior before claiming additional value.
 
-## Workstream 5: Measurements
+## Workstream 6: Measurements
 
-Core quantities include
-
-$$
-\epsilon_{\Gamma}(t)=\|\Gamma(Z(t))\|,
-$$
+Feedback contribution:
 
 $$
-\chi_i(t)
+\chi_i^F(t)
 =
-\frac{\|F_i^{\mathrm{collective}}(t)\|}
-{\|F_i^{\mathrm{local}}(t)\|+\epsilon},
+\frac{\|F_{F,i}(t)\|}
+{\|F_{0,i}(t)\|+\epsilon}.
 $$
+
+Projection contribution:
+
+$$
+\chi_i^P(t)
+=
+\frac{\|F_{P,i}(t)\|}
+{\|F_{0,i}(t)+F_{F,i}(t)\|+\epsilon}.
+$$
+
+Constraint error:
+
+$$
+\epsilon_\Gamma(t)=\|\Gamma(Z(t))\|.
+$$
+
+Metric evolution:
 
 $$
 \Delta_{\mathrm{metric}}(t)
 =
-\|g(t+\Delta t)-g(t)\|,
-$$
-
-and
-
-$$
-\Delta E(t)=E(t)-E(0).
+\|g(t+\Delta t)-g(t)\|.
 $$
 
 Additional outputs:
 
-- predictive error;
+- predictive and trajectory error;
 - perturbation recovery;
 - stability margins;
 - topology changes;
 - curvature measures;
+- condition numbers;
 - computational cost;
 - parameter sensitivity;
-- structural-intervention response.
+- structural-intervention response;
+- partial-observation identifiability.
 
-A central testable signature is:
-
-> Local dynamics dominate ordinary evolution, while the collective correction becomes large near coherence boundaries, topological transitions, or collapse barriers.
-
-## Workstream 6: Controls and tripwires
+## Workstream 7: Controls and tripwires
 
 Required controls:
 
-- graph-structure permutation with states and parameters fixed;
-- state permutation with graph and parameters fixed;
-- collective-mode replacement with a matched exogenous signal;
-- node relabeling with trajectory recovery after inverse permutation;
-- independent reference implementation of the right-hand side;
+- graph-structure intervention with state fixed;
+- state intervention with graph fixed;
+- collective-statistic replacement with a matched exogenous signal;
+- node relabeling and inverse recovery;
+- independent equation implementation;
 - solver and tolerance replication;
 - matched-parameter baselines;
-- deterministic seeds and frozen configuration manifests.
+- deterministic seeds and frozen configurations;
+- raw-output hashes;
+- explicit singular-projection tests.
 
-No result is accepted if it depends on one solver, one seed family, hidden caching, or an unrecorded configuration.
+No result is accepted if it depends on one solver, one seed family, hidden configuration, or an undeclared model difference.
 
-## Workstream 7: Prime-substrate quarantine
+## Workstream 8: Prime-substrate quarantine
 
-The prime-substrate conjecture remains separate from the core geometry until it has:
+The prime-substrate conjecture remains separate until it has:
 
 - a precise mathematical definition;
 - a lawful map into states, relations, or metric variables;
-- at least one derived observable;
+- a derived observable;
 - a prediction not inserted through parameter selection;
-- a comparison against non-prime alternatives.
+- comparison against non-prime alternatives.
 
 It must not function as an unexplained foundational stopping point.
 
-## Schedule
+## Phase sequence
 
-### Sprint 1 — Research map and claims
+The binding execution sequence is:
 
-- complete the claim ledger;
-- collect the first primary-source set;
-- build the novelty matrix;
-- identify the closest existing frameworks;
-- rewrite the formalism in standard constrained-dynamics notation.
+1. alignment and claim control;
+2. four-model design contract;
+3. $M_0$ implementation and $M_F$ freeze;
+4. $M_P$ mathematics;
+5. $M_P$ implementation and preservation tests;
+6. $M_{FP}$ implementation;
+7. comparative mechanism experiment;
+8. research grounding and physical anchors;
+9. narrow scientific evaluation.
 
-### Sprint 2 — Proofs and numerical correctness
-
-- address metric, constraint-preservation, and equivariance obligations;
-- document counterexamples;
-- implement the baseline family $M_0$ through $M_4$;
-- freeze numerical protocols and tripwires.
-
-### Sprint 3 — Synthetic mechanism tests
-
-- run exact and synthetic benchmarks;
-- complete structural ablations;
-- measure local-versus-collective influence;
-- determine whether the full model has behavior not reproduced by simpler baselines.
-
-### Sprint 4 — Physical anchors
-
-- reproduce one constrained-flow experiment;
-- reproduce one constrained-mechanics experiment;
-- reproduce one adaptive-network experiment;
-- compare accuracy, stability, interpretability, and cost.
+See `14_roadmap.md` for phase deliverables, exit gates, and stop conditions.
 
 ## Decision gate
 
 Continue toward stronger scientific claims only if at least one of the following is established:
 
 - a new theorem;
-- a demonstrably broader unification of established models;
-- a robust dynamical signature unique to the full model;
+- a strict generalization of established models;
+- a robust dynamical signature unavailable to matched alternatives;
 - improved performance on a constrained physical problem;
-- a useful new invariant or curvature quantity.
+- a useful invariant, curvature, or mechanism decomposition.
 
-Otherwise, narrow the project claim to a formal synthesis or modeling framework.
+Otherwise, narrow ARG to a documented candidate synthesis.
 
 ## Immediate next actions
 
-1. Populate `08_claim_ledger.md` with every current project claim.
-2. Begin primary-source intake using `10_literature_landscape.md`.
-3. Complete the comparison rows in `09_novelty_matrix.md`.
-4. Freeze the first benchmark protocol in `11_benchmark_specification.md`.
-5. Treat `12_falsification_criteria.md` as binding before results are generated.
+1. Finish Phase 0 documentation alignment.
+2. Rerun and record the current software test suite.
+3. Freeze the Phase 1 design contract.
+4. Implement $M_0$ without hidden collective paths.
+5. Design $M_P$ mathematically before implementation.
 
 ## Research maxim
 
-> Establish what is known. Prove what can be proved. Isolate what is new. Try to break it. Reify nothing.
+> Establish what is known. Separate what differs. Prove what can be proved. Test the alternatives. Reify nothing.
