@@ -13,13 +13,7 @@ The project separates two layers:
 
 The central dynamical form is
 
-$$
-\dot Z
-=
-F_{\mathrm{local}}(Z)
--
-\Pi_{N_Z\mathcal M}F_{\mathrm{local}}(Z),
-$$
+$$\dot Z = F_{\mathrm{local}}(Z) - \Pi_{N_Z\mathcal M}F_{\mathrm{local}}(Z).$$
 
 where local dynamics propose change and the global admissible geometry removes the component incompatible with coherence.
 
