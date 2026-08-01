@@ -6,9 +6,9 @@ Strong claims remain blocked until the applicable obligations are met for the sp
 
 $$
 \boxed{
-M_0,M_F,M_P\ \text{implemented and unit-tested};
+M_0,M_F,M_P,M_{FP}\ \text{implemented and unit-tested};
 \quad
-M_{FP}\ \text{and }M_F\equiv M_P\ \text{unverified}.
+M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
@@ -142,23 +142,29 @@ No comparison yet shows that $M_P$ explains or predicts behavior better than $M_
 
 ## $M_{FP}$ obligations
 
-### FP1. Exact reductions — open
+### FP1. Declared reductions — software level passed
 
-The implementation must verify:
+The implementation verifies:
 
-- removing feedback recovers $M_P$;
-- removing projection recovers $M_F$;
-- removing both recovers $M_0$.
+- the unprojected $F_0+F_F$ proposal agrees with $M_F$;
+- setting $\chi=\eta_2=\rho=0$ recovers $M_P$;
+- removing feedback and projection recovers $M_0$.
 
-### FP2. Mechanism separation — open
+These are implementation reductions, not evidence of scientific adequacy.
 
-Retain separate local proposal, feedback, projection-correction, and retraction diagnostics.
+### FP2. Mechanism separation — software level passed
 
-### FP3. Ordering — frozen, implementation open
+The implementation retains separate local proposal, feedback, combined proposal, projection-correction, projected derivative, and retraction diagnostics.
 
-Version 1.0 fixes feedback first and projection second.
+Whether these mechanisms are empirically identifiable remains open.
 
-### FP4. Node identity — open
+### FP3. Ordering — passed for version 1.0
+
+Version 1.0 implements feedback first and projection second at every RK4 derivative stage.
+
+Alternative orderings or coupled solves remain separate future models.
+
+### FP4. Same-state node identity — passed on the regular domain
 
 Because the node feedback is radial,
 
@@ -166,21 +172,27 @@ $$
 P_T[-\chi c(x)x]=0,
 $$
 
-so the implementation must verify
+and therefore
 
 $$
 \boxed{f_{FP}=f_P}
 $$
 
-for regular node derivatives.
+at the same regular full state.
 
-### FP5. Retained substrate feedback — open
+This identity is algebraic and unit-tested. It does not imply equal trajectories because the $s$ and $q$ dynamics differ.
 
-Verify that $M_{FP}$ retains the $\eta_2c(x)$ and $-\rho c(x)$ terms in the $s$ and $q$ equations.
+### FP5. Retained substrate feedback — passed
 
-### FP6. No double counting — open
+$M_{FP}$ retains the $\eta_2c(x)$ and $-\rho c(x)$ terms in the $s$ and $q$ equations.
 
-Demonstrate that feedback and projection remain explicitly distinct mechanisms rather than duplicated labels for one effect.
+### FP6. No double counting — software decomposition passed; scientific interpretation open
+
+The code represents feedback and projection as separately inspectable vectors. A scientific argument that both are necessary, nonredundant mechanisms remains open and belongs to the comparative experiment.
+
+### FP7. Trajectory interaction — open
+
+Determine when retained $s/q$ feedback causes $M_{FP}$ trajectories to diverge from $M_P$, under which observation maps, and whether the difference is distinguishable from simpler adaptive-network alternatives.
 
 ## Equivalence obligation
 
@@ -192,6 +204,28 @@ Visual trajectory similarity is insufficient. A valid claim requires at least on
 - exact reparameterization;
 - a proved approximation with error bounds;
 - scoped observational equivalence under a declared observation map and tolerance.
+
+The verified identity $f_{FP}=f_P$ at the same state does not discharge this obligation.
+
+## Comparative-experiment obligation
+
+### C1. Frozen protocol — open
+
+Before any development pilot, freeze:
+
+- primary and secondary hypotheses;
+- observation maps and tolerances;
+- parameter and initial-condition manifests;
+- interventions and ablations;
+- structural inferential units;
+- numerical refinement and alternate-integrator policies;
+- exclusions and stop rules;
+- exploratory/confirmatory separation;
+- raw-output provenance and checksums.
+
+### C2. Alternative-model defeat — open
+
+No whole-part, projection, geometry, or emergence claim may exceed prototype status until simpler alternatives with matched information and parameter access are tested fairly.
 
 ## Barrier obligation
 
