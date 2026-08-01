@@ -30,6 +30,8 @@ nav:
       - Phase 4 MFP Verification: 17_phase4_mfp_verification.md
       - Phase 5 Comparative Protocol: 18_phase5_comparative_protocol.md
       - Phase 5 Protocol Verification: 19_phase5_protocol_verification.md
+      - Phase 6 Runner Design: 20_phase6_runner_design.md
+      - Phase 6 Runner Verification: 21_phase6_runner_verification.md
   - Decisions:
       - Separate Mathematics from Ontology: adr/0001-separate-math-from-ontology.md
   - History:

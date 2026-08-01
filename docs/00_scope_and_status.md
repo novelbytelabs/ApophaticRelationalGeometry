@@ -6,71 +6,32 @@ Can a system be modeled as one globally organized process and many locally real 
 
 ## Candidate synthesis
 
-ARG investigates combinations of
-
-$$
-\text{local nonlinear dynamics}
-+
-\text{adaptive relations}
-+
-\text{state-dependent metric}
-+
-\text{collective feedback}
-+
-\text{global admissibility projection}.
-$$
-
-These are distinct mechanisms and must be defined, implemented, and tested separately.
+ARG investigates combinations of local nonlinear dynamics, adaptive relations, state-dependent metric, collective feedback, and global admissibility projection. These are distinct mechanisms and must be defined, implemented, and tested separately.
 
 ## Implemented mechanism split
 
-### $M_0$: local/adaptive baseline
+- $M_0$: local/adaptive baseline without a collective-statistic transition path.
+- $M_F$: endogenous collective feedback through
+  $$x\to c(x)\to(\dot x,\dot s,\dot q).$$
+- $M_P$: constant-amplitude projection sandbox on
+  $$\Gamma(Z)=\frac13x^Tx-c_0=0.$$
+- $M_{FP}$: $F_0+F_F$ followed by node projection, retaining feedback in $s$ and $q$.
 
-Local nonlinear dynamics, neighborhood coupling, adaptive edge activation, and metric deformation. The collective statistic may be logged but does not enter any transition equation.
-
-### $M_F$: collective feedback
-
-$$
-c(x)=\frac13\sum_i x_i^2,
-\qquad
-x\to c(x)\to(\dot x,\dot s,\dot q).
-$$
-
-Licensed description:
+Only $M_F$ supports the narrow description:
 
 > **implemented prototype-level downward feedback/constraint**
 
 This does not establish macro-level causal autonomy.
 
-### $M_P$: projected-admissibility sandbox
-
-Contract v1.0 implements
-
-$$
-\Gamma(Z)=\frac13x^Tx-c_0=0,
-$$
-
-$$
-f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
-$$
-
-Every RK4 derivative stage is projected, each completed step is radially retracted, mechanism diagnostics are recorded, and near-rank-loss paths fail closed.
-
-### $M_{FP}$: feedback followed by projection
-
-$$
-F_{\mathrm{proposal}}=F_0+F_F
-$$
-
-is projected using the same $M_P$ policy. At the same regular full state,
+At the same regular full state,
 
 $$
 \boxed{f_{FP}=f_P},
 $$
 
-because the node-feedback term is radial. Feedback remains in $s$ and $q$, so later trajectories need not agree.
+because radial node feedback is annihilated by the projector. This does not imply trajectory identity.
 
-Both projected models are constant-amplitude mechanism sandboxes. They are not the final relational geometry and are not validated physical models.
+Both projected models are constant-amplitude mechanism sandboxes, not validated physical laws or the completed relational geometry.
 
 ## Current claim ceiling
 
@@ -82,61 +43,57 @@ M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-## Protocol and execution status
+## Protocol and runner status
 
-Phase 5 froze protocol `ARG-P5-COMP-v1` before any trajectory generation. The human-readable protocol and machine-readable bundle fix:
+Protocol `ARG-P5-COMP-v1` was frozen before trajectory generation. Phase 6A now implements and software-verifies a pilot-only runner that:
 
-- primary and secondary hypotheses;
-- observation maps and decision thresholds;
-- direction-level inferential units;
-- deterministic pilot/confirmatory separation;
-- parameters and initial conditions;
-- RK4 refinement and alternate-integrator replication;
-- exclusions, stop rules, failure retention, and provenance;
-- executable metric, bootstrap, hashing, validation, and decision code.
+- reconstructs exactly the frozen 50 pilot configurations;
+- rejects confirmatory/mixed batches and direct confirmatory integration;
+- implements all-model RK4/DOP853 decision paths;
+- enforces H5/H6 and frozen numerical gates;
+- runs declared controls and all six relabelings;
+- writes a deterministic, checksummed, write-once archive;
+- requires a separate committed execution authorization naming the verified runner commit.
 
-Hosted verification reported 65 passing tests on Python 3.10 and 65 on Python 3.12.
+Hosted runner verification reported 100 passing tests on Python 3.10 and 100 on Python 3.12.
 
-Current authorization is:
+Current execution state:
 
 $$
 \boxed{
-\text{development pilot authorized};
+\text{pilot-only runner verified};
+\quad
+\text{development pilot not executed};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
 $$
 
-The development pilot has not run. Authorization is not execution.
-
 ## What is currently claimed
 
-- All four contract-v1.0 prototypes are implemented through canonical dispatch.
-- $M_0$ implements the no-feedback local/adaptive baseline.
-- $M_F$ implements endogenous collective feedback through an explicit substrate path.
-- $M_P$ implements the frozen constant-amplitude tangent projection and retraction policy.
-- $M_{FP}$ implements feedback followed by projection with retained $s/q$ feedback.
-- Declared reductions, projector identities, tangency, retraction, singular handling, permutation equivariance, and independent software-reference parity are unit-tested.
-- The Phase 5 protocol is frozen, machine-readable, executable at the metric/decision level, and locked before data generation.
+- All four contract-v1.0 prototypes are implemented and unit-tested.
+- The feedback and projection mechanisms are represented separately.
+- The Phase 5 protocol is frozen and executable at the metric/decision level.
+- The Phase 6A pilot-only runner and archive pipeline pass their tested software gates.
+- Confirmatory access is blocked at planner, integrator, authorization, archive, and contamination-scan boundaries.
 
 ## What is not currently claimed
 
-- That collective feedback is dynamically or observationally equivalent to tangent-space projection.
+- That feedback and projection are dynamically or observationally equivalent.
 - That same-state node equality implies trajectory equality.
-- That prototype-level feedback or projection establishes macro-level causal autonomy.
+- Any pilot or confirmatory effect size.
 - That any mechanism improves prediction or defeats scientific alternatives.
-- That constant amplitude is physically fundamental.
-- That a pilot or confirmatory experiment has been executed.
-- That organization dependence, transport, strong emergence, or physical adequacy has been demonstrated.
+- That organization dependence, transport, macro-level causal autonomy, strong emergence, or physical adequacy has been demonstrated.
 - That ARG is mathematically novel or a new fundamental geometry.
 - That reality literally is a graph, constraint manifold, or computational structure.
 
 ## Verification scope
 
-- Phase 2: 20 local software tests for $M_0/M_F$.
-- Phase 3: 35 hosted tests in each configured Python environment for $M_0/M_F/M_P$.
-- Phase 4: 51 hosted tests in each configured environment for the four-model implementation.
-- Phase 5: 65 hosted tests in each configured environment for models plus frozen protocol and decision machinery.
+- Phase 2: 20 local software tests.
+- Phase 3: 35 hosted tests in each configured Python environment.
+- Phase 4: 51 hosted tests in each configured environment.
+- Phase 5: 65 hosted tests in each configured environment.
+- Phase 6A: 100 hosted tests in each configured environment.
 
 These validate software and local mathematical/protocol contracts, not a scientific hypothesis.
 

@@ -1,44 +1,13 @@
 # Apophatic Relational Geometry
 
-ARG is a candidate synthesis of nonlinear local dynamics, adaptive relational geometry, endogenous collective feedback, and projected constraint mechanisms.
-
-It is not a claim of a new fundamental geometry or a description of absolute reality.
+ARG is a candidate synthesis of nonlinear local dynamics, adaptive relational geometry, endogenous collective feedback, and projected constraint mechanisms. It is not a claim of a new fundamental geometry or a description of absolute reality.
 
 ## Implemented prototypes
 
-### $M_0$
-
-Local/adaptive baseline with no collective-statistic transition path.
-
-### $M_F$
-
-Endogenous collective feedback:
-
-$$
-x\to c(x)\to(\dot x,\dot s,\dot q).
-$$
-
-Only $M_F$ supports the narrow description:
-
-> **implemented prototype-level downward feedback/constraint**
-
-### $M_P$
-
-Constant-amplitude projection sandbox:
-
-$$
-\Gamma(Z)=\frac13x^Tx-c_0=0,
-\qquad
-f_P=f_0-x\frac{x^Tf_0}{x^Tx}.
-$$
-
-### $M_{FP}$
-
-Feedback followed by projection:
-
-$$
-F_{\mathrm{proposal}}=F_0+F_F.
-$$
+- $M_0$: local/adaptive baseline with no collective-statistic transition path.
+- $M_F$: endogenous collective feedback through $x\to c(x)\to(\dot x,\dot s,\dot q)$.
+- $M_P$: constant-amplitude projection sandbox on $\Gamma(Z)=\frac13x^Tx-c_0=0$.
+- $M_{FP}$: feedback followed by projection, retaining feedback in $s$ and $q$.
 
 At the same regular full state,
 
@@ -46,9 +15,7 @@ $$
 \boxed{f_{FP}=f_P},
 $$
 
-while feedback remains in $s$ and $q$. Same-state node identity therefore does not imply trajectory identity.
-
-The projected models use projected RK4 stages, mandatory radial retraction, fail-closed singular handling, separate diagnostics, and independent software-reference parity. They are mechanism sandboxes, not validated physical laws.
+but this does not imply trajectory identity.
 
 ## Binding claim ceiling
 
@@ -60,23 +27,23 @@ M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-## Frozen comparative protocol
+## Frozen protocol and verified runner
 
-Phase 5 froze protocol `ARG-P5-COMP-v1` before generating trajectories. It fixes hypotheses, effect and equivalence thresholds, observation maps, 24 direction-level units, pilot/confirmatory separation, parameters, RK4 refinement, DOP853 replication, exclusions, stop rules, provenance, executable metrics, and a SHA-256 lock.
+Protocol `ARG-P5-COMP-v1` was frozen before trajectory generation. Phase 6A now implements a fail-closed runner for exactly the 50 pilot configurations, with all-model RK4/DOP853 replication, H5/H6 gates, frozen controls, all six relabelings, independent references, and a write-once checksummed archive.
 
-Hosted verification reported **65 passing tests** on Python 3.10 and **65 passing tests** on Python 3.12.
-
-Current authorization:
+Hosted verification reported **100 passing tests** on Python 3.10 and **100 passing tests** on Python 3.12.
 
 $$
 \boxed{
-\text{development pilot authorized};
+\text{runner verified};
+\quad
+\text{development pilot not executed};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
 $$
 
-No pilot has been executed.
+No execution authorization, pilot trajectory, pilot result, pilot archive, or confirmatory artifact is present.
 
 ## Foundations
 
@@ -99,14 +66,17 @@ No pilot has been executed.
 - [Canonical alignment and claim ceiling](13_alignment_and_claim_ceiling.md)
 - [Phase-gated roadmap](14_roadmap.md)
 - [Four-model design contract v1.0](15_four_model_design_contract.md)
-- [Phase 3 $M_P$ verification record](16_phase3_mp_verification.md)
-- [Phase 4 $M_{FP}$ verification record](17_phase4_mfp_verification.md)
-- [Phase 5 comparative protocol v1.0](18_phase5_comparative_protocol.md)
+- [Phase 3 $M_P$ verification](16_phase3_mp_verification.md)
+- [Phase 4 $M_{FP}$ verification](17_phase4_mfp_verification.md)
+- [Phase 5 comparative protocol](18_phase5_comparative_protocol.md)
+- [Phase 5 protocol verification](19_phase5_protocol_verification.md)
+- [Phase 6 runner design](20_phase6_runner_design.md)
+- [Phase 6 runner verification](21_phase6_runner_verification.md)
 
 ## Current roadmap position
 
-**Phases 0–5 are complete. Phase 6 is active.**
+**The Phase 6A runner gate has passed. Phase 6B pilot execution is the next separate gate.**
 
-Phase 6 must implement and independently verify the pilot-only runner and immutable archival pipeline. Confirmatory configurations remain inaccessible and no pilot has run.
+The execution slice must name the verified runner commit and may not alter protected protocol or runner files. Confirmatory configurations remain inaccessible.
 
 > Separate the mechanisms. Freeze the contracts. Test the alternatives. Reify nothing.
