@@ -2,9 +2,9 @@
 
 ## Status
 
-**CLOSED:** Phase 6A.2 passed external re-audit. Pilot execution remains unexecuted and requires a separate hash-bound authorization record.
+**CLOSED WITH CONDITIONAL-AUDIT FOLLOW-UP:** The external report scored Phase 6A.2 85/100 with a conditional pass. Its five demonstrated guardrail failures have now been remediated and pass the supplied external tripwire. Pilot execution remains unexecuted and requires a separate hash-bound authorization record.
 
-The remediation and defensive-hardening candidate passed the ordinary suite, hardened tripwire, full-horizon numerical gate, and final external re-audit. Candidate `17a17398808cae1befe85e795d371012fe999f03` merged as `4fb987b34220927466812f0276e10bb0776c28fd`.
+The remediation and defensive-hardening candidate passed the ordinary suite and full-horizon gate. The external report then identified five narrow guardrail failures; the follow-up remediation passes the exact supplied tripwire at 19 PASS / 0 FAIL / 0 INCONCLUSIVE. Candidate `17a17398808cae1befe85e795d371012fe999f03` merged as `4fb987b34220927466812f0276e10bb0776c28fd`.
 
 ## Binding rules
 
@@ -106,7 +106,7 @@ The delivered-bundle lock omission and stale Euler `run.csv` were also accepted 
 - ordinary suite: **PASS**;
 - hardened tripwire: **PASS**;
 - full-horizon numerical gate: **PASS**;
-- external re-audit: **PASS**;
+- external report: **85/100 CONDITIONAL PASS**; supplied post-remediation tripwire: **19/0/0**;
 - merge commit: `4fb987b34220927466812f0276e10bb0776c28fd`;
 - execution authorization: absent;
 - pilot trajectory data: absent;
@@ -114,6 +114,6 @@ The delivered-bundle lock omission and stale Euler `run.csv` were also accepted 
 
 ## Closure boundary
 
-Phase 6A.1/6A.2 establishes a strongly defended and externally cleared computational runner substrate. It does not establish a pilot result, scientific mechanism effect, physical adequacy, novelty, or ontology.
+Phase 6A.1/6A.2 plus the Phase 6B audit-closure patch establishes a strongly defended computational runner substrate suitable for an authorized exploratory pilot, not formal certification. It does not establish a pilot result, scientific mechanism effect, physical adequacy, novelty, or ontology.
 
 The next gate is `23_phase6b_clearance_and_authorization.md`.
