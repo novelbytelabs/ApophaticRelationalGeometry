@@ -1,0 +1,160 @@
+name: phase6b2-ci
+
+on:
+  pull_request:
+    branches: [phase6b2-ci-base]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase6b2-ci-72ab01b9
+  cancel-in-progress: false
+
+jobs:
+  compatibility:
+    if: github.event.pull_request.head.sha == '72ab01b9af96e7c4d5f4bb7239122a6de822f308'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: '3.10.20'
+            numpy-version: '2.2.6'
+            scipy-version: '1.15.3'
+          - python-version: '3.12.13'
+            numpy-version: '2.5.1'
+            scipy-version: '1.18.0'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 72ab01b9af96e7c4d5f4bb7239122a6de822f308
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install exact compatibility environment
+        run: |
+          python -m pip install --only-binary=:all: \
+            'setuptools==80.9.0' \
+            'wheel==0.45.1' \
+            'pytest==9.1.1' \
+            'numpy==${{ matrix.numpy-version }}' \
+            'scipy==${{ matrix.scipy-version }}'
+          python -m pip install --no-build-isolation --no-deps -e .
+      - name: Verify exact blocked candidate
+        run: |
+          test "$(git rev-parse HEAD)" = '72ab01b9af96e7c4d5f4bb7239122a6de822f308'
+          test ! -e protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
+          test ! -d artifacts/phase6_pilot
+          test -z "$(git status --porcelain --untracked-files=all)"
+      - name: Run ordinary suite
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+          PYTHONHASHSEED: '0'
+          OMP_NUM_THREADS: '1'
+          OPENBLAS_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+        run: python -m pytest -q
+      - name: Run hardened tripwire
+        if: matrix.python-version == '3.12.13'
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+          PYTHONHASHSEED: '0'
+          OMP_NUM_THREADS: '1'
+          OPENBLAS_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+        run: python tools/arg_tripwire.py
+      - name: Build clean-extraction audit bundle
+        if: matrix.python-version == '3.12.13'
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+          PYTHONHASHSEED: '0'
+          OMP_NUM_THREADS: '1'
+          OPENBLAS_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+        run: |
+          python tools/build_audit_bundle.py \
+            --repo-root . \
+            --output /tmp/arg-phase6b2-audit-bundle.tar.gz
+      - name: Upload audit bundle
+        if: matrix.python-version == '3.12.13'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: arg-phase6b2-audit-bundle
+          path: /tmp/arg-phase6b2-audit-bundle.tar.gz
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+  full-horizon-h6:
+    if: github.event.pull_request.head.sha == '72ab01b9af96e7c4d5f4bb7239122a6de822f308'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 72ab01b9af96e7c4d5f4bb7239122a6de822f308
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.13'
+      - name: Install exact numerical environment
+        run: |
+          python -m pip install --only-binary=:all: \
+            'setuptools==80.9.0' \
+            'wheel==0.45.1' \
+            'pytest==9.1.1' \
+            'numpy==2.5.1' \
+            'scipy==1.18.0'
+          python -m pip install --no-build-isolation --no-deps -e .
+      - name: Verify exact blocked candidate
+        run: |
+          test "$(git rev-parse HEAD)" = '72ab01b9af96e7c4d5f4bb7239122a6de822f308'
+          test ! -e protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
+          test ! -d artifacts/phase6_pilot
+          test -z "$(git status --porcelain --untracked-files=all)"
+      - name: Run full-horizon smoke numerical gate
+        env:
+          ARG_RUN_FULL_HORIZON: '1'
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+          PYTHONHASHSEED: '0'
+          OMP_NUM_THREADS: '1'
+          OPENBLAS_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+        run: |
+          python -m pytest -q \
+            tests/test_phase6a2_hardening.py::test_full_horizon_smoke_primary_models_pass_numerical_gates
+      - name: Run all-50 blinded H6 conditioning diagnostic
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+          PYTHONHASHSEED: '0'
+          OMP_NUM_THREADS: '1'
+          OPENBLAS_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+        run: |
+          python tools/h6_conditioning_diagnostic.py \
+            --repo-root . \
+            --output /tmp/arg-phase6b2-h6-diagnostic.json
+      - name: Verify diagnostic is data blind and complete
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/arg-phase6b2-h6-diagnostic.json').read_text('utf-8'))
+          assert result['status'] == 'PASS'
+          assert result['configuration_count'] == 50
+          assert result['primary_effect_computed'] is False
+          assert result['confirmatory_execution'] == 'BLOCKED'
+          PY
+      - name: Upload blinded H6 diagnostic
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: arg-phase6b2-h6-diagnostic
+          path: /tmp/arg-phase6b2-h6-diagnostic.json
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
