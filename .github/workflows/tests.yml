@@ -49,10 +49,14 @@ jobs:
           print('pytest', pytest.__version__)
           PY
           sha256sum \
+            .github/workflows/tests.yml \
+            pyproject.toml \
+            tools/build_audit_bundle.py \
             src/apophatic_geometry/model.py \
             src/apophatic_geometry/models.py \
             src/apophatic_geometry/protocol.py \
             src/apophatic_geometry/attestation.py \
+            src/apophatic_geometry/simulate.py \
             src/apophatic_geometry/pilot_types.py \
             src/apophatic_geometry/pilot_manifest.py \
             src/apophatic_geometry/pilot_mechanisms.py \
@@ -63,6 +67,7 @@ jobs:
             src/apophatic_geometry/pilot.py \
             src/apophatic_geometry/pilot_cli.py \
             protocol/phase5_v1/LOCK.json \
+            protocol/phase6_runner_v1/INTEGRITY_BASELINE.json \
             protocol/phase6_runner_v1/EXECUTION_ENVIRONMENT.json \
             tests/reference_equations.py \
             tests/reference_pilot.py \
@@ -76,3 +81,17 @@ jobs:
           test ! -d artifacts/phase6_pilot
       - name: Test
         run: python -m pytest
+      - name: Build and verify clean-extraction audit bundle
+        if: matrix.python-version == '3.12.13'
+        run: |
+          python tools/build_audit_bundle.py \
+            --repo-root . \
+            --output /tmp/arg-phase6a1-audit-bundle.tar.gz
+      - name: Upload audit bundle for external review
+        if: matrix.python-version == '3.12.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: arg-phase6a1-audit-bundle
+          path: /tmp/arg-phase6a1-audit-bundle.tar.gz
+          if-no-files-found: error
+          retention-days: 30
