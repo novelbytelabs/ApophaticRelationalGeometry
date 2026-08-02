@@ -114,7 +114,8 @@ The next authorization commit must bind the exact accepted external audit-report
 ### Research grounding and execution
 
 - `docs/07_research_grounding_plan.md`
-- `docs/08_claim_ledger.md`
+- `docs/08_claim_ledger.md` — historical ledger through the Phase 6A STOP-SHIP period.
+- `docs/08a_phase6b_claim_ledger_addendum.md` — controlling current-status addendum.
 - `docs/09_novelty_matrix.md`
 - `docs/10_literature_landscape.md`
 - `docs/11_benchmark_specification.md`
