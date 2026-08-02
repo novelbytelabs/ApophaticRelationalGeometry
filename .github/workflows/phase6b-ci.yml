@@ -1,0 +1,72 @@
+name: phase6b-ci
+
+on:
+  pull_request:
+    branches: [phase6b-ci-base]
+
+permissions:
+  contents: read
+
+jobs:
+  verification:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: "3.10.20"
+            numpy-version: "2.2.6"
+            scipy-version: "1.15.3"
+          - python-version: "3.12.13"
+            numpy-version: "2.5.1"
+            scipy-version: "1.18.0"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install exact compatibility environment
+        run: |
+          python -m pip install --only-binary=:all: \
+            'setuptools==80.9.0' \
+            'wheel==0.45.1' \
+            'pytest==9.1.1' \
+            'numpy==${{ matrix.numpy-version }}' \
+            'scipy==${{ matrix.scipy-version }}'
+          python -m pip install --no-build-isolation --no-deps -e .
+      - name: Verify blocked execution state
+        run: |
+          test ! -e protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
+          test ! -d artifacts/phase6_pilot
+          test -z "$(git status --porcelain --untracked-files=all)"
+      - name: Run ordinary suite
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+          PYTHONHASHSEED: "0"
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: python -m pytest -q
+      - name: Run hardened tripwire
+        if: matrix.python-version == '3.12.13'
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+          PYTHONHASHSEED: "0"
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: python tools/arg_tripwire.py
+      - name: Build clean-extraction audit bundle
+        if: matrix.python-version == '3.12.13'
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+          PYTHONHASHSEED: "0"
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: |
+          python tools/build_audit_bundle.py \
+            --repo-root . \
+            --output /tmp/arg-phase6b0-audit-bundle.tar.gz
