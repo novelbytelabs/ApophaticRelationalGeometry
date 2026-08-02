@@ -1,0 +1,51 @@
+{
+  "authorization_id": "ARG-P6-PILOT-EXEC-v1",
+  "status": "AUTHORIZED",
+  "protocol_id": "ARG-P5-COMP-v1",
+  "protocol_version": "1.0.0",
+  "runner_id": "ARG-P6-PILOT-RUNNER-v1",
+  "runner_version": "1.0.0",
+  "split": "pilot",
+  "runner_source_commit": "92884777c1e9f10f7c2732f4d86e9ac966ca51ad",
+  "execution_id": "arg-p6b1-pilot-20260802t192116z",
+  "execution_utc": "2026-08-02T19:21:16Z",
+  "scope": {
+    "scope_version": "ARG-P6-EXEC-SCOPE-v3",
+    "protocol_lock_sha256": "be54c8e54e8b16f439a903ca00df118252cd649ad22f315a546822551da3b5eb",
+    "integrity_baseline_sha256": "4897d5e5856998a4541aed1bf1ee6574de8b520fe3a7a1232bffd0316d000225",
+    "execution_environment_sha256": "2b8af6ef62fe6afba8e9b8211a561b9b6819596435102909f82a3549e8c7cc59",
+    "pilot_membership_sha256": "20b0e27b3b3e941cd9ad8996b049c95de8fc42a6ca920c8748eb09aeff9891d2",
+    "integrator_suite": "rk4-refinement-plus-segmented-dop853-v1",
+    "time_policy": {
+      "horizon": 10.0,
+      "observation_interval": 0.01,
+      "observation_count": 1001,
+      "include_initial_state": true,
+      "reference_rk4_dt": 0.001,
+      "refinement_dts": [
+        0.001,
+        0.0005,
+        0.00025
+      ]
+    },
+    "archive_schema_version": "ARG-P6-ARCHIVE-v3",
+    "archive_destination": "/home/runner/work/ApophaticRelationalGeometry/ApophaticRelationalGeometry/artifacts/phase6_pilot/arg-p6b1-pilot-20260802t192116z",
+    "configuration_count": 50,
+    "expected_trajectory_records": 1450,
+    "expected_summary_records": 50,
+    "confirmatory_execution": "BLOCKED",
+    "runner_source_commit": "92884777c1e9f10f7c2732f4d86e9ac966ca51ad",
+    "runner_git_tree": "9ff51165d15d114a3527d9a97af4b9c1abfacfac",
+    "runner_source_tree_sha256": "d5a1ab4a88c4e7de73e0256e63ea63833c8692fafb864e702ce7102e7884f0b6",
+    "authorization_only_commit_count": 1
+  },
+  "scope_sha256": "2c9ecd916468cecea12fb6a88a0a52f1f509168594e61a1c0dcaa3e86a987b20",
+  "external_audit": {
+    "verdict": "CONDITIONAL_PASS",
+    "clearance": "USER_AUTHORIZED_EXPLORATORY_PILOT_AFTER_REMEDIATION",
+    "bundle_sha256": "5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd",
+    "report_sha256": "985e0534fd52dcf1f2832e17d3796ad6627d728dedd5711c4e6bdc546ddfe749",
+    "tripwire_sha256": "8979a1aa6a481b3376f7f86be26f511acf6b2b1fe4f1add5fa7e9861430049b3"
+  },
+  "confirmatory_execution": "BLOCKED"
+}
