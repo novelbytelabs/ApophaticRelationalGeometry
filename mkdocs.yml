@@ -32,10 +32,12 @@ nav:
       - Phase 5 Protocol Verification: 19_phase5_protocol_verification.md
       - Phase 6 Runner Design: 20_phase6_runner_design.md
       - Phase 6 Runner Verification: 21_phase6_runner_verification.md
+      - Phase 6A.1 Integrity Remediation: 22_phase6a1_integrity_remediation.md
   - Decisions:
       - Separate Mathematics from Ontology: adr/0001-separate-math-from-ontology.md
   - History:
       - Negation-Operator Path: history/negation_operator_path.md
+      - Rejected Legacy Euler Output: ../history/legacy_euler_run_rejected.md
 
 markdown_extensions:
   - tables
