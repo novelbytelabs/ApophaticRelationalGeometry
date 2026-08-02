@@ -27,7 +27,7 @@
     "audit_report_sha256_required_before_execution_authorization": true
   },
   "files": {
-    ".github/workflows/tests.yml": "ba0412540e374135d115198fd9b2f3aa1255ac1375887c3cfeb284c9632b560a",
+    ".github/workflows/tests.yml": "7ceb114cd6277b9592145130fe5ca742144bc8b017d5b9dd569ff4b299ee0aca",
     "pyproject.toml": "87ad8c4c5a1c102a2ab5b7ec910c5bf31c6b225813544a53144452a1badbeeef",
     "tools/build_audit_bundle.py": "b387f255385083eeb0f1b9fc11a58bc57c424e6b731c7d29019135e0e837dd42",
     "src/apophatic_geometry/model.py": "5a7d921f135c72e3f1714f1bd9612fdc51eaa6208a9d72ab6becad8a42492e40",
