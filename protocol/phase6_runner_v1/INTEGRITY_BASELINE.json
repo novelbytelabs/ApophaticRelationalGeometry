@@ -12,11 +12,15 @@
     "canonical_equation_file": "src/apophatic_geometry/models.py",
     "canonical_equation_file_must_match_phase4": true,
     "remediated_files_must_match_sha256": true,
+    "workflow_build_and_audit_tools_must_match_sha256": true,
     "json_targets_use_canonical_sorted_compact_utf8_sha256": true,
     "adversarial_tests_use_stored_scientific_outputs": false,
     "external_reaudit_required": true
   },
   "files": {
+    ".github/workflows/tests.yml": "ba0412540e374135d115198fd9b2f3aa1255ac1375887c3cfeb284c9632b560a",
+    "pyproject.toml": "f44646e0640b95e9dd4d4b5951d174217b207715c6ffec340d62e3c29d5f1bc7",
+    "tools/build_audit_bundle.py": "b387f255385083eeb0f1b9fc11a58bc57c424e6b731c7d29019135e0e837dd42",
     "src/apophatic_geometry/model.py": "5a7d921f135c72e3f1714f1bd9612fdc51eaa6208a9d72ab6becad8a42492e40",
     "src/apophatic_geometry/models.py": "d511827234055192f8fb5ac23577cab44327650003e961a572defab05482cb22",
     "src/apophatic_geometry/protocol.py": "ddc77cbe410722c9bf591b07bba0a9c5b82b99b4a97391357ff57554b6e46222",
