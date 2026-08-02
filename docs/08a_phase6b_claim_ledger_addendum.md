@@ -2,7 +2,7 @@
 
 ## Authority and preservation rule
 
-This file is the controlling claim-status addendum after the Phase 6A.2 external re-audit. `08_claim_ledger.md` remains the immutable historical ledger through the STOP-SHIP remediation period. This addendum supersedes only its time-dependent execution and audit statuses; it does not erase or rewrite the historical findings.
+This file is the controlling claim-status addendum after the Phase 6A.2 external conditional audit and its surgical remediation. `08_claim_ledger.md` remains the immutable historical ledger through the STOP-SHIP remediation period. This addendum supersedes only its time-dependent execution and audit statuses; it does not erase or rewrite the historical findings.
 
 All model, equation, protocol, and scientific claim ceilings in the historical ledger remain binding unless explicitly changed here.
 
@@ -22,7 +22,7 @@ No pilot or confirmatory mechanism result exists.
 
 $$
 \boxed{
-\text{Phase 6A.2 externally cleared};
+\text{Phase 6A.2 conditional findings remediated};
 \quad
 \text{Phase 6B.0 authorization preparation verified};
 \quad
@@ -39,17 +39,17 @@ $$
 | Historical claim | Current status | Evidence and boundary |
 |---|---|---|
 | ARG-C063 — no stored expected scientific trajectory oracle | Externally reviewed and retained | Generated-state differential tests, independent equations, hardened tripwire, and accepted external re-audit. This does not prove the test system infallible. |
-| ARG-C064 — self-validating clean-extraction bundle | Externally cleared for the accepted Phase 6A.2 packet | Candidate `17a17398808cae1befe85e795d371012fe999f03`; packet SHA-256 `5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd`. |
-| ARG-C065 — Phase 6A.1 authorizes pilot execution | Rejected and still rejected | External clearance applies to the frozen runner substrate. `EXECUTION_AUTHORIZATION.json` is absent, and the exact accepted audit-report SHA-256 has not been bound. |
+| ARG-C064 — self-validating clean-extraction bundle | Verified for the audited Phase 6A.2 packet | Candidate `17a17398808cae1befe85e795d371012fe999f03`; packet SHA-256 `5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd`; external verdict remained conditional. |
+| ARG-C065 — Phase 6A.1 authorizes pilot execution | Rejected and still rejected | The conditional audit did not itself authorize execution. `EXECUTION_AUTHORIZATION.json` remains absent until the remediated final tree and exact scope are frozen. |
 
 ## New Phase 6B claims
 
 | ID | Claim | Status | Evidence required | Current scope |
 |---|---|---|---|---|
-| ARG-C066 | Phase 6A.2 passed external re-audit. | User-confirmed external clearance with fixed repository evidence | Exact candidate, accepted packet digest, remediation history, and merge record. | Runner-integrity clearance only. |
+| ARG-C066 | Phase 6A.2 received unconditional external clearance. | Rejected | The report explicitly assigns 85/100 and a conditional pass. | Numerical core strong; five guardrails required remediation. |
 | ARG-C067 | External clearance itself constitutes pilot authorization. | Rejected | A separate tracked authorization must bind the accepted external report, packet, tripwire, runner source, frozen scope, and archive destination. | Pilot not executed. |
 | ARG-C068 | Phase 6B.0 changes a scientific equation, model parameter, initial condition, split, metric, threshold, exclusion, or decision rule. | Rejected | Diff and integrity-baseline verification. | Clearance-policy and documentation slice only. |
-| ARG-C069 | The Phase 6B.0 core policy candidate passes its declared software gates. | Hosted-verified | Python 3.10 and 3.12 suites, hardened tripwire, clean-extraction bundle build, and full-horizon numerical gate on the fixed core candidate. | Software and numerical-integrity verification only. |
+| ARG-C069 | The Phase 6B remediated candidate closes the report's five demonstrated guardrail failures. | Locally verified; hosted verification required before merge | Exact supplied tripwire: 19 PASS / 0 FAIL / 0 INCONCLUSIVE, plus compatibility suites and full-horizon gate. | Software and numerical-integrity verification only. |
 | ARG-C070 | Phase 6B.0 produced scientific evidence for or against ARG. | Rejected | No execution authorization, pilot archive, trajectory, or result exists. | No scientific result. |
 
 ## Phase 6B.0 verification record
@@ -86,7 +86,7 @@ That workflow artifact is verification material, not an execution authorization 
 
 ## Authorization boundary
 
-The next authorization commit is prohibited until the exact accepted external audit-report SHA-256 is available. A user statement, packet digest, narrative summary, placeholder digest, or report authored by the implementation agent is not a substitute.
+The exact external report and tripwire SHA-256 values are now recorded. Authorization remains prohibited until the remediated runner is merged and a single authorization-only commit binds that exact final tree, frozen scope, and new archive destination.
 
 Confirmatory access remains blocked at every runner boundary.
 
