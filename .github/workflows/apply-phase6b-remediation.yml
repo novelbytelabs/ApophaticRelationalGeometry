@@ -1,6 +1,8 @@
 name: apply-phase6b-remediation
 
 on:
+  pull_request:
+    branches: [phase6b-remediation-loader]
   push:
     branches: [phase6b-remediation-loader]
 
