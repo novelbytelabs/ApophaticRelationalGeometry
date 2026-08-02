@@ -1,0 +1,212 @@
+name: phase6a2-audit-bundle
+
+on:
+  push:
+    branches: [phase6a2-audit-bundle]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-auditor-packet:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 17a17398808cae1befe85e795d371012fe999f03
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12.13"
+      - name: Install exact verification environment
+        run: |
+          python -m pip install --only-binary=:all: \
+            'setuptools==80.9.0' \
+            'wheel==0.45.1' \
+            'pytest==9.1.1' \
+            'numpy==2.5.1' \
+            'scipy==1.18.0'
+          python -m pip install --no-build-isolation --no-deps -e .
+      - name: Verify pinned blocked candidate
+        run: |
+          test "$(git rev-parse HEAD)" = "17a17398808cae1befe85e795d371012fe999f03"
+          test ! -e protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
+          test ! -d artifacts/phase6_pilot
+          test -z "$(git status --porcelain --untracked-files=all)"
+      - name: Capture ordinary verification and tripwire
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+          PYTHONHASHSEED: "0"
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: |
+          set -o pipefail
+          rm -rf /tmp/arg_phase6a2_audit_evidence
+          mkdir -p /tmp/arg_phase6a2_audit_evidence
+          python -m pytest -q 2>&1 | tee /tmp/arg_phase6a2_audit_evidence/pytest.txt
+          python tools/arg_tripwire.py 2>&1 | tee /tmp/arg_phase6a2_audit_evidence/tripwire.json
+      - name: Capture full-horizon verification
+        env:
+          ARG_RUN_FULL_HORIZON: "1"
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+          PYTHONHASHSEED: "0"
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_phase6a2_hardening.py::test_full_horizon_smoke_primary_models_pass_numerical_gates \
+            2>&1 | tee /tmp/arg_phase6a2_audit_evidence/full_horizon.txt
+      - name: Capture environment and build deterministic packet
+        env:
+          CANDIDATE_COMMIT: 17a17398808cae1befe85e795d371012fe999f03
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          WORKFLOW_SOURCE_SHA: ${{ github.sha }}
+        run: |
+          python -VV > /tmp/arg_phase6a2_audit_evidence/python.txt 2>&1
+          python -m pip freeze --all > /tmp/arg_phase6a2_audit_evidence/pip_freeze.txt
+          uname -a > /tmp/arg_phase6a2_audit_evidence/uname.txt
+          git rev-parse HEAD > /tmp/arg_phase6a2_audit_evidence/commit.txt
+          git rev-parse HEAD^{tree} > /tmp/arg_phase6a2_audit_evidence/tree.txt
+          git status --porcelain --untracked-files=all > /tmp/arg_phase6a2_audit_evidence/git_status.txt
+          git ls-files -s > /tmp/arg_phase6a2_audit_evidence/git_index.txt
+          python - <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import stat
+          import subprocess
+          import zipfile
+
+          root = Path.cwd().resolve()
+          evidence = Path('/tmp/arg_phase6a2_audit_evidence')
+          candidate = os.environ['CANDIDATE_COMMIT']
+          tree = subprocess.check_output(
+              ['git', 'rev-parse', 'HEAD^{tree}'], text=True
+          ).strip()
+          tracked_raw = subprocess.check_output(
+              ['git', 'ls-files', '-s', '-z']
+          )
+          tracked = []
+          for record in tracked_raw.split(b'\0'):
+              if not record:
+                  continue
+              metadata, raw_path = record.split(b'\t', 1)
+              mode, blob, stage = metadata.decode('ascii').split()
+              if stage != '0':
+                  raise SystemExit(f'non-stage-zero index entry: {raw_path!r}')
+              relative = raw_path.decode('utf-8')
+              path = root / relative
+              if not path.is_file() or path.is_symlink():
+                  raise SystemExit(f'unsupported tracked entry: {relative}')
+              tracked.append((relative, mode, blob, path.read_bytes()))
+
+          scope_text = (
+              '# ARG Phase 6A.2 Re-audit Packet\n\n'
+              f'Candidate commit: `{candidate}`\n\n'
+              f'Candidate tree: `{tree}`\n\n'
+              'Scope: computational runner integrity and numerical verification only.\n\n'
+              'No execution authorization, pilot trajectory, scientific result, or '
+              'confirmatory conclusion is present. Pilot execution remains blocked.\n\n'
+              'The packet contains the complete tracked candidate source plus hosted '
+              'ordinary-test, hardened-tripwire, environment, and full-horizon evidence.\n'
+          ).encode('utf-8')
+
+          summary = {
+              'format': 'ARG-PHASE6A2-REAUDIT-v1',
+              'candidate_commit': candidate,
+              'candidate_tree': tree,
+              'workflow_run_id': os.environ['WORKFLOW_RUN_ID'],
+              'workflow_source_sha': os.environ['WORKFLOW_SOURCE_SHA'],
+              'python': '3.12.13',
+              'numpy': '2.5.1',
+              'scipy': '1.18.0',
+              'ordinary_suite': 'PASS',
+              'hardened_tripwire': 'PASS',
+              'full_horizon_smoke': 'PASS',
+              'execution_authorization_present': False,
+              'pilot_artifacts_present': False,
+              'scientific_result_present': False,
+              'claim_ceiling': 'trustworthy computational runner prototype; scientific conclusion not established',
+          }
+          summary_bytes = (
+              json.dumps(summary, indent=2, sort_keys=True, ensure_ascii=False)
+              + '\n'
+          ).encode('utf-8')
+
+          entries = []
+          for relative, mode, blob, content in sorted(tracked):
+              entries.append(
+                  (
+                      f'repository/{relative}',
+                      mode,
+                      content,
+                      {'git_blob': blob},
+                  )
+              )
+          for path in sorted(evidence.iterdir(), key=lambda item: item.name):
+              if not path.is_file() or path.is_symlink():
+                  raise SystemExit(f'unsupported evidence entry: {path}')
+              entries.append((f'evidence/{path.name}', '100644', path.read_bytes(), {}))
+          entries.append(('AUDIT_SCOPE.md', '100644', scope_text, {}))
+          entries.append(('AUDIT_SUMMARY.json', '100644', summary_bytes, {}))
+
+          manifest_entries = {}
+          for archive_name, mode, content, extra in entries:
+              manifest_entries[archive_name] = {
+                  'sha256': hashlib.sha256(content).hexdigest(),
+                  'bytes': len(content),
+                  'mode': mode,
+                  **extra,
+              }
+          manifest = {
+              'format': 'ARG-PHASE6A2-REAUDIT-MANIFEST-v1',
+              'candidate_commit': candidate,
+              'candidate_tree': tree,
+              'entry_count_excluding_manifest': len(entries),
+              'entries': manifest_entries,
+          }
+          manifest_bytes = (
+              json.dumps(manifest, indent=2, sort_keys=True, ensure_ascii=False)
+              + '\n'
+          ).encode('utf-8')
+          entries.append(('AUDIT_MANIFEST.json', '100644', manifest_bytes, {}))
+
+          output = Path('/tmp/ARG_Phase6A2_Reaudit_17a1739.zip')
+          fixed_time = (1980, 1, 1, 0, 0, 0)
+          with zipfile.ZipFile(
+              output,
+              mode='w',
+              compression=zipfile.ZIP_DEFLATED,
+              compresslevel=9,
+              strict_timestamps=True,
+          ) as archive:
+              for archive_name, mode, content, _extra in sorted(entries):
+                  info = zipfile.ZipInfo(archive_name, date_time=fixed_time)
+                  info.create_system = 3
+                  permissions = 0o755 if mode == '100755' else 0o644
+                  info.external_attr = (stat.S_IFREG | permissions) << 16
+                  info.compress_type = zipfile.ZIP_DEFLATED
+                  archive.writestr(info, content, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+
+          digest = hashlib.sha256(output.read_bytes()).hexdigest()
+          Path('/tmp/ARG_Phase6A2_Reaudit_17a1739.zip.sha256').write_text(
+              f'{digest}  {output.name}\n', encoding='ascii'
+          )
+          print(json.dumps({'packet': str(output), 'sha256': digest, 'entries': len(entries)}, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ARG-Phase6A2-Reaudit-17a1739
+          path: |
+            /tmp/ARG_Phase6A2_Reaudit_17a1739.zip
+            /tmp/ARG_Phase6A2_Reaudit_17a1739.zip.sha256
+          if-no-files-found: error
+          retention-days: 30
