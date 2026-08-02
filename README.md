@@ -2,7 +2,7 @@
 
 > **Status: candidate synthesis — not a claim of a new fundamental geometry.**
 
-> **STOP-SHIP:** An independent audit identified integrity defects in the delivered audit bundle and in supporting code paths. Phase 6A.1 remediation is active. Pilot execution, confirmatory execution, and scientific claims are blocked until adversarial remediation tests and an external re-audit pass.
+> **Phase 6B.0:** Phase 6A.2 passed external re-audit and the defensive-hardening candidate was merged. The execution substrate is cleared, but the development pilot remains unexecuted and blocked until a separate committed authorization binds the exact accepted audit-report SHA-256. Confirmatory execution remains blocked.
 
 ARG investigates whether nonlinear local dynamics, adaptive relations, state-dependent geometry, endogenous collective feedback, and explicit admissibility projection can form a coherent and scientifically useful framework. Mathematical novelty, physical relevance, and explanatory value remain open.
 
@@ -64,32 +64,31 @@ No implemented result establishes scientific superiority, physical adequacy, str
 
 ## Audit status
 
-The independent audit found strong nominal differential and RK4 parity, but also found serious integrity defects:
+Phase 6A.2 closed the material defensive-integrity defects found by the earlier audit. The exact candidate `17a17398808cae1befe85e795d371012fe999f03` passed the ordinary suite, hardened tripwire, full-horizon numerical gate, and external re-audit, then merged as `4fb987b34220927466812f0276e10bb0776c28fd`.
 
-- a delivered bundle that invalidated its own lock and could not reproduce its advertised test result;
-- a stale Euler `run.csv` presented alongside the current RK4 implementation;
-- writable aliased `State` arrays;
-- non-fail-closed finite extremes in conductance and intrinsic geometry;
-- permissive JSON parsing and lock-root traversal;
-- caller-controlled standalone provenance;
-- non-atomic standalone output with no completion attestation;
-- incomplete environment and supply-chain locking.
+The accepted re-audit packet SHA-256 is:
 
-Previous test counts do not waive these findings. The stale Euler output is rejected as current evidence.
+```text
+5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd
+```
+
+This clears the runner remediation gate. It does not create a pilot result or authorize confirmatory access.
 
 ## Current execution state
 
 $$
 \boxed{
-\text{Phase 6A.1 integrity remediation STOP-SHIP};
+\text{Phase 6A.2 externally cleared};
 \quad
-\text{development pilot not authorized for execution};
+\text{development pilot not executed};
 \quad
-\text{confirmatory execution and scientific claims blocked}.
+\text{execution authorization absent};
+\quad
+\text{confirmatory execution blocked}.
 }
 $$
 
-No pilot has been executed. No execution authorization is valid while Phase 6A.1 remains open.
+The next authorization commit must bind the exact accepted external audit-report SHA-256. No placeholder or self-authored substitute is permitted.
 
 ## Integrity rules
 
@@ -98,7 +97,7 @@ No pilot has been executed. No execution authorization is valid while Phase 6A.1
 - tests must target invariants, independent references, metamorphic properties, failure behavior, and provenance;
 - failed runs remain failures and are never imputed;
 - a fresh audit bundle must validate itself after clean extraction;
-- an external Auditor AI must clear the remediation before Phase 6B can reopen.
+- execution requires a separate committed record binding the accepted external audit report, exact runner source, frozen scope, and archive destination.
 
 ## Repository map
 
@@ -130,6 +129,7 @@ No pilot has been executed. No execution authorization is valid while Phase 6A.1
 - `docs/20_phase6_runner_design.md`
 - `docs/21_phase6_runner_verification.md`
 - `docs/22_phase6a1_integrity_remediation.md`
+- `docs/23_phase6b_clearance_and_authorization.md`
 
 ### Implementation and tests
 
@@ -138,7 +138,7 @@ No pilot has been executed. No execution authorization is valid while Phase 6A.1
 - `src/apophatic_geometry/protocol.py` — metrics, strict manifest loading, root-confined locks, and decisions.
 - `src/apophatic_geometry/attestation.py` — source/runtime attestation derived from the execution substrate.
 - `src/apophatic_geometry/simulate.py` — exploratory simulator with atomic completion-attested output.
-- `src/apophatic_geometry/pilot.py` and `pilot_*` — gated pilot-only machinery; execution remains blocked.
+- `src/apophatic_geometry/pilot.py` and `pilot_*` — gated pilot-only machinery; execution requires a hash-bound authorization record.
 
 ## Data-free validation
 
