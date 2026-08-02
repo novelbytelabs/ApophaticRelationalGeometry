@@ -2,7 +2,7 @@
 
 > **Status: candidate synthesis — not a claim of a new fundamental geometry.**
 
-> **Phase 6B.0:** Phase 6A.2 passed external re-audit and the defensive-hardening candidate was merged. The execution substrate is cleared, but the development pilot remains unexecuted and blocked until a separate committed authorization binds the exact accepted audit-report SHA-256. Confirmatory execution remains blocked.
+> **Phase 6B audit closure:** The external report scored the runner **85/100 with a conditional pass**. Its five demonstrated guardrail failures have now been surgically remediated, and the supplied external tripwire reports **19 PASS / 0 FAIL / 0 INCONCLUSIVE** on the remediated tree. The development pilot remains unexecuted pending a separate authorization-only commit. Confirmatory execution remains blocked.
 
 ARG investigates whether nonlinear local dynamics, adaptive relations, state-dependent geometry, endogenous collective feedback, and explicit admissibility projection can form a coherent and scientifically useful framework. Mathematical novelty, physical relevance, and explanatory value remain open.
 
@@ -64,21 +64,21 @@ No implemented result establishes scientific superiority, physical adequacy, str
 
 ## Audit status
 
-Phase 6A.2 closed the material defensive-integrity defects found by the earlier audit. The exact candidate `17a17398808cae1befe85e795d371012fe999f03` passed the ordinary suite, hardened tripwire, full-horizon numerical gate, and external re-audit, then merged as `4fb987b34220927466812f0276e10bb0776c28fd`.
+The external Phase 6A.2 report did not give unconditional clearance. It assigned **85/100** and a **conditional pass as a trustworthy computational runner prototype**. It found the numerical equations and RK4 kernel strong, while demonstrating five remaining guardrail failures in authorization binding, frozen membership, platform enforcement, archive semantics, and path confinement. Those five findings are now remediated and pass the auditor-supplied tripwire.
 
-The accepted re-audit packet SHA-256 is:
+The audited packet SHA-256 is:
 
 ```text
 5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd
 ```
 
-This clears the runner remediation gate. It does not create a pilot result or authorize confirmatory access.
+This closes the report's demonstrated guardrail failures for exploratory pilot use. It is not formal certification, does not create a pilot result, and does not authorize confirmatory access.
 
 ## Current execution state
 
 $$
 \boxed{
-\text{Phase 6A.2 externally cleared};
+\text{conditional audit findings remediated};
 \quad
 \text{development pilot not executed};
 \quad
@@ -88,7 +88,7 @@ $$
 }
 $$
 
-The next authorization commit must bind the exact accepted external audit-report SHA-256. No placeholder or self-authored substitute is permitted.
+The report and supplied tripwire are now hash-bound in the execution policy. A separate authorization-only commit must still bind the exact remediated runner tree, frozen scope, and new archive destination before any pilot trajectory is generated.
 
 ## Integrity rules
 
