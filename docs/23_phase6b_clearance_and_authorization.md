@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 6A.2 passed external re-audit. The audited candidate
+Phase 6A.2 received an **85/100 conditional pass**, not unconditional clearance. The audited candidate
 
 ```text
 17a17398808cae1befe85e795d371012fe999f03
@@ -20,13 +20,13 @@ The accepted re-audit packet SHA-256 is
 5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd
 ```
 
-This closes the STOP-SHIP remediation gate. It does **not** itself authorize or execute the development pilot.
+The report found a strong numerical core but five remaining guardrail failures. Those failures are now surgically remediated and the supplied external tripwire reports 19 PASS / 0 FAIL / 0 INCONCLUSIVE. This does **not** itself authorize or execute the development pilot.
 
 ## Current execution boundary
 
 $$
 \boxed{
-\text{execution substrate externally cleared};
+\text{conditional-audit guardrails remediated};
 \quad
 \text{execution authorization absent};
 \quad
@@ -60,8 +60,8 @@ Phase 6B.0 passes when:
 2. the integrity baseline and all protected hashes are consistent;
 3. the ordinary suite, hardened tripwire, and full-horizon gate pass;
 4. no execution authorization or trajectory artifact exists; and
-5. the exact accepted external audit report SHA-256 is available for the authorization commit.
+5. the report and supplied tripwire SHA-256 values are bound in the frozen execution policy.
 
 ## Claim ceiling
 
-This slice establishes only that the runner remediation gate was externally cleared and that the repository is authorization-ready. It provides no pilot result and no scientific evidence for or against the ARG hypotheses.
+This slice establishes only that the report's demonstrated guardrail failures were closed against its supplied tripwire and that the repository is authorization-ready. It provides no pilot result and no scientific evidence for or against the ARG hypotheses.
