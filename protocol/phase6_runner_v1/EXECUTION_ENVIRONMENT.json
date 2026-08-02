@@ -1,6 +1,6 @@
 {
   "environment_id": "ARG-P6-EXEC-ENV-v1",
-  "status": "CLEARED_AFTER_PHASE6A1_EXTERNAL_AUDIT",
+  "status": "CLEARED_FOR_EXPLORATORY_PILOT_AFTER_REMEDIATION",
   "protocol_id": "ARG-P5-COMP-v1",
   "runner_id": "ARG-P6-PILOT-RUNNER-v1",
   "execution_python": {
@@ -15,24 +15,40 @@
   "platform_policy": {
     "operating_system": "Linux",
     "machine": "x86_64",
-    "blas_and_compiler": "record_and_hash_at_execution"
+    "blas_and_compiler": "record_hash_and_verify_import_origins_at_execution"
   },
   "fingerprint_policy": {
     "python_executable_sha256": "record_at_execution",
-    "installed_distribution_tree_sha256": "record_at_execution",
-    "tracked_source_tree_sha256": "record_at_execution",
+    "installed_distribution_tree_sha256": "recompute_and_compare_at_execution",
+    "imported_module_origin": "record_and_compare_at_execution",
+    "numpy_blas_configuration_sha256": "record_and_verify_at_execution",
+    "tracked_source_tree_sha256": "bind_complete_authorized_git_tree",
     "protocol_lock_sha256": "record_at_execution",
     "implementation_file_sha256": "record_at_execution"
   },
   "confirmatory_execution": "BLOCKED",
   "pilot_execution": "AUTHORIZED_ONLY_WITH_EXECUTION_RECORD",
-  "notes": "Phase 6A.2 external re-audit was reported passed for the exact pinned candidate. This policy clears the frozen execution substrate only. Pilot execution still requires a separate committed EXECUTION_AUTHORIZATION.json that binds the exact accepted audit-report SHA-256, source commit, scope, and archive destination. Confirmatory execution remains blocked.",
+  "notes": "The external report was a conditional pass, not an unconditional clearance. Its five demonstrated guardrail failures are the acceptance criteria for this remediation slice. Exploratory pilot execution is permitted only after those failures pass the supplied tripwire and a separate authorization-only commit binds the exact complete runner tree, report, packet, tripwire, scope, and archive destination. This is not certification or a scientific conclusion.",
   "external_audit_clearance": {
-    "state": "PASSED",
+    "state": "CONDITIONAL_PASS_REMEDIATED",
+    "score": 85,
+    "verdict": "Conditional pass as a trustworthy computational runner prototype",
     "candidate_commit": "17a17398808cae1befe85e795d371012fe999f03",
     "merge_commit": "4fb987b34220927466812f0276e10bb0776c28fd",
     "reaudit_packet_sha256": "5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd",
-    "report_sha256_must_be_bound_by_execution_authorization": true,
-    "report_sha256_recorded_in_environment_policy": false
+    "report_sha256": "985e0534fd52dcf1f2832e17d3796ad6627d728dedd5711c4e6bdc546ddfe749",
+    "tripwire_sha256": "8979a1aa6a481b3376f7f86be26f511acf6b2b1fe4f1add5fa7e9861430049b3",
+    "demonstrated_failures_required_to_pass": [
+      "confirmatory_relabel_blocked",
+      "platform_policy_enforced",
+      "semantic_archive_validation",
+      "archive_path_confined",
+      "authorization_binds_full_executable_tree"
+    ],
+    "external_unconditional_clearance_claimed": false,
+    "user_authorized_exploratory_continuation_after_remediation": true,
+    "report_filename": "Pasted markdown(364).md",
+    "tripwire_filename": "arg_phase6a2_reaudit_tripwire(1).py",
+    "audit_input_record": "audits/external/arg_phase6a2_reaudit_inputs.json"
   }
 }

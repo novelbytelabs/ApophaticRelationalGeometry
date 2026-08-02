@@ -39,6 +39,7 @@ def _manifest(config_id: str, configuration_hash: str, *, trajectories: int = 1)
         "runner_version": "1.0.0",
         "protocol_id": "ARG-P5-COMP-v1",
         "protocol_version": "1.0.0",
+        "source_commit": "0" * 40,
         "split": "pilot",
         "configuration_count": 1,
         "configuration_hashes": {config_id: configuration_hash},
@@ -140,8 +141,8 @@ def test_authorization_scope_mismatch_fails_closed(tmp_path: Path, monkeypatch: 
 
     path = tmp_path / "protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json"
     path.parent.mkdir(parents=True)
-    expected_scope = {"scope_version": "ARG-P6-EXEC-SCOPE-v2", "value": 1}
-    wrong_scope = {"scope_version": "ARG-P6-EXEC-SCOPE-v2", "value": 2}
+    expected_scope = {"scope_version": "ARG-P6-EXEC-SCOPE-v3", "value": 1}
+    wrong_scope = {"scope_version": "ARG-P6-EXEC-SCOPE-v3", "value": 2}
     path.write_text(
         json.dumps(
             {
@@ -158,7 +159,8 @@ def test_authorization_scope_mismatch_fails_closed(tmp_path: Path, monkeypatch: 
                 "scope": wrong_scope,
                 "scope_sha256": canonical_json_sha256(wrong_scope),
                 "external_audit": {
-                    "clearance": "CLEARED_FOR_PILOT",
+                    "verdict": "CONDITIONAL_PASS",
+                    "clearance": "USER_AUTHORIZED_EXPLORATORY_PILOT_AFTER_REMEDIATION",
                     "bundle_sha256": "2" * 64,
                     "report_sha256": "3" * 64,
                     "tripwire_sha256": "4" * 64,
@@ -168,11 +170,14 @@ def test_authorization_scope_mismatch_fails_closed(tmp_path: Path, monkeypatch: 
         ),
         encoding="utf-8",
     )
-    monkeypatch.setattr(
-        manifest_module,
-        "_run_git",
-        lambda root, *args: subprocess.CompletedProcess(args, 0, "", ""),
-    )
+    def git_fixture(root: Path, *args: str):
+        if args[:2] == ("rev-parse", "1111111111111111111111111111111111111111^{tree}"):
+            return subprocess.CompletedProcess(args, 0, "a" * 40 + "\n", "")
+        if args[:3] == ("ls-tree", "-r", "1111111111111111111111111111111111111111"):
+            return subprocess.CompletedProcess(args, 0, "100644 blob\tfile.py\n", "")
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(manifest_module, "_run_git", git_fixture)
     with pytest.raises(ProtocolIntegrityError, match="scope differs"):
         validate_execution_authorization(
             tmp_path,
@@ -217,7 +222,7 @@ def test_integrity_baseline_records_roundoff_only_projector_remediation() -> Non
             encoding="utf-8"
         )
     )
-    assert baseline["baseline_id"] == "ARG-P6-INTEGRITY-BASELINE-v3"
+    assert baseline["baseline_id"] == "ARG-P6-INTEGRITY-BASELINE-v4"
     assert baseline["scientific_equations_changed"] is False
     remediation = baseline["numerical_remediation"]
     assert remediation["scientific_equation_changed"] is False

@@ -8,19 +8,20 @@ from scipy.integrate import solve_ivp
 
 from .model import Parameters, State
 from .models import ModelId, ProjectionTarget, derivatives_for_model, parse_model_id, retract_to_constraint
+from .pilot_manifest import require_frozen_configuration
 from .pilot_mechanisms import (
     _canonical_step, _controlled_rk4_step, _observation_arrays, _record_observation,
     _trajectory, _validate_time_grid,
 )
 from .pilot_types import (
     CONFIRMATORY_SPLIT, PILOT_SPLIT, SMOKE_SPLIT, ConfirmatoryAccessError,
-    ControlSpec, NumericalGateError, PilotConfiguration, Trajectory,
+    ControlSpec, FrozenProtocolBundle, NumericalGateError, PilotConfiguration, Trajectory,
 )
 
 FloatArray = NDArray[np.float64]
 
 
-def integrate_rk4(
+def _integrate_rk4_unchecked(
     configuration: PilotConfiguration,
     params: Parameters,
     model: ModelId | str,
@@ -99,7 +100,41 @@ def integrate_rk4(
     )
 
 
-def integrate_dop853(
+def integrate_rk4(
+    configuration: PilotConfiguration,
+    params: Parameters,
+    model: ModelId | str,
+    *,
+    bundle: FrozenProtocolBundle | None = None,
+    dt: float,
+    horizon: float,
+    observation_interval: float,
+    source_commit: str,
+    control: ControlSpec | None = None,
+) -> Trajectory:
+    """Integrate only an exact frozen pilot or smoke configuration."""
+
+    if configuration.split == PILOT_SPLIT:
+        if bundle is None:
+            raise ConfirmatoryAccessError(
+                "pilot integration requires exact frozen-membership context"
+            )
+        require_frozen_configuration(bundle, configuration)
+    elif configuration.split == SMOKE_SPLIT and bundle is not None:
+        require_frozen_configuration(bundle, configuration)
+    return _integrate_rk4_unchecked(
+        configuration,
+        params,
+        model,
+        dt=dt,
+        horizon=horizon,
+        observation_interval=observation_interval,
+        source_commit=source_commit,
+        control=control,
+    )
+
+
+def _integrate_dop853_unchecked(
     configuration: PilotConfiguration,
     params: Parameters,
     model: ModelId | str,
@@ -234,6 +269,42 @@ def integrate_dop853(
             f"dop853-rtol-{rtol:.1e}-atol-{atol:.1e}-max-{max_step:.1e}"
         ),
         control_id="canonical",
+    )
+
+
+def integrate_dop853(
+    configuration: PilotConfiguration,
+    params: Parameters,
+    model: ModelId | str,
+    *,
+    bundle: FrozenProtocolBundle | None = None,
+    horizon: float,
+    observation_interval: float,
+    source_commit: str,
+    rtol: float = 1.0e-10,
+    atol: float = 1.0e-12,
+    max_step: float = 1.0e-3,
+) -> Trajectory:
+    """Integrate only an exact frozen pilot or smoke configuration."""
+
+    if configuration.split == PILOT_SPLIT:
+        if bundle is None:
+            raise ConfirmatoryAccessError(
+                "pilot integration requires exact frozen-membership context"
+            )
+        require_frozen_configuration(bundle, configuration)
+    elif configuration.split == SMOKE_SPLIT and bundle is not None:
+        require_frozen_configuration(bundle, configuration)
+    return _integrate_dop853_unchecked(
+        configuration,
+        params,
+        model,
+        horizon=horizon,
+        observation_interval=observation_interval,
+        source_commit=source_commit,
+        rtol=rtol,
+        atol=atol,
+        max_step=max_step,
     )
 
 

@@ -1,0 +1,20 @@
+{
+  "audit_input_record_id": "ARG-P6A2-REAUDIT-INPUTS-v1",
+  "status": "EXTERNAL_INPUTS_HASH_BOUND",
+  "report": {
+    "filename": "Pasted markdown(364).md",
+    "bytes": 23856,
+    "sha256": "985e0534fd52dcf1f2832e17d3796ad6627d728dedd5711c4e6bdc546ddfe749",
+    "score": 85,
+    "verdict": "CONDITIONAL_PASS"
+  },
+  "tripwire": {
+    "filename": "arg_phase6a2_reaudit_tripwire(1).py",
+    "bytes": 21966,
+    "sha256": "8979a1aa6a481b3376f7f86be26f511acf6b2b1fe4f1add5fa7e9861430049b3",
+    "observed_after_remediation": "19_PASS_0_FAIL_0_INCONCLUSIVE"
+  },
+  "storage_note": "Original external inputs were supplied out-of-band and are bound here by exact byte count and SHA-256; this repository record does not rewrite the auditor artifacts.",
+  "confirmatory_execution": "BLOCKED",
+  "pilot_data_generated": false
+}

@@ -4,12 +4,13 @@ import csv
 import json
 import os
 from pathlib import Path
+import platform
 import re
 
 import numpy as np
 import pytest
 
-from apophatic_geometry.attestation import build_attestation
+from apophatic_geometry.attestation import build_attestation, runtime_environment
 from apophatic_geometry.model import (
     Parameters,
     State,
@@ -181,30 +182,38 @@ def test_attestation_derives_commit_and_ignores_source_environment(
     assert len(str(attestation["attestation_sha256"])) == 64
 
 
+@pytest.mark.skipif(
+    platform.python_version() != "3.12.13",
+    reason="exact execution policy is intentionally frozen to CPython 3.12.13",
+)
 def test_execution_environment_policy_is_exact_and_externally_cleared() -> None:
+    policy = validate_execution_environment_policy(
+        REPO_ROOT,
+        runtime_environment(),
+        require_execution_clearance=True,
+    )
+    assert policy["status"] == "CLEARED_FOR_EXPLORATORY_PILOT_AFTER_REMEDIATION"
+    assert policy["pilot_execution"] == "AUTHORIZED_ONLY_WITH_EXECUTION_RECORD"
+    clearance = policy["external_audit_clearance"]
+    assert clearance["state"] == "CONDITIONAL_PASS_REMEDIATED"
+    assert clearance["report_sha256"] == "985e0534fd52dcf1f2832e17d3796ad6627d728dedd5711c4e6bdc546ddfe749"
+    assert clearance["tripwire_sha256"] == "8979a1aa6a481b3376f7f86be26f511acf6b2b1fe4f1add5fa7e9861430049b3"
+
+
+def test_execution_environment_rejects_platform_laundering() -> None:
     runtime = {
         "python_implementation": "CPython",
         "python_version": "3.12.13",
-        "distributions": {
-            "numpy": {"version": "2.5.1", "installed_tree_sha256": "1" * 64},
-            "scipy": {"version": "1.18.0", "installed_tree_sha256": "2" * 64},
-            "apophatic-relational-geometry": {
-                "version": "0.6.0",
-                "installed_tree_sha256": "3" * 64,
-            },
-        },
+        "operating_system": "Windows",
+        "machine": "arm64",
+        "numpy_configuration": "fake",
+        "numpy_configuration_sha256": "0" * 64,
+        "distributions": {},
     }
-    policy = validate_execution_environment_policy(
-        REPO_ROOT,
-        runtime,
-        require_execution_clearance=True,
-    )
-    assert policy["status"] == "CLEARED_AFTER_PHASE6A1_EXTERNAL_AUDIT"
-    assert policy["pilot_execution"] == "AUTHORIZED_ONLY_WITH_EXECUTION_RECORD"
-    clearance = policy["external_audit_clearance"]
-    assert clearance["state"] == "PASSED"
-    assert clearance["report_sha256_must_be_bound_by_execution_authorization"] is True
-    assert clearance["report_sha256_recorded_in_environment_policy"] is False
+    with pytest.raises(Exception):
+        validate_execution_environment_policy(
+            REPO_ROOT, runtime, require_execution_clearance=False
+        )
 
 
 def test_300_randomized_states_match_independent_equations_and_rk4() -> None:

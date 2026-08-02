@@ -13,7 +13,12 @@ from typing import Any
 
 from .attestation import build_attestation
 from .models import CONTRACT_VERSION, ModelId
-from .pilot_archive import PilotArchiveWriter, archive_has_confirmatory_identifiers
+from .pilot_archive import (
+    PilotArchiveWriter,
+    archive_has_confirmatory_identifiers,
+    expected_trajectory_schema,
+)
+from .pilot_verify import verify_pilot_archive
 from .pilot_integrate import (
     all_permutations,
     assess_numerics,
@@ -69,6 +74,7 @@ from .protocol import (
 )
 
 PILOT_IMPLEMENTATION_PATHS = (
+    "src/apophatic_geometry/__init__.py",
     "src/apophatic_geometry/model.py",
     "src/apophatic_geometry/models.py",
     "src/apophatic_geometry/protocol.py",
@@ -80,6 +86,7 @@ PILOT_IMPLEMENTATION_PATHS = (
     "src/apophatic_geometry/pilot_gates.py",
     "src/apophatic_geometry/pilot_integrate.py",
     "src/apophatic_geometry/pilot_archive.py",
+    "src/apophatic_geometry/pilot_verify.py",
     "src/apophatic_geometry/pilot.py",
     "src/apophatic_geometry/pilot_cli.py",
     "protocol/phase5_v1/LOCK.json",
@@ -227,7 +234,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
         len(configurations) * EXPECTED_TRAJECTORIES_PER_CONFIGURATION
     )
     expected_scope = {
-        "scope_version": "ARG-P6-EXEC-SCOPE-v2",
+        "scope_version": "ARG-P6-EXEC-SCOPE-v3",
         "protocol_lock_sha256": canonical_json_sha256(
             load_json(bundle.repo_root / "protocol/phase5_v1/LOCK.json")
         ),
@@ -247,7 +254,9 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
             configuration_hashes
         ),
         "integrator_suite": PILOT_INTEGRATOR_SUITE,
-        "archive_schema_version": "ARG-P6-ARCHIVE-v2",
+        "time_policy": dict(bundle.protocol["time_and_sampling"]),
+        "archive_schema_version": "ARG-P6-ARCHIVE-v3",
+        "archive_destination": str(Path(archive_root).resolve()),
         "configuration_count": len(configurations),
         "expected_trajectory_records": expected_trajectory_records,
         "expected_summary_records": len(configurations),
@@ -295,6 +304,15 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
         "integrator_suite": PILOT_INTEGRATOR_SUITE,
     }
     run_identity_sha256 = canonical_json_sha256(run_identity_payload)
+    trajectory_schema = [
+        {
+            "model_id": model_id,
+            "integrator": integrator,
+            "profile": profile,
+            "control_id": control_id,
+        }
+        for model_id, integrator, profile, control_id in expected_trajectory_schema(bundle)
+    ]
     run_manifest = {
         "runner_id": RUNNER_ID,
         "runner_version": RUNNER_VERSION,
@@ -320,13 +338,15 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
         "split": PILOT_SPLIT,
         "configuration_count": len(configurations),
         "configuration_hashes": configuration_hashes,
+        "trajectory_schema": trajectory_schema,
+        "time_policy": dict(bundle.protocol["time_and_sampling"]),
         "execution_scope": expected_scope,
         "execution_scope_sha256": canonical_json_sha256(expected_scope),
         "expected_trajectory_records": expected_trajectory_records,
         "expected_summary_records": len(configurations),
         "confirmatory_execution": "BLOCKED",
     }
-    archive = PilotArchiveWriter(archive_root, run_manifest)
+    archive = PilotArchiveWriter(archive_root, run_manifest, bundle=bundle)
     archive.write_environment(
         {
             "policy": dict(environment_policy),
@@ -350,6 +370,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                         configuration,
                         params,
                         model,
+                        bundle=bundle,
                         dt=dt,
                         horizon=horizon,
                         observation_interval=observation_interval,
@@ -369,6 +390,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                     configuration,
                     params,
                     model,
+                    bundle=bundle,
                     horizon=horizon,
                     observation_interval=observation_interval,
                     source_commit=source_commit,
@@ -422,6 +444,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                 configuration,
                 params,
                 ModelId.MF,
+                bundle=bundle,
                 dt=dts[2],
                 horizon=horizon,
                 observation_interval=observation_interval,
@@ -436,6 +459,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                         configuration,
                         params,
                         model,
+                        bundle=bundle,
                         dt=dts[0],
                         horizon=horizon,
                         observation_interval=observation_interval,
@@ -456,6 +480,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                     configuration,
                     params,
                     model,
+                    bundle=bundle,
                     dt=dts[0],
                     horizon=horizon,
                     observation_interval=observation_interval,
@@ -510,6 +535,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
             "confirmatory identifier contamination detected"
         )
     archive.finalize()
+    verify_pilot_archive(archive.root, bundle)
 
 
 __all__ = [
@@ -532,6 +558,7 @@ __all__ = [
     "Trajectory",
     "all_permutations",
     "archive_has_confirmatory_identifiers",
+    "expected_trajectory_schema",
     "assess_numerics",
     "authorize_pilot_batch",
     "build_pilot_configurations",
@@ -556,4 +583,5 @@ __all__ = [
     "validate_execution_authorization",
     "validate_execution_environment_policy",
     "verify_model_baseline",
+    "verify_pilot_archive",
 ]
