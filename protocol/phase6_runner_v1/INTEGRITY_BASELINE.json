@@ -23,7 +23,8 @@
   "confirmatory_execution": "BLOCKED",
   "files": {
     ".github/workflows/phase6a2-full-horizon.yml": "97ebbbc3c263e96bb046a565cdcf1aa8eff7ec29b81d9aef0877c16cf8bd0a80",
-    ".github/workflows/tests.yml": "d99e7126ee4497169b54e90b45c9167b113a64e6a49ae4ab157dd541b530963b",
+    ".github/workflows/phase6b-pilot-execution.yml": "2e5a3611c382be2ad37510a5905d9737a1ad421c498634c61c55427e66bff91a",
+    ".github/workflows/tests.yml": "39466a4ba175d5c7f2ea3b26a51947e294e1d9dfedae706cd690132ad2dbcddb",
     "audits/external/arg_phase6a2_reaudit_inputs.json": "15e73c6e3ed8bc8884b44386bfed9290ba2182e5fa2766d264b86a18b5b27913",
     "audits/external/arg_tripwire_20260801.py": "0dc7e06afab992e7097f735a201444ddef803550b5351db0a03a8852be433408",
     "protocol/phase5_v1/LOCK.json": "be54c8e54e8b16f439a903ca00df118252cd649ad22f315a546822551da3b5eb",
@@ -57,6 +58,7 @@
     "tests/test_phase6_planning.py": "6dd8d569512a267c04dbeb3ca57869774f77dbca43a39ce41b85d2f2901eecbb",
     "tests/test_phase6a1_integrity.py": "546f2f2279f75d68e9e6dd24f87b90f9478cbecbf1b4ff2017eb945dee99a87f",
     "tests/test_phase6a2_hardening.py": "aa7275ed11365b768f8a2e0cf95487e92f24275fca915cddb7b6e9dad01e592a",
+    "tests/test_phase6b1_execution_channel.py": "527e18869177f2f86268a3712c588b575bd42efb3221f0006896dc99cb2b1772",
     "tests/test_phase6b_audit_closure.py": "6c2fa010fe5e31a321fa1aa9192f75df4b57297703e00ee8d59a15998efe6593",
     "tools/arg_tripwire.py": "95efd7f62c7606e91d5eb22d808127a2e9d984ceba5c1db15082c68fc82c8e04",
     "tools/build_audit_bundle.py": "b387f255385083eeb0f1b9fc11a58bc57c424e6b731c7d29019135e0e837dd42"
@@ -93,6 +95,7 @@
     "external_unconditional_clearance_claimed": false,
     "frozen_membership_required_before_public_integration": true,
     "full_horizon_workflow_must_checkout_triggering_sha": true,
+    "governed_pilot_execution_workflow_required": true,
     "import_origin_and_platform_enforcement_required": true,
     "json_targets_use_canonical_sorted_compact_utf8_sha256": true,
     "phase4_equation_scope_ast_must_match_except_project_node_derivative": true,
