@@ -49,12 +49,12 @@ $$
 | ARG-C066 | Phase 6A.2 passed external re-audit. | User-confirmed external clearance with fixed repository evidence | Exact candidate, accepted packet digest, remediation history, and merge record. | Runner-integrity clearance only. |
 | ARG-C067 | External clearance itself constitutes pilot authorization. | Rejected | A separate tracked authorization must bind the accepted external report, packet, tripwire, runner source, frozen scope, and archive destination. | Pilot not executed. |
 | ARG-C068 | Phase 6B.0 changes a scientific equation, model parameter, initial condition, split, metric, threshold, exclusion, or decision rule. | Rejected | Diff and integrity-baseline verification. | Clearance-policy and documentation slice only. |
-| ARG-C069 | The Phase 6B.0 candidate passes its declared software gates. | Hosted-verified | Python 3.10 and 3.12 suites, hardened tripwire, clean-extraction bundle build, and full-horizon numerical gate on the exact candidate. | Software and numerical-integrity verification only. |
+| ARG-C069 | The Phase 6B.0 core policy candidate passes its declared software gates. | Hosted-verified | Python 3.10 and 3.12 suites, hardened tripwire, clean-extraction bundle build, and full-horizon numerical gate on the fixed core candidate. | Software and numerical-integrity verification only. |
 | ARG-C070 | Phase 6B.0 produced scientific evidence for or against ARG. | Rejected | No execution authorization, pilot archive, trajectory, or result exists. | No scientific result. |
 
 ## Phase 6B.0 verification record
 
-Exact candidate head:
+Core clearance-policy candidate verified before this append-only claim-control addendum:
 
 ```text
 d554e057f357f463d48cc43f9f580310cc2eb535
@@ -82,7 +82,7 @@ The standard workflow artifact digest was:
 sha256:dadeccbc8ee18af8673927d28cec70d918507a1adb8a42d9eb1900a969defe20
 ```
 
-That workflow artifact is verification material, not an execution authorization or scientific result.
+That workflow artifact is verification material, not an execution authorization or scientific result. Subsequent claim-control-only commits remain subject to the permanent repository workflows and do not change protected equations or runner logic.
 
 ## Authorization boundary
 
