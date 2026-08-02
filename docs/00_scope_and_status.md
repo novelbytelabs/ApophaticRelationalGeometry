@@ -55,15 +55,17 @@ Protocol `ARG-P5-COMP-v1` was frozen before trajectory generation. Phase 6A now 
 - writes a deterministic, checksummed, write-once archive;
 - requires a separate committed execution authorization naming the verified runner commit.
 
-Hosted runner verification reported 100 passing tests on Python 3.10 and 100 on Python 3.12.
+Hosted runner verification, Phase 6A.2 defensive hardening, the full-horizon numerical gate, and external re-audit have passed for the pinned runner candidate.
 
 Current execution state:
 
 $$
 \boxed{
-\text{pilot-only runner verified};
+\text{runner externally cleared};
 \quad
 \text{development pilot not executed};
+\quad
+\text{execution authorization absent};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
