@@ -136,12 +136,19 @@ def test_model_baseline_mutation_fails_closed(bundle, monkeypatch) -> None:
     original = manifest_module._run_git
 
     def mutated(root: Path, *args: str):
-        if args and args[0] == "diff":
-            return subprocess.CompletedProcess(args, 1, "", "changed")
+        if args and args[0] == "show" and str(args[1]).endswith(
+            ":src/apophatic_geometry/models.py"
+        ):
+            return subprocess.CompletedProcess(
+                args, 0, "PROJECTOR_TOLERANCE = 9.0\n", ""
+            )
         return original(root, *args)
 
     monkeypatch.setattr(manifest_module, "_run_git", mutated)
-    with pytest.raises(ProtocolIntegrityError, match="model equations differ"):
+    with pytest.raises(
+        ProtocolIntegrityError,
+        match="outside the authorized projector roundoff remediation",
+    ):
         verify_model_baseline(REPO_ROOT, bundle.protocol)
 
 

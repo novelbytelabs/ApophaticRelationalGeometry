@@ -10,7 +10,12 @@ import numpy as np
 import pytest
 
 from apophatic_geometry.attestation import AttestationError, require_clean_tracked_tree
-from apophatic_geometry.models import ModelId
+from apophatic_geometry.models import (
+    PROJECTOR_TOLERANCE,
+    ModelId,
+    ProjectionTarget,
+    project_node_derivative,
+)
 from apophatic_geometry.pilot import (
     PilotArchiveWriter,
     ProtocolIntegrityError,
@@ -174,6 +179,51 @@ def test_authorization_scope_mismatch_fails_closed(tmp_path: Path, monkeypatch: 
             "5" * 40,
             expected_scope=expected_scope,
         )
+
+
+def test_near_radial_projection_roundoff_cleanup_meets_frozen_tolerance() -> None:
+    x = np.array(
+        [-0.7103751263703857, -0.6378792663177448, 0.8209154395162704],
+        dtype=np.float64,
+    )
+    proposal = np.array(
+        [-1.365806732675058, -1.2264221769407428, 1.5783377204086004],
+        dtype=np.float64,
+    )
+    denominator = float(np.dot(x, x))
+    legacy = proposal - x * (float(np.dot(x, proposal)) / denominator)
+    legacy_tangency = abs(float(np.dot(x, legacy))) / (
+        float(np.linalg.norm(x)) * float(np.linalg.norm(legacy)) + 1.0e-30
+    )
+    assert legacy_tangency > PROJECTOR_TOLERANCE
+
+    target = ProjectionTarget(c0=denominator / 3.0)
+    projected, correction, tangency, actual_denominator = project_node_derivative(
+        x, proposal, target
+    )
+    assert actual_denominator == denominator
+    assert tangency <= PROJECTOR_TOLERANCE
+    np.testing.assert_allclose(
+        proposal + correction,
+        projected,
+        rtol=0.0,
+        atol=5.0e-16,
+    )
+
+
+def test_integrity_baseline_records_roundoff_only_projector_remediation() -> None:
+    baseline = json.loads(
+        (REPO_ROOT / "protocol/phase6_runner_v1/INTEGRITY_BASELINE.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert baseline["baseline_id"] == "ARG-P6-INTEGRITY-BASELINE-v3"
+    assert baseline["scientific_equations_changed"] is False
+    remediation = baseline["numerical_remediation"]
+    assert remediation["scientific_equation_changed"] is False
+    assert remediation["protocol_threshold_changed"] is False
+    assert remediation["pilot_data_generated"] is False
+    assert PROJECTOR_TOLERANCE == 1.0e-12
 
 
 @pytest.mark.slow

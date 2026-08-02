@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 from dataclasses import asdict
 from pathlib import Path
 import re
@@ -285,13 +286,45 @@ def _run_git(repo_root: Path, *args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _models_ast_outside_projector_cleanup(source: str) -> str:
+    tree = ast.parse(source)
+    retained: list[ast.stmt] = []
+    for node in tree.body:
+        if isinstance(node, ast.Import):
+            aliases = [alias for alias in node.names if alias.name != "math"]
+            if not aliases:
+                continue
+            node = ast.Import(names=aliases)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == "project_node_derivative":
+            continue
+        retained.append(node)
+    tree.body = retained
+    return ast.dump(tree, annotate_fields=True, include_attributes=False)
+
+
+def _verify_authorized_projector_remediation(root: Path, phase4_commit: str) -> None:
+    historical = _run_git(
+        root,
+        "show",
+        f"{phase4_commit}:src/apophatic_geometry/models.py",
+    )
+    if historical.returncode != 0 or not historical.stdout:
+        raise ProtocolIntegrityError("unable to read the frozen Phase 4 model source")
+    current_path = root / "src/apophatic_geometry/models.py"
+    current = current_path.read_text(encoding="utf-8")
+    if _models_ast_outside_projector_cleanup(historical.stdout) != _models_ast_outside_projector_cleanup(current):
+        raise ProtocolIntegrityError(
+            "model equations differ outside the authorized projector roundoff remediation"
+        )
+
+
 def _verify_integrity_baseline(root: Path, phase4_commit: str) -> Mapping[str, Any]:
     path = root / INTEGRITY_BASELINE_PATH
     if not path.is_file():
         raise ProtocolIntegrityError("remediated integrity baseline is missing")
     baseline = _strict_json(path)
     required = {
-        "baseline_id": "ARG-P6-INTEGRITY-BASELINE-v2",
+        "baseline_id": "ARG-P6-INTEGRITY-BASELINE-v3",
         "status": "FROZEN_NO_EXECUTION",
         "protocol_id": PROTOCOL_ID,
         "protocol_version": PROTOCOL_VERSION,
@@ -303,6 +336,31 @@ def _verify_integrity_baseline(root: Path, phase4_commit: str) -> Mapping[str, A
     for key, expected in required.items():
         if baseline.get(key) != expected:
             raise ProtocolIntegrityError(f"integrity baseline mismatch: {key}")
+    remediation = baseline.get("numerical_remediation")
+    expected_remediation = {
+        "remediation_id": "ARG-P6A2-PROJECTOR-ROUNDOFF-v1",
+        "trigger": "full-horizon normalized tangency residual 1.0166487685339358e-12 exceeded 1e-12",
+        "scope": "binary64 orthogonality cleanup inside project_node_derivative only",
+        "scientific_equation_changed": False,
+        "protocol_threshold_changed": False,
+        "pilot_data_generated": False,
+        "confirmatory_execution": "BLOCKED",
+    }
+    if not isinstance(remediation, Mapping):
+        raise ProtocolIntegrityError("projector remediation record is missing")
+    for key, expected in expected_remediation.items():
+        if remediation.get(key) != expected:
+            raise ProtocolIntegrityError(f"projector remediation mismatch: {key}")
+    policy = baseline.get("verification_policy")
+    if not isinstance(policy, Mapping):
+        raise ProtocolIntegrityError("integrity verification policy is missing")
+    if policy.get("canonical_equation_file_must_match_phase4") is not False:
+        raise ProtocolIntegrityError("projector remediation policy must disable byte identity")
+    if policy.get("phase4_equation_scope_ast_must_match_except_project_node_derivative") is not True:
+        raise ProtocolIntegrityError("projector remediation scope guard is missing")
+    if policy.get("projector_tolerance_unchanged") is not True:
+        raise ProtocolIntegrityError("projector tolerance preservation is not recorded")
+
     files = baseline.get("files")
     if not isinstance(files, Mapping) or not files:
         raise ProtocolIntegrityError("integrity baseline file set is missing")
@@ -334,22 +392,27 @@ def verify_model_baseline(repo_root: str | Path, protocol: Mapping[str, Any]) ->
     if present.returncode != 0:
         raise ProtocolIntegrityError("model baseline commit is unavailable; fetch full history")
 
-    # The canonical four-model equations remain byte-identical to Phase 4.
-    # model.py may differ only through the separately frozen integrity baseline,
-    # because Phase 6A.1 adds domain guards and immutable state handling there.
-    changed_equations = _run_git(
-        root,
-        "diff",
-        "--quiet",
-        phase4_commit,
-        "--",
-        "src/apophatic_geometry/models.py",
-    )
-    if changed_equations.returncode != 0:
-        raise ProtocolIntegrityError(
-            "canonical model equations differ from the frozen Phase 4 baseline"
+    baseline = _verify_integrity_baseline(root, phase4_commit)
+    policy = baseline.get("verification_policy")
+    if not isinstance(policy, Mapping):
+        raise ProtocolIntegrityError("integrity verification policy is missing")
+    if policy.get("canonical_equation_file_must_match_phase4") is True:
+        changed_equations = _run_git(
+            root,
+            "diff",
+            "--quiet",
+            phase4_commit,
+            "--",
+            "src/apophatic_geometry/models.py",
         )
-    _verify_integrity_baseline(root, phase4_commit)
+        if changed_equations.returncode != 0:
+            raise ProtocolIntegrityError(
+                "canonical model equations differ from the frozen Phase 4 baseline"
+            )
+    elif policy.get("phase4_equation_scope_ast_must_match_except_project_node_derivative") is True:
+        _verify_authorized_projector_remediation(root, phase4_commit)
+    else:
+        raise ProtocolIntegrityError("no valid model-source comparison policy is frozen")
 
     dirty = _run_git(root, "status", "--porcelain", "--untracked-files=all")
     if dirty.returncode != 0 or dirty.stdout.strip():

@@ -8,6 +8,7 @@ retraction policy used by MP.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from enum import Enum
 from typing import Final
@@ -309,10 +310,23 @@ def project_node_derivative(
     if not np.all(np.isfinite(proposal)):
         raise FloatingPointError("non-finite proposed node derivative")
 
-    correction = -vector * (float(np.dot(vector, proposal)) / denominator)
-    projected = proposal + correction
+    # Compute the same Euclidean projection with compensated three-term
+    # dot products, then remove the residual radial component introduced by
+    # binary64 cancellation. This does not change P_T or its frozen tolerance.
+    def dot3(left: FloatArray, right: FloatArray) -> float:
+        return float(
+            math.fsum(float(left[index]) * float(right[index]) for index in range(3))
+        )
+
+    projected = proposal - vector * (dot3(vector, proposal) / denominator)
+    for _ in range(2):
+        radial_residual = dot3(vector, projected)
+        if radial_residual == 0.0:
+            break
+        projected = projected - vector * (radial_residual / denominator)
+    correction = projected - proposal
     norm_projected = float(np.linalg.norm(projected))
-    tangency_residual = abs(float(np.dot(vector, projected))) / (
+    tangency_residual = abs(dot3(vector, projected)) / (
         norm_x * norm_projected + 1.0e-30
     )
 
