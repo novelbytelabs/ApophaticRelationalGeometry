@@ -37,7 +37,7 @@ nav:
       - Separate Mathematics from Ontology: adr/0001-separate-math-from-ontology.md
   - History:
       - Negation-Operator Path: history/negation_operator_path.md
-      - Rejected Legacy Euler Output: ../history/legacy_euler_run_rejected.md
+      - Rejected Legacy Euler Output: history/legacy_euler_run_rejected.md
 
 markdown_extensions:
   - tables
