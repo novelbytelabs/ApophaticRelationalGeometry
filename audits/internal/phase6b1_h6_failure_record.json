@@ -1,0 +1,37 @@
+{
+  "record_id": "ARG-P6B1-H6-FAILURE-v1",
+  "execution_run_id": 30763372785,
+  "authorized_commit": "e8c5467cd0a3ddd35c07489c55b4fa6dfa987388",
+  "runner_parent_commit": "92884777c1e9f10f7c2732f4d86e9ac966ca51ad",
+  "execution_id": "arg-p6b1-pilot-20260802t192116z",
+  "artifact_zip_sha256": "42d27f5c63fbedc32f925649f92f3816b49b3f7c5f873e2cc5d3e4e4bed93b8b",
+  "partial_archive_tar_sha256": "2c5e6ed1473303e382d49413857c2aa89f394ada44e739403dffded8b395ecc9",
+  "execution_log_sha256": "f215c695cd8003f6b87e7354f37492301bfbe266f896ac50d35d61b23c77b75b",
+  "failures_jsonl_sha256": "f1606c2111163ee8c59b16fe97b1d6f3e4b03489641cb64aaf1b908940c013f1",
+  "archive_status": "PARTIAL_OR_FAILED",
+  "completed_archive": false,
+  "summary_records": 0,
+  "confirmatory_execution": "BLOCKED",
+  "primary_effect_inspected": false,
+  "failure_count": 6,
+  "pause_rule_triggered": true,
+  "failures": [
+    {"config_id": "p5-d03-c005", "legacy_forward_relative_error": 3.9291289349516e-10},
+    {"config_id": "p5-d03-c010", "legacy_forward_relative_error": 1.91707812847175e-09},
+    {"config_id": "p5-d03-c025", "legacy_forward_relative_error": 8.320850651053059e-09},
+    {"config_id": "p5-d03-c050", "legacy_forward_relative_error": 1.3177231667642747e-07},
+    {"config_id": "p5-d03-c100", "legacy_forward_relative_error": 9.932142184310296e-12},
+    {"config_id": "p5-d11-c005", "legacy_forward_relative_error": 5.442028479972021e-12}
+  ],
+  "blinded_diagnosis": {
+    "classification": "ILL_CONDITIONED_FORWARD_RELATIVE_GATE",
+    "maximum_reproduced_absolute_error": 2.7194799110210365e-16,
+    "worst_case_config_id": "p5-d03-c050",
+    "worst_case_time": 9.99,
+    "worst_case_absolute_error": 3.9252311485372656e-17,
+    "worst_case_projected_norm": 1.3022455239013855e-10,
+    "high_precision_identity_residual": "approximately 7.8e-102 at 100 decimal digits",
+    "mathematical_identity_rejected": false,
+    "gate_measurement_rejected": true
+  }
+}

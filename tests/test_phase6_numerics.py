@@ -331,7 +331,7 @@ def _archive_manifest(
 ) -> dict[str, object]:
     return {
         "runner_id": "ARG-P6-PILOT-RUNNER-v1",
-        "runner_version": "1.0.0",
+        "runner_version": "1.1.0",
         "protocol_id": "ARG-P5-COMP-v1",
         "protocol_version": "1.0.0",
         "source_commit": "0" * 40,

@@ -20,6 +20,7 @@ from .pilot_archive import (
 )
 from .pilot_verify import verify_pilot_archive
 from .pilot_integrate import (
+    H6_POLICY_ID,
     all_permutations,
     assess_numerics,
     exogenous_replay_control,
@@ -31,6 +32,7 @@ from .pilot_integrate import (
     require_constraint_gate,
     require_same_state_identity_gate,
     run_permutation_tripwires,
+    same_state_identity_assessment,
     same_state_identity_error,
 )
 from .pilot_manifest import (
@@ -104,6 +106,7 @@ def pilot_plan(bundle: FrozenProtocolBundle) -> dict[str, Any]:
     return {
         "runner_id": RUNNER_ID,
         "runner_version": RUNNER_VERSION,
+        "h6_policy_id": H6_POLICY_ID,
         "protocol_id": PROTOCOL_ID,
         "protocol_version": PROTOCOL_VERSION,
         "split": PILOT_SPLIT,
@@ -254,6 +257,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
             configuration_hashes
         ),
         "integrator_suite": PILOT_INTEGRATOR_SUITE,
+        "h6_policy_id": H6_POLICY_ID,
         "time_policy": dict(bundle.protocol["time_and_sampling"]),
         "archive_schema_version": "ARG-P6-ARCHIVE-v3",
         "archive_destination": str(Path(archive_root).resolve()),
@@ -326,6 +330,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
         ],
         "environment_policy_id": environment_policy["environment_id"],
         "integrator_suite": PILOT_INTEGRATOR_SUITE,
+        "h6_policy_id": H6_POLICY_ID,
         "run_identity_sha256": run_identity_sha256,
         "model_implementation_commit": bundle.protocol[
             "model_implementation_commit"
@@ -540,6 +545,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
 
 __all__ = [
     "ArchiveWriteResult",
+    "H6_POLICY_ID",
     "CONFIRMATORY_SPLIT",
     "EXPECTED_PILOT_CONFIGURATIONS",
     "EXPECTED_PILOT_DIRECTIONS",
@@ -577,6 +583,7 @@ __all__ = [
     "require_constraint_gate",
     "require_same_state_identity_gate",
     "run_permutation_tripwires",
+    "same_state_identity_assessment",
     "same_state_identity_error",
     "smoke_configuration",
     "summarize_configuration",

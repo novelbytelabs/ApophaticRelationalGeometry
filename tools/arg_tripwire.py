@@ -151,7 +151,7 @@ def run_probe(root: Path) -> dict[str, Any]:
 
     manifest = {
         "runner_id": "ARG-P6-PILOT-RUNNER-v1",
-        "runner_version": "1.0.0",
+        "runner_version": "1.1.0",
         "protocol_id": "ARG-P5-COMP-v1",
         "protocol_version": "1.0.0",
         "split": "pilot",

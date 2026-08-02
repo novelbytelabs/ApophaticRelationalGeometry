@@ -18,11 +18,11 @@ $$
 
 $$
 \boxed{
-\text{Phase 6A.2 conditional findings remediated};
+\text{Phase 6B.1 pilot attempt stopped fail closed};
 \quad
-\text{Phase 6B.0 authorization preparation active};
+\text{Phase 6B.2 H6 conditioning remediation active};
 \quad
-\text{development pilot not executed};
+\text{no completed pilot result};
 \quad
 \text{confirmatory execution blocked}.
 }
@@ -40,8 +40,9 @@ $$
 | Phase 5 — Freeze comparative experiment protocol | COMPLETE | Data-free protocol and executable decision rules frozen; 65 tests passed in each configured environment. |
 | Phase 6A — Implement pilot-only runner | COMPLETE | Runner and archive machinery implemented. |
 | Phase 6A.1/6A.2 — Integrity remediation and defensive hardening | COMPLETE / CONDITIONAL PASS | External report: 85/100 conditional pass; numerical core strong, five guardrail failures identified. |
-| Phase 6B.0 — Conditional-audit closure and authorization freeze | ACTIVE | Five demonstrated guardrail failures are remediated; supplied tripwire is 19/0/0; no authorization or pilot data exists. |
-| Phase 6B.1 — Execute development pilot | BLOCKED | Requires a committed authorization binding the exact accepted audit-report SHA-256 and archive destination. |
+| Phase 6B.0 — Conditional-audit closure and authorization freeze | COMPLETE | Five demonstrated guardrail failures remediated; supplied tripwire 19/0/0; exact authorization boundary frozen. |
+| Phase 6B.1 — Execute development pilot | STOPPED / NO RESULT | Authorized run `30763372785` stopped after six H6 validity failures exceeded the frozen 10% pause rule. Partial archive preserved; no summaries or completion marker. |
+| Phase 6B.2 — H6 conditioning diagnosis and remediation | ACTIVE | Exact identity intact to machine precision; legacy forward-relative metric ill-conditioned near projected equilibrium. Runner v1.1.0 validity-gate revision under audit. |
 | Phase 7 onward | BLOCKED | Confirmatory execution remains unauthorized. |
 
 Software tests verify declared code and protocol contracts. They do not validate the scientific hypothesis, and they do not supersede an unresolved independent audit.
@@ -123,13 +124,17 @@ The external report assigned an 85/100 conditional pass and identified five narr
 
 # Phase 6B.0 — Clearance integration and authorization freeze
 
-Active. Record external clearance in the environment policy, refresh the integrity baseline, align the claim ledger, and preserve the absence of `EXECUTION_AUTHORIZATION.json` and pilot artifacts.
+Complete. The report, tripwire, runner tree, frozen scope, and archive destination were bound in one authorization-only commit.
 
-Exit requires ordinary tests, the exact supplied external tripwire, and the full-horizon gate to pass with no trajectory generation. The report and tripwire SHA-256 values must be bound before the authorization commit.
+# Phase 6B.1 — First development-pilot attempt
 
-# Phase 6B.1 — Execute the development pilot
+Stopped fail closed. Run `30763372785` created a partial failure archive and no summaries. Six H6 failures exceeded the frozen 10% pause rule. The authorization is consumed and cannot be reused.
 
-Blocked until a separate committed authorization binds the verified Phase 6B runner-source commit, exact frozen scope, accepted re-audit packet, accepted external audit report, frozen tripwire, and new archive destination.
+# Phase 6B.2 — H6 conditioning diagnosis and remediation
+
+Active. Blinded analysis shows the exact same-state node identity is preserved to binary64 precision, while the legacy forward-relative ratio becomes singular as both projected derivatives approach zero. The remediation keeps the existing `1e-12` forward-relative gate in well-conditioned states and adds a machine-precision backward-error gate only in cancellation-dominated states. Genuine non-radial perturbations must still fail.
+
+Exit requires all 50 frozen pilot MP trajectories to pass the data-blind H6 diagnostic, adversarial mismatch tests, ordinary suites, hardened tripwire, full-horizon verification, and external audit. No primary hypothesis effect may be inspected during this slice.
 
 # Phase 7 — Confirmatory four-model experiment
 
@@ -149,4 +154,4 @@ Initial order:
 
 ## Immediate next action
 
-Complete Phase 6B.0 hosted verification without generating trajectories. Merge the remediated runner, then create exactly one authorization-only commit binding the final runner tree, report, tripwire, frozen scope, and archive destination before running the 50 frozen pilot configurations.
+Complete Phase 6B.2 verification and external audit on runner v1.1.0. Preserve the failed run unchanged, inspect no primary effect, and do not reauthorize until the condition-aware H6 gate and all-50 blinded diagnostic are independently cleared.

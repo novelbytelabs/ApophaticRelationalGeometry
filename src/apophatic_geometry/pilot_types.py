@@ -18,7 +18,7 @@ from .protocol import PROTOCOL_ID, PROTOCOL_VERSION
 FloatArray = NDArray[np.float64]
 
 RUNNER_ID = "ARG-P6-PILOT-RUNNER-v1"
-RUNNER_VERSION = "1.0.0"
+RUNNER_VERSION = "1.1.0"
 PILOT_SPLIT = "pilot"
 CONFIRMATORY_SPLIT = "confirmatory"
 SMOKE_SPLIT = "smoke"

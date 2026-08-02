@@ -36,7 +36,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 def _manifest(config_id: str, configuration_hash: str, *, trajectories: int = 1) -> dict[str, object]:
     return {
         "runner_id": "ARG-P6-PILOT-RUNNER-v1",
-        "runner_version": "1.0.0",
+        "runner_version": "1.1.0",
         "protocol_id": "ARG-P5-COMP-v1",
         "protocol_version": "1.0.0",
         "source_commit": "0" * 40,
@@ -151,7 +151,7 @@ def test_authorization_scope_mismatch_fails_closed(tmp_path: Path, monkeypatch: 
                 "protocol_id": "ARG-P5-COMP-v1",
                 "protocol_version": "1.0.0",
                 "runner_id": "ARG-P6-PILOT-RUNNER-v1",
-                "runner_version": "1.0.0",
+                "runner_version": "1.1.0",
                 "split": "pilot",
                 "runner_source_commit": "1" * 40,
                 "execution_id": "test",
@@ -222,13 +222,18 @@ def test_integrity_baseline_records_roundoff_only_projector_remediation() -> Non
             encoding="utf-8"
         )
     )
-    assert baseline["baseline_id"] == "ARG-P6-INTEGRITY-BASELINE-v4"
+    assert baseline["baseline_id"] == "ARG-P6-INTEGRITY-BASELINE-v5"
     assert baseline["scientific_equations_changed"] is False
     remediation = baseline["numerical_remediation"]
     assert remediation["scientific_equation_changed"] is False
     assert remediation["protocol_threshold_changed"] is False
     assert remediation["pilot_data_generated"] is False
     assert PROJECTOR_TOLERANCE == 1.0e-12
+    h6 = baseline["h6_conditioning_remediation"]
+    assert h6["legacy_gate_rejected"] is True
+    assert h6["scientific_effect_threshold_changed"] is False
+    assert h6["runner_version"] == "1.1.0"
+    assert h6["confirmatory_execution"] == "BLOCKED"
 
 
 @pytest.mark.slow

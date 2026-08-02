@@ -2,7 +2,7 @@
 
 > **Status: candidate synthesis — not a claim of a new fundamental geometry.**
 
-> **Phase 6B audit closure:** The external report scored the runner **85/100 with a conditional pass**. Its five demonstrated guardrail failures have now been surgically remediated, and the supplied external tripwire reports **19 PASS / 0 FAIL / 0 INCONCLUSIVE** on the remediated tree. The development pilot remains unexecuted pending a separate authorization-only commit. Confirmatory execution remains blocked.
+> **Phase 6B.2:** The first authorized development-pilot attempt stopped fail closed after six H6 identity-gate failures exceeded the frozen 10% pause rule. Blinded diagnosis found the exact identity intact to machine precision; the legacy forward-relative H6 metric became ill-conditioned as both projected derivatives approached zero. No completed pilot result exists. A versioned, condition-aware H6 validity gate is under review, and confirmatory execution remains blocked.
 
 ARG investigates whether nonlinear local dynamics, adaptive relations, state-dependent geometry, endogenous collective feedback, and explicit admissibility projection can form a coherent and scientifically useful framework. Mathematical novelty, physical relevance, and explanatory value remain open.
 
@@ -72,28 +72,28 @@ The audited packet SHA-256 is:
 5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd
 ```
 
-This closes the report's demonstrated guardrail failures for exploratory pilot use. It is not formal certification, does not create a pilot result, and does not authorize confirmatory access.
+This closed the report's demonstrated guardrail failures sufficiently to permit one tightly scoped exploratory pilot attempt. That attempt stopped before completion and produced no licensed scientific result. The failure is preserved as numerical-integrity evidence rather than discarded.
 
 ## Current execution state
 
 $$
 \boxed{
-\text{conditional audit findings remediated};
+\text{first development-pilot attempt stopped fail closed};
 \quad
-\text{development pilot not executed};
+\text{H6 legacy metric rejected as ill-conditioned};
 \quad
-\text{execution authorization absent};
+\text{no completed pilot result};
 \quad
 \text{confirmatory execution blocked}.
 }
 $$
 
-The report and supplied tripwire are now hash-bound in the execution policy. A separate authorization-only commit must still bind the exact remediated runner tree, frozen scope, and new archive destination before any pilot trajectory is generated.
+The consumed authorization and partial failure archive remain historical evidence and may not be reused. Any rerun requires a newly audited runner commit, a new authorization-only commit, and a new empty archive destination. The H6 validity rule change is explicitly versioned; scientific equations, effect thresholds, model parameters, initial conditions, split membership, and decision rules remain unchanged.
 
 ## Integrity rules
 
 - no oracles, hardcoded scientific outputs, golden trajectory replay, hidden fixtures, or test-mode model branches;
-- no threshold, parameter, configuration, split, or outcome-rule change after outcome inspection;
+- no scientific effect threshold, parameter, configuration, split, or outcome-rule change after outcome inspection; numerical validity-gate changes must be separately versioned, justified, and audited;
 - tests must target invariants, independent references, metamorphic properties, failure behavior, and provenance;
 - failed runs remain failures and are never imputed;
 - a fresh audit bundle must validate itself after clean extraction;
@@ -131,6 +131,7 @@ The report and supplied tripwire are now hash-bound in the execution policy. A s
 - `docs/21_phase6_runner_verification.md`
 - `docs/22_phase6a1_integrity_remediation.md`
 - `docs/23_phase6b_clearance_and_authorization.md`
+- `docs/24_phase6b1_h6_failure_analysis.md`
 
 ### Implementation and tests
 

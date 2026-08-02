@@ -31,7 +31,7 @@ AUDIT_INPUTS = REPO_ROOT / "audits/external/arg_phase6a2_reaudit_inputs.json"
 def _bogus_manifest(config: PilotConfiguration) -> dict[str, object]:
     return {
         "runner_id": "ARG-P6-PILOT-RUNNER-v1",
-        "runner_version": "1.0.0",
+        "runner_version": "1.1.0",
         "protocol_id": "ARG-P5-COMP-v1",
         "protocol_version": "1.0.0",
         "source_commit": "not-a-commit",

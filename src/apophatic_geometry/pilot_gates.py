@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+import math
 from typing import Sequence
+
 import numpy as np
 from numpy.typing import NDArray
 
@@ -15,7 +18,33 @@ from .pilot_types import FrozenProtocolBundle, NumericalAssessment, NumericalGat
 from .protocol import canonical_json_sha256, max_abs_discrepancy, symmetric_normalized_rms
 
 FloatArray = NDArray[np.float64]
+H6_POLICY_ID = "ARG-H6-CONDITION-AWARE-v2"
 _EDGE_TO_INDEX = {edge: index for index, edge in enumerate(EDGES)}
+_H6_RELATIVE_TOLERANCE = 1.0e-12
+_H6_BACKWARD_TOLERANCE = 128.0 * np.finfo(np.float64).eps
+_H6_CONDITIONING_THRESHOLD = (
+    _H6_BACKWARD_TOLERANCE / _H6_RELATIVE_TOLERANCE
+)
+
+
+@dataclass(frozen=True)
+class SameStateIdentityAssessment:
+    """Condition-aware diagnostics for the exact same-state node identity."""
+
+    regime: str
+    absolute_error: float
+    forward_relative_error: float
+    backward_error: float
+    radiality_error: float
+    conditioning_ratio: float
+    signal_scale: float
+    input_scale: float
+    identity_pass: bool
+    radiality_pass: bool
+
+    @property
+    def passed(self) -> bool:
+        return self.identity_pass and self.radiality_pass
 
 
 def assess_numerics(
@@ -77,29 +106,126 @@ def require_constraint_gate(trajectory: Trajectory, c0: float) -> None:
         raise NumericalGateError("H5 sampled-state constraint gate failed")
 
 
-def same_state_identity_error(state: State, params: Parameters, c0: float) -> float:
-    target = ProjectionTarget(c0)
-    mp = projected_derivative(state, params, target).projected.x
-    mfp = combined_projected_derivative(state, params, target).projected.x
+def _dot3(left: FloatArray, right: FloatArray) -> float:
     return float(
-        np.linalg.norm(mp - mfp)
-        / (np.linalg.norm(mp) + np.linalg.norm(mfp) + 1.0e-30)
+        math.fsum(float(left[index]) * float(right[index]) for index in range(3))
     )
+
+
+def same_state_identity_assessment(
+    state: State,
+    params: Parameters,
+    c0: float,
+) -> SameStateIdentityAssessment:
+    """Assess H6 without dividing machine residuals by a vanishing signal.
+
+    The exact identity is structural: MFP adds a radial node-feedback vector,
+    which the tangent projector annihilates. A forward-relative comparison is
+    meaningful only while the projected derivative is not cancellation
+    dominated. Near a projected equilibrium, the gate switches to a
+    dimensionless backward-error bound derived from binary64 precision.
+    """
+
+    target = ProjectionTarget(c0)
+    mp_diagnostics = projected_derivative(state, params, target)
+    mfp_diagnostics = combined_projected_derivative(state, params, target)
+    mp = mp_diagnostics.projected.x
+    mfp = mfp_diagnostics.projected.x
+
+    absolute_error = float(np.linalg.norm(mp - mfp))
+    signal_scale = float(np.linalg.norm(mp) + np.linalg.norm(mfp))
+    input_scale = max(
+        float(np.linalg.norm(mfp_diagnostics.local_proposal.x)),
+        float(np.linalg.norm(mfp_diagnostics.proposal.x)),
+        float(np.linalg.norm(mfp_diagnostics.feedback.x)),
+        np.finfo(np.float64).tiny,
+    )
+    forward_relative_error = absolute_error / max(
+        signal_scale, np.finfo(np.float64).tiny
+    )
+    backward_error = absolute_error / input_scale
+    conditioning_ratio = signal_scale / input_scale
+
+    feedback = mfp_diagnostics.feedback.x
+    feedback_norm = float(np.linalg.norm(feedback))
+    denominator = _dot3(state.x, state.x)
+    radial_coefficient = _dot3(state.x, feedback) / denominator
+    radial_residual = float(
+        np.linalg.norm(feedback - radial_coefficient * state.x)
+    )
+    if feedback_norm == 0.0:
+        radiality_error = 0.0 if radial_residual == 0.0 else math.inf
+    else:
+        radiality_error = radial_residual / feedback_norm
+
+    well_conditioned = conditioning_ratio >= _H6_CONDITIONING_THRESHOLD
+    regime = "well_conditioned" if well_conditioned else "cancellation_dominated"
+    identity_pass = (
+        forward_relative_error <= _H6_RELATIVE_TOLERANCE
+        if well_conditioned
+        else backward_error <= _H6_BACKWARD_TOLERANCE
+    )
+    radiality_pass = radiality_error <= _H6_BACKWARD_TOLERANCE
+
+    return SameStateIdentityAssessment(
+        regime=regime,
+        absolute_error=absolute_error,
+        forward_relative_error=forward_relative_error,
+        backward_error=backward_error,
+        radiality_error=radiality_error,
+        conditioning_ratio=conditioning_ratio,
+        signal_scale=signal_scale,
+        input_scale=input_scale,
+        identity_pass=identity_pass,
+        radiality_pass=radiality_pass,
+    )
+
+
+def same_state_identity_error(state: State, params: Parameters, c0: float) -> float:
+    """Return the legacy forward-relative H6 diagnostic.
+
+    This value remains available for reporting, but the gate no longer treats
+    it as well-conditioned when both projected derivatives approach zero.
+    """
+
+    return same_state_identity_assessment(
+        state, params, c0
+    ).forward_relative_error
+
+
+def _h6_failure_ratio(assessment: SameStateIdentityAssessment) -> float:
+    identity_ratio = (
+        assessment.forward_relative_error / _H6_RELATIVE_TOLERANCE
+        if assessment.regime == "well_conditioned"
+        else assessment.backward_error / _H6_BACKWARD_TOLERANCE
+    )
+    radial_ratio = assessment.radiality_error / _H6_BACKWARD_TOLERANCE
+    return max(identity_ratio, radial_ratio)
 
 
 def require_same_state_identity_gate(
     trajectory: Trajectory,
     params: Parameters,
     c0: float,
-) -> None:
+) -> SameStateIdentityAssessment | None:
     if trajectory.model_id not in {ModelId.MP.value, ModelId.MFP.value}:
-        return
-    maximum = max(
-        same_state_identity_error(State.unpack(vector), params, c0)
+        return None
+    assessments = [
+        same_state_identity_assessment(State.unpack(vector), params, c0)
         for vector in trajectory.states
-    )
-    if maximum > 1.0e-12:
-        raise NumericalGateError(f"H6 same-state node identity gate failed: {maximum}")
+    ]
+    worst = max(assessments, key=_h6_failure_ratio)
+    if not worst.passed:
+        raise NumericalGateError(
+            "H6 same-state node identity gate failed: "
+            f"regime={worst.regime}, "
+            f"absolute_error={worst.absolute_error}, "
+            f"forward_relative_error={worst.forward_relative_error}, "
+            f"backward_error={worst.backward_error}, "
+            f"radiality_error={worst.radiality_error}, "
+            f"conditioning_ratio={worst.conditioning_ratio}"
+        )
+    return worst
 
 
 def _validate_permutation(permutation: Sequence[int]) -> tuple[int, int, int]:

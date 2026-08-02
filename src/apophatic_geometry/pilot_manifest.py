@@ -367,13 +367,13 @@ def _verify_integrity_baseline(root: Path, phase4_commit: str) -> Mapping[str, A
         raise ProtocolIntegrityError("remediated integrity baseline is missing")
     baseline = _strict_json(path)
     required = {
-        "baseline_id": "ARG-P6-INTEGRITY-BASELINE-v4",
+        "baseline_id": "ARG-P6-INTEGRITY-BASELINE-v5",
         "status": "FROZEN_NO_EXECUTION",
         "protocol_id": PROTOCOL_ID,
         "protocol_version": PROTOCOL_VERSION,
         "phase4_model_implementation_commit": phase4_commit,
         "scientific_equations_changed": False,
-        "trajectory_data_generated": False,
+        "trajectory_data_generated": True,
         "confirmatory_execution": "BLOCKED",
     }
     for key, expected in required.items():
@@ -394,6 +394,25 @@ def _verify_integrity_baseline(root: Path, phase4_commit: str) -> Mapping[str, A
     for key, expected in expected_remediation.items():
         if remediation.get(key) != expected:
             raise ProtocolIntegrityError(f"projector remediation mismatch: {key}")
+    h6 = baseline.get("h6_conditioning_remediation")
+    expected_h6 = {
+        "remediation_id": "ARG-P6B2-H6-CONDITIONING-v1",
+        "trigger_run_id": 30763372785,
+        "legacy_gate_rejected": True,
+        "policy_id": "ARG-H6-CONDITION-AWARE-v2",
+        "runner_version": RUNNER_VERSION,
+        "scientific_equation_changed": False,
+        "scientific_effect_threshold_changed": False,
+        "numerical_validity_gate_changed": True,
+        "partial_failure_trajectory_data_generated": True,
+        "completed_pilot_result_generated": False,
+        "confirmatory_execution": "BLOCKED",
+    }
+    if not isinstance(h6, Mapping):
+        raise ProtocolIntegrityError("H6 conditioning remediation record is missing")
+    for key, expected in expected_h6.items():
+        if h6.get(key) != expected:
+            raise ProtocolIntegrityError(f"H6 conditioning remediation mismatch: {key}")
     policy = baseline.get("verification_policy")
     if not isinstance(policy, Mapping):
         raise ProtocolIntegrityError("integrity verification policy is missing")
@@ -403,6 +422,14 @@ def _verify_integrity_baseline(root: Path, phase4_commit: str) -> Mapping[str, A
         raise ProtocolIntegrityError("projector remediation scope guard is missing")
     if policy.get("projector_tolerance_unchanged") is not True:
         raise ProtocolIntegrityError("projector tolerance preservation is not recorded")
+    if policy.get("h6_condition_aware_policy_required") is not True:
+        raise ProtocolIntegrityError("H6 condition-aware policy is not required")
+    if policy.get("h6_forward_relative_tolerance_unchanged") is not True:
+        raise ProtocolIntegrityError("H6 forward-relative tolerance preservation is missing")
+    if policy.get("h6_backward_error_multiplier") != 128:
+        raise ProtocolIntegrityError("H6 backward-error multiplier differs from the freeze")
+    if policy.get("h6_all_50_diagnostic_required") is not True:
+        raise ProtocolIntegrityError("all-50 H6 diagnostic is not required")
 
     files = baseline.get("files")
     if not isinstance(files, Mapping) or not files:

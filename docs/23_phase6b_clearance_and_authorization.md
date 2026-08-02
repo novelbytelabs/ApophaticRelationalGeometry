@@ -28,15 +28,15 @@ $$
 \boxed{
 \text{conditional-audit guardrails remediated};
 \quad
-\text{execution authorization absent};
+\text{first authorization consumed};
 \quad
-\text{pilot not executed};
+\text{pilot attempt stopped with no completed result};
 \quad
 \text{confirmatory execution blocked}.
 }
 $$
 
-The environment policy now permits execution only through the separately committed authorization path. `EXECUTION_AUTHORIZATION.json` remains absent.
+The environment policy permitted execution only through a separately committed authorization. That authorization was created, consumed by run `30763372785`, and is not reusable.
 
 ## Required authorization record
 
@@ -65,3 +65,9 @@ Phase 6B.0 passes when:
 ## Claim ceiling
 
 This slice establishes only that the report's demonstrated guardrail failures were closed against its supplied tripwire and that the repository is authorization-ready. It provides no pilot result and no scientific evidence for or against the ARG hypotheses.
+
+## Subsequent execution record
+
+One authorization-only commit was created after this slice and used for run `30763372785`. The run stopped fail closed after six H6 same-state identity-gate failures exceeded the frozen 10% pause rule. The partial archive has no summaries and no completion marker.
+
+Blinded diagnosis is recorded in `24_phase6b1_h6_failure_analysis.md`. Any future execution requires a new audited runner commit, a new authorization-only commit, and a new empty archive destination.

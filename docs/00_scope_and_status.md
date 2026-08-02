@@ -55,17 +55,17 @@ Protocol `ARG-P5-COMP-v1` was frozen before trajectory generation. Phase 6A now 
 - writes a deterministic, checksummed, write-once archive;
 - requires a separate committed execution authorization naming the verified runner commit.
 
-The external report scored the pinned candidate 85/100 with a conditional pass. Its five demonstrated guardrail failures have since been remediated; the supplied external tripwire reports 19 PASS / 0 FAIL / 0 INCONCLUSIVE on the remediated tree.
+The external report scored the pinned candidate 85/100 with a conditional pass. Its five demonstrated guardrail failures were remediated, after which one authorized exploratory pilot attempt began. The runner stopped fail closed after six H6 identity-gate failures exceeded the frozen 10% pause rule. Blinded analysis found absolute MP/MFP node-identity residuals below `2.8e-16` while the projected derivatives collapsed toward zero, exposing an ill-conditioned forward-relative validity metric rather than a broken identity.
 
 Current execution state:
 
 $$
 \boxed{
-\text{conditional-audit guardrails remediated};
+\text{first pilot attempt stopped fail closed};
 \quad
-\text{development pilot not executed};
+\text{no completed archive or scientific result};
 \quad
-\text{execution authorization absent};
+\text{Phase 6B.2 H6 remediation active};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
@@ -76,14 +76,15 @@ $$
 - All four contract-v1.0 prototypes are implemented and unit-tested.
 - The feedback and projection mechanisms are represented separately.
 - The Phase 5 protocol is frozen and executable at the metric/decision level.
-- The Phase 6A pilot-only runner and archive pipeline pass their tested software gates.
+- The runner correctly enforced its stop rule and preserved a partial failure archive when H6 exceeded its validity threshold.
+- Blinded H6 diagnosis supports a conditioning failure in the metric, not a violation of the exact projected identity.
 - Confirmatory access is blocked at planner, integrator, authorization, archive, and contamination-scan boundaries.
 
 ## What is not currently claimed
 
 - That feedback and projection are dynamically or observationally equivalent.
 - That same-state node equality implies trajectory equality.
-- Any pilot or confirmatory effect size.
+- Any completed pilot or confirmatory effect size; the partial failed archive is not a result dataset.
 - That any mechanism improves prediction or defeats scientific alternatives.
 - That organization dependence, transport, macro-level causal autonomy, strong emergence, or physical adequacy has been demonstrated.
 - That ARG is mathematically novel or a new fundamental geometry.
