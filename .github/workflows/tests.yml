@@ -3,6 +3,8 @@ name: tests
 on:
   push:
     branches: [main, phase2-m0, phase6a1-integrity-remediation]
+    paths-ignore:
+      - protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
   pull_request:
     branches: [main, phase6a1-integrity-remediation]
 
@@ -50,6 +52,7 @@ jobs:
           PY
           sha256sum \
             .github/workflows/tests.yml \
+            .github/workflows/phase6b-pilot-execution.yml \
             pyproject.toml \
             tools/build_audit_bundle.py \
             src/apophatic_geometry/__init__.py \
