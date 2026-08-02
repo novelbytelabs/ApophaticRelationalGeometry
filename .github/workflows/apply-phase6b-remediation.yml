@@ -38,5 +38,16 @@ jobs:
           git apply --index --binary /tmp/phase6b.patch
           test "$(git write-tree)" = "a0d72fb48aeb42b525b084a4f1aa25b3ed1542c3"
 
+          # GitHub App tokens cannot modify workflow files. Publish the exact
+          # remediation tree minus those two files, then update them through
+          # the repository contents API as separate, SHA-checked commits.
+          git checkout 451878e41b790b2cbfbb402501e401b544f260ab -- \
+            .github/workflows/phase6a2-full-horizon.yml \
+            .github/workflows/tests.yml
+          git add \
+            .github/workflows/phase6a2-full-horizon.yml \
+            .github/workflows/tests.yml
+          test "$(git write-tree)" = "d405f5444e1e5e248e657706663acac1057c5607"
+
           git commit -m "Close Phase 6A2 conditional audit guardrails"
           git push origin HEAD:phase6b-clearance-integration
