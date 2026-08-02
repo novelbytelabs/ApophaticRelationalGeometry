@@ -11,7 +11,7 @@ permissions:
 jobs:
   full-horizon-smoke:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -50,3 +50,22 @@ jobs:
         run: |
           python -m pytest -q \
             tests/test_phase6a2_hardening.py::test_full_horizon_smoke_primary_models_pass_numerical_gates
+
+      - name: Run all-50 blinded H6 conditioning diagnostic
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+          PYTHONHASHSEED: "0"
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: |
+          python tools/h6_conditioning_diagnostic.py \
+            --repo-root . \
+            --output /tmp/arg-phase6b2-h6-diagnostic.json
+      - name: Upload H6 diagnostic
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: arg-phase6b2-h6-diagnostic
+          path: /tmp/arg-phase6b2-h6-diagnostic.json
+          if-no-files-found: error
+          retention-days: 30
