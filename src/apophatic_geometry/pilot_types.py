@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import re
+from types import MappingProxyType
 from typing import Any, Mapping
 
 import numpy as np
@@ -28,6 +29,16 @@ EXECUTION_AUTHORIZATION_PATH = Path(
 )
 ALLOWED_ABLATIONS = {None, "freeze_s", "freeze_q", "freeze_sq"}
 _SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+
+
+def _frozen_float_array(value: Any, *, name: str) -> FloatArray:
+    """Return an owned, finite, read-only FP64 array."""
+
+    array = np.array(value, dtype=np.float64, copy=True)
+    if not np.all(np.isfinite(array)):
+        raise ValueError(f"{name} contains non-finite values")
+    array.setflags(write=False)
+    return array
 
 
 class PilotRunnerError(RuntimeError):
@@ -120,12 +131,12 @@ class ControlSpec:
         if one_missing:
             raise ValueError("exogenous_times and exogenous_c must be supplied together")
         if self.exogenous_times is not None and self.exogenous_c is not None:
-            times = np.asarray(self.exogenous_times, dtype=np.float64)
-            values = np.asarray(self.exogenous_c, dtype=np.float64)
+            times = _frozen_float_array(self.exogenous_times, name="exogenous_times")
+            values = _frozen_float_array(self.exogenous_c, name="exogenous_c")
             if times.ndim != 1 or values.ndim != 1 or times.shape != values.shape:
                 raise ValueError("exogenous replay arrays must be matching one-dimensional arrays")
-            if times.size < 2 or not np.all(np.isfinite(times)) or not np.all(np.isfinite(values)):
-                raise ValueError("exogenous replay arrays are incomplete or non-finite")
+            if times.size < 2:
+                raise ValueError("exogenous replay arrays are incomplete")
             if not np.all(np.diff(times) > 0.0):
                 raise ValueError("exogenous replay times must be strictly increasing")
             if np.any(values < 0.0):
@@ -171,22 +182,22 @@ class Trajectory:
     retraction_magnitude: FloatArray
 
     def __post_init__(self) -> None:
-        times = np.asarray(self.times, dtype=np.float64)
+        times = _frozen_float_array(self.times, name="times")
         n = times.size
         if times.ndim != 1 or n < 1 or not np.all(np.isfinite(times)):
             raise ValueError("trajectory times are invalid")
         if n > 1 and not np.all(np.diff(times) > 0.0):
             raise ValueError("trajectory times must be strictly increasing")
         values = {
-            "states": np.asarray(self.states, dtype=np.float64),
-            "geometry": np.asarray(self.geometry, dtype=np.float64),
-            "local_proposal": np.asarray(self.local_proposal, dtype=np.float64),
-            "feedback": np.asarray(self.feedback, dtype=np.float64),
-            "combined_proposal": np.asarray(self.combined_proposal, dtype=np.float64),
-            "projection_correction": np.asarray(self.projection_correction, dtype=np.float64),
-            "constraint_residual": np.asarray(self.constraint_residual, dtype=np.float64),
-            "tangency_residual": np.asarray(self.tangency_residual, dtype=np.float64),
-            "denominator": np.asarray(self.denominator, dtype=np.float64),
+            "states": _frozen_float_array(self.states, name="states"),
+            "geometry": _frozen_float_array(self.geometry, name="geometry"),
+            "local_proposal": _frozen_float_array(self.local_proposal, name="local_proposal"),
+            "feedback": _frozen_float_array(self.feedback, name="feedback"),
+            "combined_proposal": _frozen_float_array(self.combined_proposal, name="combined_proposal"),
+            "projection_correction": _frozen_float_array(self.projection_correction, name="projection_correction"),
+            "constraint_residual": _frozen_float_array(self.constraint_residual, name="constraint_residual"),
+            "tangency_residual": _frozen_float_array(self.tangency_residual, name="tangency_residual"),
+            "denominator": _frozen_float_array(self.denominator, name="denominator"),
         }
         expected_shapes = {
             "states": (n, 9),
@@ -203,14 +214,12 @@ class Trajectory:
             value = values[name]
             if value.shape != expected:
                 raise ValueError(f"{name} has shape {value.shape}; expected {expected}")
-            if not np.all(np.isfinite(value)):
-                raise ValueError(f"{name} contains non-finite values")
             object.__setattr__(self, name, value)
         step_values = {
-            "step_times": np.asarray(self.step_times, dtype=np.float64),
-            "raw_constraint_residual": np.asarray(self.raw_constraint_residual, dtype=np.float64),
-            "post_constraint_residual": np.asarray(self.post_constraint_residual, dtype=np.float64),
-            "retraction_magnitude": np.asarray(self.retraction_magnitude, dtype=np.float64),
+            "step_times": _frozen_float_array(self.step_times, name="step_times"),
+            "raw_constraint_residual": _frozen_float_array(self.raw_constraint_residual, name="raw_constraint_residual"),
+            "post_constraint_residual": _frozen_float_array(self.post_constraint_residual, name="post_constraint_residual"),
+            "retraction_magnitude": _frozen_float_array(self.retraction_magnitude, name="retraction_magnitude"),
         }
         shape = step_values["step_times"].shape
         if len(shape) != 1:
@@ -218,8 +227,6 @@ class Trajectory:
         for name, value in step_values.items():
             if value.shape != shape:
                 raise ValueError("step diagnostics must share the step_times shape")
-            if not np.all(np.isfinite(value)):
-                raise ValueError(f"{name} contains non-finite values")
             object.__setattr__(self, name, value)
         object.__setattr__(self, "times", times)
 
@@ -278,3 +285,17 @@ class ArchiveWriteResult:
 
     relative_directory: str
     files: Mapping[str, str]
+
+    def __post_init__(self) -> None:
+        if not self.relative_directory or self.relative_directory.startswith(("/", "\\")):
+            raise ValueError("relative_directory must be a non-empty relative path")
+        copied: dict[str, str] = {}
+        for path, digest in self.files.items():
+            if not isinstance(path, str) or not path:
+                raise ValueError("archive file path must be non-empty text")
+            if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+                raise ValueError(f"invalid archive digest for {path}")
+            copied[path] = digest
+        if not copied:
+            raise ValueError("archive write result must contain at least one file")
+        object.__setattr__(self, "files", MappingProxyType(copied))

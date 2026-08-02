@@ -324,7 +324,7 @@ def _make_test_pilot_trajectory(
     return config, trajectory
 
 
-def _archive_manifest() -> dict[str, object]:
+def _archive_manifest(configuration_hash: str = "1" * 64) -> dict[str, object]:
     return {
         "runner_id": "ARG-P6-PILOT-RUNNER-v1",
         "runner_version": "1.0.0",
@@ -333,6 +333,10 @@ def _archive_manifest() -> dict[str, object]:
         "execution_id": "test-execution",
         "execution_utc": "2026-08-01T00:00:00Z",
         "split": "pilot",
+        "configuration_count": 1,
+        "configuration_hashes": {"test-pilot": configuration_hash},
+        "expected_trajectory_records": 1,
+        "expected_summary_records": 1,
         "confirmatory_execution": "BLOCKED",
         "run_identity_sha256": "1" * 64,
         "attestation_sha256": "2" * 64,
@@ -358,7 +362,7 @@ def test_archive_is_deterministic_and_independently_hashed(
     tmp_path, bundle, params
 ) -> None:
     config, trajectory = _make_test_pilot_trajectory(bundle, params)
-    manifest = _archive_manifest()
+    manifest = _archive_manifest(config.configuration_hash)
     checksum_bytes = []
     try:
         for name in ("archive-a", "archive-b"):
