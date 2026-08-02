@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: phase6a2-defensive-hardening
+          ref: ${{ github.sha }}
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
@@ -29,6 +29,11 @@ jobs:
             'numpy==2.5.1' \
             'scipy==1.18.0'
           python -m pip install --no-build-isolation --no-deps -e .
+      - name: Record triggering source identity
+        run: |
+          git rev-parse HEAD
+          git rev-parse HEAD^{tree}
+          sha256sum pyproject.toml protocol/phase6_runner_v1/INTEGRITY_BASELINE.json
       - name: Verify blocked execution state
         run: |
           test ! -e protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
