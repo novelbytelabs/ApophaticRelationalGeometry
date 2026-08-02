@@ -1,6 +1,6 @@
 {
   "environment_id": "ARG-P6-EXEC-ENV-v1",
-  "status": "FROZEN_NO_EXECUTION",
+  "status": "CLEARED_AFTER_PHASE6A1_EXTERNAL_AUDIT",
   "protocol_id": "ARG-P5-COMP-v1",
   "runner_id": "ARG-P6-PILOT-RUNNER-v1",
   "execution_python": {
@@ -25,6 +25,14 @@
     "implementation_file_sha256": "record_at_execution"
   },
   "confirmatory_execution": "BLOCKED",
-  "pilot_execution": "BLOCKED_PENDING_PHASE6A1_EXTERNAL_AUDIT",
-  "notes": "This file freezes the intended Phase 6B execution substrate. It does not authorize execution. Hosted compatibility tests continue on Python 3.10 and 3.12, but scientific pilot execution is restricted to this exact environment after Phase 6A.1 external clearance."
+  "pilot_execution": "AUTHORIZED_ONLY_WITH_EXECUTION_RECORD",
+  "notes": "Phase 6A.2 external re-audit was reported passed for the exact pinned candidate. This policy clears the frozen execution substrate only. Pilot execution still requires a separate committed EXECUTION_AUTHORIZATION.json that binds the exact accepted audit-report SHA-256, source commit, scope, and archive destination. Confirmatory execution remains blocked.",
+  "external_audit_clearance": {
+    "state": "PASSED",
+    "candidate_commit": "17a17398808cae1befe85e795d371012fe999f03",
+    "merge_commit": "4fb987b34220927466812f0276e10bb0776c28fd",
+    "reaudit_packet_sha256": "5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd",
+    "report_sha256_must_be_bound_by_execution_authorization": true,
+    "report_sha256_recorded_in_environment_policy": false
+  }
 }
