@@ -18,6 +18,7 @@ from apophatic_geometry.pilot import (
     Trajectory,
     archive_has_confirmatory_identifiers,
     assess_numerics,
+    build_pilot_configurations,
     exogenous_replay_control,
     frozen_parameters,
     integrate_dop853,
@@ -310,12 +311,12 @@ def _test_pilot_config(smoke: PilotConfiguration) -> PilotConfiguration:
 def _make_test_pilot_trajectory(
     bundle, params
 ) -> tuple[PilotConfiguration, Trajectory]:
-    smoke = smoke_configuration(bundle)
-    config = _test_pilot_config(smoke)
+    config = build_pilot_configurations(bundle)[0]
     trajectory = integrate_rk4(
         config,
         params,
         ModelId.MF,
+        bundle=bundle,
         dt=0.001,
         horizon=0.01,
         observation_interval=0.01,
@@ -324,17 +325,21 @@ def _make_test_pilot_trajectory(
     return config, trajectory
 
 
-def _archive_manifest(configuration_hash: str = "1" * 64) -> dict[str, object]:
+def _archive_manifest(
+    config_id: str = "p5-placeholder-c005",
+    configuration_hash: str = "1" * 64,
+) -> dict[str, object]:
     return {
         "runner_id": "ARG-P6-PILOT-RUNNER-v1",
         "runner_version": "1.0.0",
         "protocol_id": "ARG-P5-COMP-v1",
         "protocol_version": "1.0.0",
+        "source_commit": "0" * 40,
         "execution_id": "test-execution",
         "execution_utc": "2026-08-01T00:00:00Z",
         "split": "pilot",
         "configuration_count": 1,
-        "configuration_hashes": {"test-pilot": configuration_hash},
+        "configuration_hashes": {config_id: configuration_hash},
         "expected_trajectory_records": 1,
         "expected_summary_records": 1,
         "confirmatory_execution": "BLOCKED",
@@ -344,6 +349,12 @@ def _archive_manifest(configuration_hash: str = "1" * 64) -> dict[str, object]:
         "runtime_environment_sha256": "4" * 64,
         "protocol_lock": {"file_sha256": "5" * 64},
         "implementation_files": {"test.py": "6" * 64},
+        "execution_scope": {
+            "configuration_count": 1,
+            "expected_trajectory_records": 1,
+            "expected_summary_records": 1,
+        },
+        "trajectory_schema": [],
     }
 
 
@@ -358,37 +369,20 @@ def _restore_write_permissions(root: Path) -> None:
     root.chmod(stat.S_IRWXU)
 
 
-def test_archive_is_deterministic_and_independently_hashed(
+def test_incomplete_archive_cannot_be_certified(
     tmp_path, bundle, params
 ) -> None:
     config, trajectory = _make_test_pilot_trajectory(bundle, params)
-    manifest = _archive_manifest(config.configuration_hash)
-    checksum_bytes = []
-    try:
-        for name in ("archive-a", "archive-b"):
-            root = tmp_path / name
-            writer = PilotArchiveWriter(root, manifest)
-            writer.write_environment({"python": "test", "packages": {}})
-            writer.write_configuration(config)
-            written = writer.write_trajectory(trajectory)
-            assert isinstance(written, ArchiveWriteResult)
-            writer.write_summary(
-                "test-pilot",
-                {"status": "ACCEPTED"},
-                written.files,
-            )
-            checksums = writer.finalize()
-            assert checksums
-            assert (root / "ARCHIVE_COMPLETE.json").is_file()
-            checksum_bytes.append((root / "checksums.sha256").read_bytes())
-            independently_hashed = independent_file_hashes(root)
-            for relative, digest in independently_hashed.items():
-                if relative != "checksums.sha256":
-                    assert digest in checksum_bytes[-1].decode("utf-8")
-        assert checksum_bytes[0] == checksum_bytes[1]
-    finally:
-        _restore_write_permissions(tmp_path / "archive-a")
-        _restore_write_permissions(tmp_path / "archive-b")
+    manifest = _archive_manifest(config.config_id, config.configuration_hash)
+    root = tmp_path / "archive"
+    writer = PilotArchiveWriter(root, manifest, bundle=bundle)
+    writer.write_environment({"python": "test", "packages": {}})
+    writer.write_configuration(config)
+    written = writer.write_trajectory(trajectory)
+    assert isinstance(written, ArchiveWriteResult)
+    writer.write_summary(config.config_id, {"status": "ACCEPTED"}, written.files)
+    with pytest.raises(RuntimeError, match="exact frozen 50"):
+        writer.finalize()
 
 
 def test_archive_rejects_incomplete_attestation(tmp_path) -> None:
@@ -408,7 +402,12 @@ def test_archive_rejects_confirmatory_trajectory(
         direction_id="d01",
         split="confirmatory",
     )
-    writer = PilotArchiveWriter(tmp_path / "archive", _archive_manifest())
+    config, _ = _make_test_pilot_trajectory(bundle, params)
+    writer = PilotArchiveWriter(
+        tmp_path / "archive",
+        _archive_manifest(config.config_id, config.configuration_hash),
+        bundle=bundle,
+    )
     with pytest.raises(ConfirmatoryAccessError):
         writer.write_trajectory(confirmatory)
 

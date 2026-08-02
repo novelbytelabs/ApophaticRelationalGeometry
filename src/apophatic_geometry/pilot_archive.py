@@ -11,21 +11,68 @@ from typing import Any, Iterable, Mapping
 
 import numpy as np
 
-from .models import CONTRACT_VERSION
+from .models import CONTRACT_VERSION, ModelId
 from .pilot_types import (
     PILOT_SPLIT,
     SMOKE_SPLIT,
+    EXPECTED_PILOT_CONFIGURATIONS,
     RUNNER_ID,
     RUNNER_VERSION,
     ArchiveWriteResult,
     ConfirmatoryAccessError,
+    FrozenProtocolBundle,
     PilotConfiguration,
     Trajectory,
 )
 from .protocol import PROTOCOL_ID, PROTOCOL_VERSION, file_sha256, load_json
 
 _HEX_64 = re.compile(r"^[0-9a-f]{64}$")
+_SAFE_COMPONENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 
+
+
+def _safe_archive_path(root: Path, *components: str) -> Path:
+    for component in components:
+        if not isinstance(component, str) or _SAFE_COMPONENT.fullmatch(component) is None:
+            raise ValueError(f"unsafe archive path component: {component!r}")
+    candidate = root.joinpath(*components).resolve(strict=False)
+    try:
+        candidate.relative_to(root.resolve())
+    except ValueError as exc:
+        raise ValueError("archive path escapes the archive root") from exc
+    return candidate
+
+
+def expected_trajectory_schema(
+    bundle: FrozenProtocolBundle,
+) -> tuple[tuple[str, str, str, str], ...]:
+    """Return the exact 29 allowed trajectory labels per pilot configuration."""
+
+    dts = [float(value) for value in bundle.protocol["time_and_sampling"]["refinement_dts"]]
+    if dts != [0.001, 0.0005, 0.00025]:
+        raise ValueError("frozen RK4 schedule differs from the runner contract")
+    records: list[tuple[str, str, str, str]] = []
+    for model in ModelId:
+        for dt in dts:
+            records.append((model.value, "RK4", f"rk4-dt-{dt:.8g}", "canonical"))
+    for model in ModelId:
+        records.append(
+            (
+                model.value,
+                "DOP853",
+                "dop853-rtol-1.0e-10-atol-1.0e-12-max-1.0e-03",
+                "canonical",
+            )
+        )
+    records.append(
+        (ModelId.MF.value, "RK4", f"rk4-dt-{dts[2]:.8g}", "exogenous_replay")
+    )
+    for ablation in ("freeze_s", "freeze_q", "freeze_sq"):
+        for model in ModelId:
+            records.append((model.value, "RK4", f"rk4-dt-{dts[0]:.8g}", ablation))
+    if len(records) != 29 or len(set(records)) != 29:
+        raise RuntimeError("frozen trajectory schema is not exactly 29 unique records")
+    return tuple(records)
 
 def _canonical_json_bytes(value: Any) -> bytes:
     return (
@@ -74,7 +121,13 @@ def _require_digest(value: Any, name: str) -> str:
 class PilotArchiveWriter:
     """Write-once archive builder with deterministic files and final checksums."""
 
-    def __init__(self, root: str | Path, run_manifest: Mapping[str, Any]) -> None:
+    def __init__(
+        self,
+        root: str | Path,
+        run_manifest: Mapping[str, Any],
+        *,
+        bundle: FrozenProtocolBundle | None = None,
+    ) -> None:
         if run_manifest.get("runner_id") != RUNNER_ID:
             raise ValueError("run manifest has wrong runner_id")
         if run_manifest.get("runner_version") != RUNNER_VERSION:
@@ -102,6 +155,31 @@ class PilotArchiveWriter:
             run_manifest.get("runtime_environment_sha256"),
             "runtime_environment_sha256",
         )
+        self.run_manifest = dict(run_manifest)
+        self.bundle = bundle
+        source_commit = run_manifest.get("source_commit")
+        self.source_commit = (
+            source_commit
+            if isinstance(source_commit, str) and _SAFE_COMPONENT.fullmatch(source_commit)
+            else ""
+        )
+        execution_scope = run_manifest.get("execution_scope")
+        self.execution_scope = (
+            dict(execution_scope) if isinstance(execution_scope, Mapping) else {}
+        )
+        raw_schema = run_manifest.get("trajectory_schema")
+        self.declared_trajectory_schema: set[tuple[str, str, str, str]] = set()
+        self.declared_trajectory_schema_count = 0
+        if isinstance(raw_schema, list):
+            for entry in raw_schema:
+                if isinstance(entry, Mapping):
+                    values = tuple(
+                        str(entry.get(name, ""))
+                        for name in ("model_id", "integrator", "profile", "control_id")
+                    )
+                    if all(_SAFE_COMPONENT.fullmatch(value) for value in values):
+                        self.declared_trajectory_schema.add(values)
+                        self.declared_trajectory_schema_count += 1
         protocol_lock = run_manifest.get("protocol_lock")
         implementation_files = run_manifest.get("implementation_files")
         if not isinstance(protocol_lock, Mapping):
@@ -145,8 +223,11 @@ class PilotArchiveWriter:
         self.expected_summary_records = expected_summary_records
         self._environment_written = False
         self._written_configurations: set[str] = set()
-        self._trajectory_records: set[tuple[str, str, str, str]] = set()
+        self._trajectory_records: set[tuple[str, str, str, str, str]] = set()
         self._summaries: set[str] = set()
+        self._summary_raw_hashes: dict[str, dict[str, str]] = {}
+        self._trajectory_hashes_by_config: dict[str, dict[str, str]] = {}
+        self._trajectory_source_commits: set[str] = set()
         self._failure_records = 0
 
         self.root = Path(root).resolve()
@@ -193,7 +274,9 @@ class PilotArchiveWriter:
             raise ConfirmatoryAccessError(
                 "configuration hash differs from frozen pilot membership"
             )
-        path = self.root / "configs" / f"{configuration.config_id}.json"
+        path = _safe_archive_path(
+            self.root, "configs", f"{configuration.config_id}.json"
+        )
         payload = configuration.canonical_payload() | {
             "configuration_hash": configuration.configuration_hash,
             "run_identity_sha256": self.run_identity_sha256,
@@ -236,19 +319,21 @@ class PilotArchiveWriter:
         record_key = (
             trajectory.config_id,
             trajectory.model_id,
+            trajectory.integrator,
             trajectory.profile,
             trajectory.control_id,
         )
         if record_key in self._trajectory_records:
             raise FileExistsError(f"duplicate trajectory record: {record_key}")
-        relative = Path(
+        directory = _safe_archive_path(
+            self.root,
             "raw",
             trajectory.config_id,
             trajectory.model_id,
             trajectory.profile,
             trajectory.control_id,
         )
-        directory = self.root / relative
+        relative = directory.relative_to(self.root)
         if directory.exists():
             raise FileExistsError(f"trajectory output already exists: {relative}")
         directory.mkdir(parents=True)
@@ -293,6 +378,8 @@ class PilotArchiveWriter:
             if path.is_file()
         }
         self._trajectory_records.add(record_key)
+        self._trajectory_source_commits.add(trajectory.source_commit)
+        self._trajectory_hashes_by_config.setdefault(trajectory.config_id, {}).update(hashes)
         return ArchiveWriteResult(
             relative_directory=str(relative),
             files=hashes,
@@ -315,9 +402,10 @@ class PilotArchiveWriter:
             raise ConfirmatoryAccessError(
                 "summary is not associated with a frozen pilot configuration"
             )
-        path = self.root / "summaries" / f"{name}.json"
+        path = _safe_archive_path(self.root, "summaries", f"{name}.json")
         _write_new_json(path, payload)
         self._summaries.add(name)
+        self._summary_raw_hashes[name] = dict(sorted(raw_input_hashes.items()))
         return file_sha256(path)
 
     def append_failure(self, record: Mapping[str, Any]) -> None:
@@ -335,6 +423,52 @@ class PilotArchiveWriter:
             handle.flush()
             os.fsync(handle.fileno())
         self._failure_records += 1
+
+    def _validate_semantic_completion(self) -> None:
+        if self.bundle is None:
+            raise RuntimeError(
+                "archive semantic completion requires the frozen protocol bundle"
+            )
+        from .pilot_manifest import build_pilot_configurations
+
+        frozen = build_pilot_configurations(self.bundle)
+        expected_hashes = {item.config_id: item.configuration_hash for item in frozen}
+        expected_schema = set(expected_trajectory_schema(self.bundle))
+        if self.expected_configuration_hashes != expected_hashes:
+            raise RuntimeError("archive manifest does not name the exact frozen 50 configurations")
+        if self.expected_configuration_count != EXPECTED_PILOT_CONFIGURATIONS:
+            raise RuntimeError("archive manifest configuration count is not the frozen 50")
+        if self.expected_trajectory_records != EXPECTED_PILOT_CONFIGURATIONS * 29:
+            raise RuntimeError("archive manifest trajectory count is not the frozen 50 x 29")
+        if self.expected_summary_records != EXPECTED_PILOT_CONFIGURATIONS:
+            raise RuntimeError("archive manifest summary count is not the frozen 50")
+        if (
+            self.declared_trajectory_schema_count != 29
+            or self.declared_trajectory_schema != expected_schema
+        ):
+            raise RuntimeError("archive manifest trajectory schema differs from the frozen 29")
+        if self.execution_scope.get("configuration_count") != EXPECTED_PILOT_CONFIGURATIONS:
+            raise RuntimeError("execution scope configuration count is inconsistent")
+        if self.execution_scope.get("expected_trajectory_records") != EXPECTED_PILOT_CONFIGURATIONS * 29:
+            raise RuntimeError("execution scope trajectory count is inconsistent")
+        if self.execution_scope.get("expected_summary_records") != EXPECTED_PILOT_CONFIGURATIONS:
+            raise RuntimeError("execution scope summary count is inconsistent")
+        expected_records = {
+            (config_id, model, integrator, profile, control)
+            for config_id in expected_hashes
+            for model, integrator, profile, control in expected_schema
+        }
+        if self._trajectory_records != expected_records:
+            raise RuntimeError("archive trajectory membership differs from the frozen 50 x 29 set")
+        if re.fullmatch(r"[0-9a-f]{40}", self.source_commit) is None:
+            raise RuntimeError("run manifest source commit is not a full Git commit")
+        if self._trajectory_source_commits != {self.source_commit}:
+            raise RuntimeError("trajectory source commits do not match the run manifest")
+        for config_id in expected_hashes:
+            if self._summary_raw_hashes.get(config_id) != self._trajectory_hashes_by_config.get(config_id):
+                raise RuntimeError(
+                    f"summary raw-input hashes do not match archived trajectories: {config_id}"
+                )
 
     def finalize(self) -> Mapping[str, str]:
         if self._finalized:
@@ -359,6 +493,7 @@ class PilotArchiveWriter:
             raise RuntimeError(
                 "archive with failure records cannot be marked COMPLETE"
             )
+        self._validate_semantic_completion()
         checksum_path = self.root / "checksums.sha256"
         _write_new_json(
             self.root / "ARCHIVE_COMPLETE.json",

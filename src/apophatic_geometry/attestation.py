@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from contextlib import redirect_stdout
 import hashlib
+import importlib
 import importlib.metadata
 import io
 import json
@@ -115,7 +116,7 @@ def tracked_source_sha256(repo_root: str | Path) -> str:
     return digest.hexdigest()
 
 
-def _distribution_tree_sha256(name: str) -> str:
+def distribution_tree_sha256(name: str) -> str:
     """Hash installed files declared by one Python distribution."""
 
     try:
@@ -153,12 +154,30 @@ def runtime_environment() -> dict[str, Any]:
     stream = io.StringIO()
     with redirect_stdout(stream):
         np.show_config()
+    module_names = {
+        "apophatic-relational-geometry": "apophatic_geometry",
+        "numpy": "numpy",
+        "scipy": "scipy",
+    }
     distributions: dict[str, dict[str, str]] = {}
-    for name in ("apophatic-relational-geometry", "numpy", "scipy"):
+    for name, module_name in module_names.items():
+        distribution = importlib.metadata.distribution(name)
+        module = importlib.import_module(module_name)
+        raw_module_file = getattr(module, "__file__", None)
+        if not raw_module_file:
+            raise AttestationError(f"imported module has no file identity: {module_name}")
+        module_file = Path(raw_module_file).resolve(strict=True)
+        distribution_root = Path(distribution.locate_file("")).resolve(strict=True)
         distributions[name] = {
             "version": importlib.metadata.version(name),
-            "installed_tree_sha256": _distribution_tree_sha256(name),
+            "installed_tree_sha256": distribution_tree_sha256(name),
+            "module_name": module_name,
+            "module_file": str(module_file),
+            "distribution_root": str(distribution_root),
         }
+    numpy_configuration = stream.getvalue()
+    if not numpy_configuration.strip():
+        raise AttestationError("NumPy configuration identity is empty")
     return {
         "python_version": platform.python_version(),
         "python_implementation": platform.python_implementation(),
@@ -166,10 +185,14 @@ def runtime_environment() -> dict[str, Any]:
         "python_executable_sha256": file_sha256(
             Path(sys.executable).resolve(strict=True)
         ),
+        "operating_system": platform.system(),
         "platform": platform.platform(),
         "machine": platform.machine(),
         "processor": platform.processor(),
-        "numpy_configuration": stream.getvalue(),
+        "numpy_configuration": numpy_configuration,
+        "numpy_configuration_sha256": hashlib.sha256(
+            numpy_configuration.encode("utf-8")
+        ).hexdigest(),
         "distributions": distributions,
     }
 

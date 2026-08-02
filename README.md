@@ -2,7 +2,7 @@
 
 > **Status: candidate synthesis — not a claim of a new fundamental geometry.**
 
-> **STOP-SHIP:** An independent audit identified integrity defects in the delivered audit bundle and in supporting code paths. Phase 6A.1 remediation is active. Pilot execution, confirmatory execution, and scientific claims are blocked until adversarial remediation tests and an external re-audit pass.
+> **Phase 6B audit closure:** The external report scored the runner **85/100 with a conditional pass**. Its five demonstrated guardrail failures have now been surgically remediated, and the supplied external tripwire reports **19 PASS / 0 FAIL / 0 INCONCLUSIVE** on the remediated tree. The development pilot remains unexecuted pending a separate authorization-only commit. Confirmatory execution remains blocked.
 
 ARG investigates whether nonlinear local dynamics, adaptive relations, state-dependent geometry, endogenous collective feedback, and explicit admissibility projection can form a coherent and scientifically useful framework. Mathematical novelty, physical relevance, and explanatory value remain open.
 
@@ -64,32 +64,31 @@ No implemented result establishes scientific superiority, physical adequacy, str
 
 ## Audit status
 
-The independent audit found strong nominal differential and RK4 parity, but also found serious integrity defects:
+The external Phase 6A.2 report did not give unconditional clearance. It assigned **85/100** and a **conditional pass as a trustworthy computational runner prototype**. It found the numerical equations and RK4 kernel strong, while demonstrating five remaining guardrail failures in authorization binding, frozen membership, platform enforcement, archive semantics, and path confinement. Those five findings are now remediated and pass the auditor-supplied tripwire.
 
-- a delivered bundle that invalidated its own lock and could not reproduce its advertised test result;
-- a stale Euler `run.csv` presented alongside the current RK4 implementation;
-- writable aliased `State` arrays;
-- non-fail-closed finite extremes in conductance and intrinsic geometry;
-- permissive JSON parsing and lock-root traversal;
-- caller-controlled standalone provenance;
-- non-atomic standalone output with no completion attestation;
-- incomplete environment and supply-chain locking.
+The audited packet SHA-256 is:
 
-Previous test counts do not waive these findings. The stale Euler output is rejected as current evidence.
+```text
+5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd
+```
+
+This closes the report's demonstrated guardrail failures for exploratory pilot use. It is not formal certification, does not create a pilot result, and does not authorize confirmatory access.
 
 ## Current execution state
 
 $$
 \boxed{
-\text{Phase 6A.1 integrity remediation STOP-SHIP};
+\text{conditional audit findings remediated};
 \quad
-\text{development pilot not authorized for execution};
+\text{development pilot not executed};
 \quad
-\text{confirmatory execution and scientific claims blocked}.
+\text{execution authorization absent};
+\quad
+\text{confirmatory execution blocked}.
 }
 $$
 
-No pilot has been executed. No execution authorization is valid while Phase 6A.1 remains open.
+The report and supplied tripwire are now hash-bound in the execution policy. A separate authorization-only commit must still bind the exact remediated runner tree, frozen scope, and new archive destination before any pilot trajectory is generated.
 
 ## Integrity rules
 
@@ -98,7 +97,7 @@ No pilot has been executed. No execution authorization is valid while Phase 6A.1
 - tests must target invariants, independent references, metamorphic properties, failure behavior, and provenance;
 - failed runs remain failures and are never imputed;
 - a fresh audit bundle must validate itself after clean extraction;
-- an external Auditor AI must clear the remediation before Phase 6B can reopen.
+- execution requires a separate committed record binding the accepted external audit report, exact runner source, frozen scope, and archive destination.
 
 ## Repository map
 
@@ -115,7 +114,8 @@ No pilot has been executed. No execution authorization is valid while Phase 6A.1
 ### Research grounding and execution
 
 - `docs/07_research_grounding_plan.md`
-- `docs/08_claim_ledger.md`
+- `docs/08_claim_ledger.md` — historical ledger through the Phase 6A STOP-SHIP period.
+- `docs/08a_phase6b_claim_ledger_addendum.md` — controlling current-status addendum.
 - `docs/09_novelty_matrix.md`
 - `docs/10_literature_landscape.md`
 - `docs/11_benchmark_specification.md`
@@ -130,6 +130,7 @@ No pilot has been executed. No execution authorization is valid while Phase 6A.1
 - `docs/20_phase6_runner_design.md`
 - `docs/21_phase6_runner_verification.md`
 - `docs/22_phase6a1_integrity_remediation.md`
+- `docs/23_phase6b_clearance_and_authorization.md`
 
 ### Implementation and tests
 
@@ -138,7 +139,7 @@ No pilot has been executed. No execution authorization is valid while Phase 6A.1
 - `src/apophatic_geometry/protocol.py` — metrics, strict manifest loading, root-confined locks, and decisions.
 - `src/apophatic_geometry/attestation.py` — source/runtime attestation derived from the execution substrate.
 - `src/apophatic_geometry/simulate.py` — exploratory simulator with atomic completion-attested output.
-- `src/apophatic_geometry/pilot.py` and `pilot_*` — gated pilot-only machinery; execution remains blocked.
+- `src/apophatic_geometry/pilot.py` and `pilot_*` — gated pilot-only machinery; execution requires a hash-bound authorization record.
 
 ## Data-free validation
 
