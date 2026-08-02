@@ -22,6 +22,7 @@ Every substantive project claim must appear here before it is used in a paper, R
 - **Philosophical** — interpretive and not directly established by mathematics or experiment.
 - **Unverified** — required evidence is absent or incomplete.
 - **Rejected** — disproved, contradicted, or withdrawn.
+- **STOP-SHIP** — execution or claim promotion is blocked by an unresolved integrity finding.
 
 ## Canonical model status
 
@@ -33,7 +34,7 @@ Every substantive project claim must appear here before it is used in a paper, R
 | $M_{FP}$ | Implemented and unit-tested | Feedback proposal followed by node projection and retraction, with retained $s/q$ feedback and separate diagnostics. |
 | $M_F\equiv M_P$ | Unverified | No exact, approximate, or observational equivalence has been established. |
 
-Current ceiling:
+Current scientific ceiling:
 
 $$
 \boxed{
@@ -43,17 +44,19 @@ M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-Current execution state:
+Current integrity and execution state:
 
 $$
 \boxed{
-\text{pilot-only runner verified};
+\text{Phase 6A.1 STOP-SHIP remediation active};
 \quad
-\text{development pilot not executed};
+\text{development pilot not authorized for execution};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
 $$
+
+The original Phase 6A runner verification is a historical software result. It does not supersede the independent audit or authorize execution.
 
 ## Current claims
 
@@ -105,15 +108,25 @@ $$
 | ARG-C044 | The four-model comparative experiment establishes a mechanism result. | Unverified | Frozen protocol, pilot, held-out confirmation, and claim review. | No experiment executed. |
 | ARG-C045 | Protocol `ARG-P5-COMP-v1` was frozen before trajectory generation. | Protocol-frozen and unit-tested | Human/machine agreement, lock, split, executable metrics, and hosted verification. | Phase 5. |
 | ARG-C046 | The Phase 5 primary decision rule is executable and fail closed. | Implemented and unit-tested | Known-answer positive, equivalence, inconclusive, invalid-input, and deterministic-bootstrap tests. | Decision software only. |
-| ARG-C047 | The 10-direction pilot and 14-direction confirmatory sets are deterministically separated at direction level. | Protocol-frozen and unit-tested | Hash-rule reconstruction, count checks, and no-overlap tests. | Frozen initial-condition domain. |
+| ARG-C047 | The 10-direction pilot and 14-direction confirmatory sets are deterministically separated at direction level. | Protocol-frozen and unit-tested | Hash-rule reconstruction, count checks, chronology, and no-overlap tests. | Frozen initial-condition domain. |
 | ARG-C048 | Phase 5 produced a numerical or scientific mechanism result. | Rejected | Phase 5 generated no trajectory data. | Not licensed. |
-| ARG-C049 | A development pilot is authorized in principle. | Definition of current authorization | Phase 5 exit gate and lock remain intact. | Execution permission only. |
-| ARG-C050 | The development pilot has been executed. | Unverified | Separate execution authorization and completed pilot archive. | Not executed. |
+| ARG-C049 | A development pilot was previously authorized in principle. | Superseded by STOP-SHIP | External audit clearance and a new authorization gate are required. | Prior authorization path invalidated. |
+| ARG-C050 | The development pilot has been executed. | Rejected for current history | No execution authorization or pilot archive exists. | Not executed. |
 | ARG-C051 | The Phase 6 runner reconstructs exactly the 50 frozen pilot configurations and rejects confirmatory/mixed input. | Implemented and unit-tested | Independent membership/hash reconstruction and split tripwires. | Runner software only. |
 | ARG-C052 | The runner implements the frozen RK4/DOP853, H5/H6, control, relabeling, and numerical-floor policies. | Implemented and unit-tested | Smoke/reference parity, known-answer gates, and hosted verification. | Runner software only. |
-| ARG-C053 | The runner produces a write-once, checksummed archive and independently verifiable hashes. | Implemented and unit-tested | Deterministic archive tests and independent checksum reconstruction. | Archive software only. |
+| ARG-C053 | The runner can produce a write-once, checksummed archive with independently verifiable hashes. | Implemented and unit-tested | Deterministic archive tests and independent checksum reconstruction. | Archive software only; no pilot archive exists. |
 | ARG-C054 | Phase 6 runner verification produced pilot evidence. | Rejected | The execution authorization and pilot archive are absent. | No pilot data. |
 | ARG-C055 | The verified runner may access the confirmatory set. | Rejected | Planner, integrator, archive, authorization, and contamination tripwires prohibit access. | Confirmatory execution blocked. |
+| ARG-C056 | The delivered 2026-08-01 audit bundle reproduced its advertised test result. | Rejected | The independent audit found one failed test because a lock target was omitted. | Historical delivered bundle only. |
+| ARG-C057 | The delivered `run.csv` represents the current RK4 simulator or frozen protocol. | Rejected | It reproduces the legacy Euler path and lacks current attestations. | File permanently excluded from current evidence. |
+| ARG-C058 | Pre-remediation `State` objects were deeply immutable. | Rejected | Caller aliases and writable arrays reproduced the defect. | Historical implementation. |
+| ARG-C059 | Pre-remediation finite extreme states always preserved finite positive geometry. | Rejected | Finite $q=\pm1000$ reproduced zero/infinite values. | Historical implementation. |
+| ARG-C060 | Phase 6A.1 copies and freezes state arrays and fails closed outside the executable finite-positive geometry domain. | Implemented and unit-tested on remediation branch | Mutation, aliasing, finite-extreme, and regression tests. | Software integrity only. |
+| ARG-C061 | Phase 6A.1 rejects non-standard JSON and lock-root traversal/symlink escape. | Implemented and unit-tested on remediation branch | Adversarial parsing and filesystem tests. | Protocol integrity only. |
+| ARG-C062 | Standalone and pilot execution identities are bound to Git-derived source, tracked bytes, protocol lock, integrator, implementation files, runtime distributions, and environment fingerprints. | Implemented and unit-tested on remediation branch | Attestation, spoofing, atomic-output, and archive-identity tests. | Execution provenance software only. |
+| ARG-C063 | The Phase 6A.1 test suite contains no stored expected scientific trajectory used as an oracle. | Verified by design and external review pending | Generated-state differential tests, independent equations, source review, and external audit. | No claim that tests are infallible. |
+| ARG-C064 | The Phase 6A.1 audit bundle is self-validating after clean extraction. | Hosted-builder verified; external audit pending | Fresh clone, full tests, data-free plan, wheel rebuild, manifest/hash verification, final re-extraction, and independent external review. | Remediation artifact only. |
+| ARG-C065 | Phase 6A.1 authorizes pilot execution. | Rejected | Environment policy remains `FROZEN_NO_EXECUTION`; authorization file is absent; Issue #12 is closed. | Pilot blocked. |
 
 ## Verification records
 
@@ -129,11 +142,19 @@ Protocol `ARG-P5-COMP-v1`, its manifests, split, numerical policy, exclusions, s
 
 ### Phase 6A
 
-The pilot-only runner adds lock-first loading, exact pilot reconstruction, direct confirmatory rejection, all-model RK4/DOP853 paths, H5/H6 and numerical gates, frozen controls, all six relabelings, immutable archives, independent membership/trajectory/checksum references, and a separate execution-authorization boundary.
+The original pilot-only runner added lock-first loading, exact pilot reconstruction, direct confirmatory rejection, all-model RK4/DOP853 paths, H5/H6 and numerical gates, frozen controls, all six relabelings, immutable archives, independent membership/trajectory/checksum references, and a separate execution-authorization boundary.
 
-PR `#11`, Actions `30722763003`, 100 tests on Python 3.10 and 100 on Python 3.12. No execution authorization, pilot trajectory, result, archive, or confirmatory artifact was introduced.
+PR `#11`, merge `b0b5acc1f2db77b7b0fab43eefafd15f3ee2f728`, 100 tests in each configured Python environment. This software result is retained, but execution authorization is superseded by Phase 6A.1 STOP-SHIP.
 
-See `20_phase6_runner_design.md` and `21_phase6_runner_verification.md`.
+### Independent audit
+
+The delivered audit bundle failed its own lock/test attestation, contained stale Euler output, and exposed provenance, numeric-domain, state-mutability, atomic-output, lock-containment, strict-JSON, and environment-lock defects. It also found strong nominal equation/RK4 parity and no evidence of hidden oracles, hardcoded outputs, network access, or test-only model behavior.
+
+### Phase 6A.1 remediation
+
+The remediation branch introduces immutable state arrays, finite-domain guards, strict JSON, root-confined locks, Git/runtime attestations, atomic standalone output, source-bound pilot archive identities, exact execution-environment policy, a frozen integrity baseline, generated-state independent differential testing, and a clean-extraction self-validating audit-bundle builder.
+
+Hosted software verification and bundle assembly may be recorded here only after the final branch state passes. External Auditor AI clearance remains mandatory before merge or execution.
 
 ## Claim promotion rules
 
@@ -145,6 +166,8 @@ A claim may move to **empirically supported** only with external data or a physi
 
 A claim may move to **proved under stated assumptions** only when assumptions, domain, singular cases, and proof are explicit and independently checked.
 
+An integrity finding may move from STOP-SHIP only after direct remediation, adversarial regression tests, self-validating artifact assembly, and external review. Passing internal tests alone is insufficient.
+
 ## Non-claims
 
 The repository does not currently establish that:
@@ -155,10 +178,11 @@ The repository does not currently establish that:
 - projection or feedback improves predictive performance;
 - the constant-amplitude constraint is physically fundamental;
 - a pilot or confirmatory experiment has been executed;
+- the Phase 6A.1 remediation has passed external audit;
 - ARG demonstrates macro-level causal autonomy or strong emergence;
 - ARG is a fundamental theory of physics;
 - primes are the ontological foundation of reality.
 
 ## Maintenance rule
 
-Every theorem, implementation, protocol amendment, experiment, or conceptual extension must update this ledger. No claim may exceed `13_alignment_and_claim_ceiling.md`.
+Every theorem, implementation, protocol amendment, experiment, audit, remediation, or conceptual extension must update this ledger. No claim may exceed `13_alignment_and_claim_ceiling.md`.
