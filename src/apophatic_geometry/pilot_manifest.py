@@ -291,7 +291,7 @@ def _verify_integrity_baseline(root: Path, phase4_commit: str) -> Mapping[str, A
         raise ProtocolIntegrityError("remediated integrity baseline is missing")
     baseline = _strict_json(path)
     required = {
-        "baseline_id": "ARG-P6-INTEGRITY-BASELINE-v1",
+        "baseline_id": "ARG-P6-INTEGRITY-BASELINE-v2",
         "status": "FROZEN_NO_EXECUTION",
         "protocol_id": PROTOCOL_ID,
         "protocol_version": PROTOCOL_VERSION,
@@ -351,7 +351,7 @@ def verify_model_baseline(repo_root: str | Path, protocol: Mapping[str, Any]) ->
         )
     _verify_integrity_baseline(root, phase4_commit)
 
-    dirty = _run_git(root, "status", "--porcelain", "--untracked-files=no")
+    dirty = _run_git(root, "status", "--porcelain", "--untracked-files=all")
     if dirty.returncode != 0 or dirty.stdout.strip():
         raise ProtocolIntegrityError("pilot execution requires a clean tracked working tree")
     head = _run_git(root, "rev-parse", "HEAD")
@@ -364,6 +364,8 @@ def verify_model_baseline(repo_root: str | Path, protocol: Mapping[str, Any]) ->
 def validate_execution_authorization(
     repo_root: str | Path,
     source_commit: str,
+    *,
+    expected_scope: Mapping[str, Any],
 ) -> Mapping[str, Any]:
     """Require a committed authorization for an already verified runner commit."""
 
@@ -390,6 +392,25 @@ def validate_execution_authorization(
     for key in ("execution_id", "execution_utc"):
         if not isinstance(authorization.get(key), str) or not authorization[key]:
             raise ProtocolIntegrityError(f"execution authorization lacks {key}")
+
+    scope = authorization.get("scope")
+    if not isinstance(scope, Mapping):
+        raise ProtocolIntegrityError("execution authorization lacks exact scope")
+    if dict(scope) != dict(expected_scope):
+        raise ProtocolIntegrityError("execution authorization scope differs from frozen execution scope")
+    scope_sha256 = authorization.get("scope_sha256")
+    if scope_sha256 != canonical_json_sha256(dict(scope)):
+        raise ProtocolIntegrityError("execution authorization scope hash is invalid")
+
+    external_audit = authorization.get("external_audit")
+    if not isinstance(external_audit, Mapping):
+        raise ProtocolIntegrityError("execution authorization lacks external audit clearance")
+    if external_audit.get("clearance") != "CLEARED_FOR_PILOT":
+        raise ProtocolIntegrityError("external audit has not cleared pilot execution")
+    for key in ("bundle_sha256", "report_sha256", "tripwire_sha256"):
+        value = external_audit.get(key)
+        if not isinstance(value, str) or _HEX_64.fullmatch(value) is None:
+            raise ProtocolIntegrityError(f"external audit clearance lacks {key}")
 
     runner_commit = str(authorization.get("runner_source_commit", ""))
     if _HEX_40.fullmatch(runner_commit) is None:

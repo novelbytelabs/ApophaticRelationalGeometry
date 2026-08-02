@@ -62,6 +62,7 @@ from .protocol import (
     PROTOCOL_ID,
     PROTOCOL_VERSION,
     canonical_json_sha256,
+    load_json,
     max_abs_discrepancy,
     root_energy_ratio,
     symmetric_normalized_rms,
@@ -86,6 +87,7 @@ PILOT_IMPLEMENTATION_PATHS = (
     "protocol/phase6_runner_v1/EXECUTION_ENVIRONMENT.json",
 )
 PILOT_INTEGRATOR_SUITE = "rk4-refinement-plus-segmented-dop853-v1"
+EXPECTED_TRAJECTORIES_PER_CONFIGURATION = 29
 
 
 def pilot_plan(bundle: FrozenProtocolBundle) -> dict[str, Any]:
@@ -215,11 +217,46 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
 
     bundle = load_frozen_bundle(repo_root)
     source_commit = verify_model_baseline(bundle.repo_root, bundle.protocol)
-    authorization = validate_execution_authorization(
-        bundle.repo_root, source_commit
-    )
     configurations = require_complete_pilot_batch(
         build_pilot_configurations(bundle)
+    )
+    configuration_hashes = {
+        item.config_id: item.configuration_hash for item in configurations
+    }
+    expected_trajectory_records = (
+        len(configurations) * EXPECTED_TRAJECTORIES_PER_CONFIGURATION
+    )
+    expected_scope = {
+        "scope_version": "ARG-P6-EXEC-SCOPE-v2",
+        "protocol_lock_sha256": canonical_json_sha256(
+            load_json(bundle.repo_root / "protocol/phase5_v1/LOCK.json")
+        ),
+        "integrity_baseline_sha256": canonical_json_sha256(
+            load_json(
+                bundle.repo_root
+                / "protocol/phase6_runner_v1/INTEGRITY_BASELINE.json"
+            )
+        ),
+        "execution_environment_sha256": canonical_json_sha256(
+            load_json(
+                bundle.repo_root
+                / "protocol/phase6_runner_v1/EXECUTION_ENVIRONMENT.json"
+            )
+        ),
+        "pilot_membership_sha256": canonical_json_sha256(
+            configuration_hashes
+        ),
+        "integrator_suite": PILOT_INTEGRATOR_SUITE,
+        "archive_schema_version": "ARG-P6-ARCHIVE-v2",
+        "configuration_count": len(configurations),
+        "expected_trajectory_records": expected_trajectory_records,
+        "expected_summary_records": len(configurations),
+        "confirmatory_execution": "BLOCKED",
+    }
+    authorization = validate_execution_authorization(
+        bundle.repo_root,
+        source_commit,
+        expected_scope=expected_scope,
     )
     params = frozen_parameters(bundle)
 
@@ -282,6 +319,11 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
         "execution_utc": authorization["execution_utc"],
         "split": PILOT_SPLIT,
         "configuration_count": len(configurations),
+        "configuration_hashes": configuration_hashes,
+        "execution_scope": expected_scope,
+        "execution_scope_sha256": canonical_json_sha256(expected_scope),
+        "expected_trajectory_records": expected_trajectory_records,
+        "expected_summary_records": len(configurations),
         "confirmatory_execution": "BLOCKED",
     }
     archive = PilotArchiveWriter(archive_root, run_manifest)

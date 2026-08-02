@@ -54,15 +54,15 @@ def _require_repo_root(repo_root: str | Path) -> Path:
 def require_clean_tracked_tree(repo_root: str | Path) -> tuple[Path, str]:
     """Return ``(root, commit)`` for a clean tracked checkout.
 
-    Modified, deleted, staged, or conflicted tracked files fail. Untracked
-    files are excluded from source identity and cannot affect the tracked-tree
-    digest.
+    Modified, deleted, staged, conflicted, or untracked files fail. This closes
+    import-shadowing paths in which an untracked module could affect execution
+    without entering the tracked-tree digest.
     """
 
     root = _require_repo_root(repo_root)
-    status = _run_git(root, "status", "--porcelain", "--untracked-files=no")
+    status = _run_git(root, "status", "--porcelain", "--untracked-files=all")
     if status.returncode != 0 or status.stdout.strip():
-        raise AttestationError("attested execution requires a clean tracked tree")
+        raise AttestationError("attested execution requires a completely clean tree, including no untracked files")
     head = _run_git(root, "rev-parse", "HEAD")
     commit = head.stdout.strip()
     if head.returncode != 0 or _COMMIT_RE.fullmatch(commit) is None:
