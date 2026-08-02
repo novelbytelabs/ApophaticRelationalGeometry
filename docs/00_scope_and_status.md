@@ -55,13 +55,13 @@ Protocol `ARG-P5-COMP-v1` was frozen before trajectory generation. Phase 6A now 
 - writes a deterministic, checksummed, write-once archive;
 - requires a separate committed execution authorization naming the verified runner commit.
 
-Hosted runner verification, Phase 6A.2 defensive hardening, the full-horizon numerical gate, and external re-audit have passed for the pinned runner candidate.
+The external report scored the pinned candidate 85/100 with a conditional pass. Its five demonstrated guardrail failures have since been remediated; the supplied external tripwire reports 19 PASS / 0 FAIL / 0 INCONCLUSIVE on the remediated tree.
 
 Current execution state:
 
 $$
 \boxed{
-\text{runner externally cleared};
+\text{conditional-audit guardrails remediated};
 \quad
 \text{development pilot not executed};
 \quad
