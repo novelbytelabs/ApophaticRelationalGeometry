@@ -18,11 +18,13 @@ $$
 
 $$
 \boxed{
-\text{Phase 6A.1 integrity remediation STOP-SHIP};
+\text{Phase 6A.2 externally cleared};
 \quad
-\text{development pilot not authorized for execution};
+\text{Phase 6B.0 authorization preparation active};
 \quad
-\text{confirmatory execution and scientific claims blocked}.
+\text{development pilot not executed};
+\quad
+\text{confirmatory execution blocked}.
 }
 $$
 
@@ -36,9 +38,10 @@ $$
 | Phase 3 — Implement and verify $M_P$ | COMPLETE | Projection sandbox merged and hosted-tested. |
 | Phase 4 — Implement and verify $M_{FP}$ | COMPLETE | Combined model merged; 51 tests passed in each configured Python environment. |
 | Phase 5 — Freeze comparative experiment protocol | COMPLETE | Data-free protocol and executable decision rules frozen; 65 tests passed in each configured environment. |
-| Phase 6A — Implement pilot-only runner | COMPLETE WITH AUDIT REMEDIATION REQUIRED | Runner gate passed, but an independent audit found integrity defects outside and around the nominal equations. |
-| Phase 6A.1 — Integrity remediation | STOP-SHIP / ACTIVE | Provenance, numerical-domain, immutability, atomic-output, lock-containment, strict-JSON, environment-lock, and bundle-assembly defects must be closed and externally re-audited. |
-| Phase 6B — Execute development pilot | BLOCKED | No execution authorization may be created until Phase 6A.1 passes external audit. |
+| Phase 6A — Implement pilot-only runner | COMPLETE | Runner and archive machinery implemented. |
+| Phase 6A.1/6A.2 — Integrity remediation and defensive hardening | COMPLETE / EXTERNALLY CLEARED | Exact candidate passed adversarial, full-horizon, and external re-audit gates. |
+| Phase 6B.0 — Clearance integration and authorization freeze | ACTIVE | Environment policy and integrity baseline are being aligned; no authorization or pilot data exists. |
+| Phase 6B.1 — Execute development pilot | BLOCKED | Requires a committed authorization binding the exact accepted audit-report SHA-256 and archive destination. |
 | Phase 7 onward | BLOCKED | Confirmatory execution remains unauthorized. |
 
 Software tests verify declared code and protocol contracts. They do not validate the scientific hypothesis, and they do not supersede an unresolved independent audit.
@@ -91,11 +94,11 @@ Original verification: PR `#11`, merge `b0b5acc1f2db77b7b0fab43eefafd15f3ee2f728
 
 ---
 
-# Phase 6A.1 — Integrity remediation
+# Phase 6A.1/6A.2 — Integrity remediation and defensive hardening
 
-## Objective
+## Result
 
-Remediate the audit findings without changing scientific equations, thresholds, configurations, pilot/confirmatory membership, or outcome rules.
+The integrity and defensive-hardening findings were remediated without changing scientific equations, thresholds, configurations, pilot/confirmatory membership, or outcome rules. The exact candidate passed external re-audit.
 
 ## Mandatory remediation
 
@@ -118,9 +121,15 @@ Remediate the audit findings without changing scientific equations, thresholds, 
 - a fresh audit package validates its own lock and test attestation from a clean extraction;
 - an external Auditor AI reports no remaining STOP-SHIP finding.
 
-# Phase 6B — Execute the development pilot
+# Phase 6B.0 — Clearance integration and authorization freeze
 
-Blocked until Phase 6A.1 is externally cleared. A prior execution issue or authorization template does not override this block.
+Active. Record external clearance in the environment policy, refresh the integrity baseline, align the claim ledger, and preserve the absence of `EXECUTION_AUTHORIZATION.json` and pilot artifacts.
+
+Exit requires ordinary tests, the hardened tripwire, and the full-horizon gate to pass with no trajectory generation. The exact accepted external audit-report SHA-256 must be available before the authorization commit.
+
+# Phase 6B.1 — Execute the development pilot
+
+Blocked until a separate committed authorization binds the verified Phase 6B runner-source commit, exact frozen scope, accepted re-audit packet, accepted external audit report, frozen tripwire, and new archive destination.
 
 # Phase 7 — Confirmatory four-model experiment
 
@@ -140,4 +149,4 @@ Initial order:
 
 ## Immediate next action
 
-Complete Phase 6A.1 remediation on an isolated branch, run hosted adversarial verification, assemble a fresh self-validating audit bundle, and submit it to an external Auditor AI. Do not create execution authorization or run the pilot.
+Complete Phase 6B.0 hosted verification without adding an execution authorization or generating trajectories. Then bind the exact accepted audit-report SHA-256 in a separate authorization commit before running the 50 frozen pilot configurations.
