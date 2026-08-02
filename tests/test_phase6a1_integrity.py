@@ -181,7 +181,7 @@ def test_attestation_derives_commit_and_ignores_source_environment(
     assert len(str(attestation["attestation_sha256"])) == 64
 
 
-def test_execution_environment_policy_is_exact_and_still_blocks_execution() -> None:
+def test_execution_environment_policy_is_exact_and_externally_cleared() -> None:
     runtime = {
         "python_implementation": "CPython",
         "python_version": "3.12.13",
@@ -197,17 +197,14 @@ def test_execution_environment_policy_is_exact_and_still_blocks_execution() -> N
     policy = validate_execution_environment_policy(
         REPO_ROOT,
         runtime,
-        require_execution_clearance=False,
+        require_execution_clearance=True,
     )
-    assert policy["status"] == "FROZEN_NO_EXECUTION"
-    with pytest.raises(
-        Exception, match="external audit clearance is absent"
-    ):
-        validate_execution_environment_policy(
-            REPO_ROOT,
-            runtime,
-            require_execution_clearance=True,
-        )
+    assert policy["status"] == "CLEARED_AFTER_PHASE6A1_EXTERNAL_AUDIT"
+    assert policy["pilot_execution"] == "AUTHORIZED_ONLY_WITH_EXECUTION_RECORD"
+    clearance = policy["external_audit_clearance"]
+    assert clearance["state"] == "PASSED"
+    assert clearance["report_sha256_must_be_bound_by_execution_authorization"] is True
+    assert clearance["report_sha256_recorded_in_environment_policy"] is False
 
 
 def test_300_randomized_states_match_independent_equations_and_rk4() -> None:
