@@ -1,0 +1,40 @@
+name: apply-phase6b-remediation
+
+on:
+  push:
+    branches: [phase6b-remediation-loader]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: phase6b-remediation-loader
+          fetch-depth: 0
+      - name: Apply exact remediation patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            .remediation/phase6b_patch_00 \
+            .remediation/phase6b_patch_01 \
+            .remediation/phase6b_patch_02 \
+            .remediation/phase6b_patch_03 \
+            .remediation/phase6b_patch_04 \
+            | base64 -d | gzip -d > /tmp/phase6b.patch
+
+          git config user.name "novelbytelabs"
+          git config user.email "247028117+novelbytelabs@users.noreply.github.com"
+          git fetch origin phase6b-clearance-integration
+          git checkout -B phase6b-clearance-integration origin/phase6b-clearance-integration
+          test "$(git rev-parse HEAD)" = "451878e41b790b2cbfbb402501e401b544f260ab"
+
+          git apply --index --binary /tmp/phase6b.patch
+          test "$(git write-tree)" = "a0d72fb48aeb42b525b084a4f1aa25b3ed1542c3"
+
+          git commit -m "Close Phase 6A2 conditional audit guardrails"
+          git push origin HEAD:phase6b-clearance-integration
