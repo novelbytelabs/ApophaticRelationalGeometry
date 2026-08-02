@@ -2,20 +2,18 @@
 
 ## Status
 
-**STOP-SHIP remains active. Pilot authorization and execution are blocked.**
+**CLOSED:** Phase 6A.2 passed external re-audit. Pilot execution remains unexecuted and requires a separate hash-bound authorization record.
 
-The code-level remediation and clean-extraction bundle machinery are implemented on the remediation branch. Internal and hosted checks are necessary but not sufficient. This gate remains open until the final branch artifact passes an external Auditor AI review with no STOP-SHIP finding.
-
-Narrative rebuttal does not close a finding.
+The remediation and defensive-hardening candidate passed the ordinary suite, hardened tripwire, full-horizon numerical gate, and final external re-audit. Candidate `17a17398808cae1befe85e795d371012fe999f03` merged as `4fb987b34220927466812f0276e10bb0776c28fd`.
 
 ## Binding rules
 
-- No pilot or confirmatory trajectories may be generated.
+- No pilot or confirmatory trajectories may be generated during remediation.
 - No expected scientific outputs may be encoded in production or test logic.
 - No oracle, golden trajectory, hidden fixture, test-mode branch, environment bypass, or post-hoc threshold change is permitted.
 - Tests target invariants, independently written equations, generated-state differential comparisons, metamorphic properties, failure behavior, and provenance integrity.
 - Failed runs remain failures; no imputation or silent repair.
-- No remediation is considered externally cleared merely because its internal tests pass.
+- Internal tests alone never constituted external clearance.
 
 ## Current-repository reproduction
 
@@ -62,9 +60,10 @@ The delivered-bundle lock omission and stale Euler `run.csv` were also accepted 
 
 - intended Phase 6B execution is frozen to CPython 3.12.13, NumPy 2.5.1, SciPy 1.18.0, and ARG 0.6.0;
 - installed-byte and interpreter fingerprints are recorded at execution;
-- the environment policy remains `FROZEN_NO_EXECUTION` pending external audit;
-- an integrity baseline freezes canonical equations, remediated execution code, protocol lock, environment policy, independent references, adversarial tests, CI workflow, build metadata, and audit-bundle builder;
-- the canonical four-model equation file must remain byte-identical to the Phase 4 model commit.
+- external clearance now applies to the frozen execution substrate only;
+- pilot execution still requires a separately committed authorization binding the accepted external audit-report SHA-256, exact runner source, scope, and archive destination;
+- the integrity baseline freezes canonical equations, authorized projector roundoff remediation, execution code, protocol lock, environment policy, independent references, adversarial tests, CI workflow, build metadata, and audit tooling;
+- AST-based comparison rejects equation-source changes outside the explicitly authorized `project_node_derivative` roundoff cleanup, and the projector tolerance remains unchanged.
 
 ### Independent and adversarial checks
 
@@ -77,7 +76,7 @@ The delivered-bundle lock omission and stale Euler `run.csv` were also accepted 
 
 - the legacy Euler `run.csv` is explicitly rejected as current evidence;
 - the audit-bundle builder accepts only a clean Git checkout;
-- execution authorization, pilot artifacts, confirmatory artifacts, and unclassified `run.csv` files are forbidden;
+- execution authorization, pilot artifacts, confirmatory artifacts, and unclassified `run.csv` files are forbidden from remediation bundles;
 - source is exported from Git and full history is included as a Git bundle;
 - a fresh clone reruns the complete test suite and data-free pilot validation/plan;
 - the wheel is rebuilt after those checks;
@@ -86,43 +85,35 @@ The delivered-bundle lock omission and stale Euler `run.csv` were also accepted 
 
 ## Remediation register
 
-| Finding | Branch status | External closure requirement |
+| Finding | Final status | Closure evidence |
 |---|---|---|
-| Delivered lock omitted a required file | Remediated by complete self-validating bundle assembly | External extraction must reproduce every locked file and advertised test result. |
-| Bundled `run.csv` used obsolete Euler integration | Rejected and quarantined by policy | External audit must confirm no stale or unclassified output is included. |
-| Source provenance caller-controlled | Patched and adversarially tested | External review of attestation and execution-identity binding. |
-| Extreme finite geometry breaks positivity/finite invariants | Patched and adversarially tested | External finite-domain and nominal-regression verification. |
-| `State` arrays mutable through aliasing/write access | Patched and adversarially tested | External alias/write mutation verification. |
-| Failed simulator leaves plausible partial output | Patched and adversarially tested | External fault-injection and artifact-cleanup verification. |
-| Lock paths can escape repository root | Patched and adversarially tested | External traversal and symlink testing. |
-| JSON accepts NaN/Infinity | Patched and adversarially tested | External malformed-JSON testing. |
-| Exact execution environment not locked | Frozen and fingerprinted; still no execution clearance | External review of version and installed-byte attestation. |
-| Predictable split chronology unavailable in old bundle | Full Git history included; no pilot trajectory exists | External chronology review must confirm split preceded all pilot output. |
+| Delivered lock omitted a required file | Closed | Complete self-validating bundle and external re-audit. |
+| Bundled `run.csv` used obsolete Euler integration | Closed | Rejected and quarantined by policy; absent from accepted evidence. |
+| Source provenance caller-controlled | Closed | Git-derived attestation and adversarial verification. |
+| Extreme finite geometry breaks positivity/finite invariants | Closed | Fail-closed finite-domain checks and external review. |
+| `State` arrays mutable through aliasing/write access | Closed | Copied read-only arrays and mutation tests. |
+| Failed simulator leaves plausible partial output | Closed | Atomic publication, cleanup, and fault-injection tests. |
+| Lock paths can escape repository root | Closed | Root confinement plus traversal and symlink tests. |
+| JSON accepts NaN/Infinity | Closed | Strict JSON parser and malformed-input tests. |
+| Exact execution environment not locked | Closed for substrate; authorization still separate | Frozen versions, execution-time fingerprints, and external clearance. |
+| Predictable split chronology unavailable in old bundle | Closed | Full Git history and confirmation that no pilot trajectory predated the split. |
+| Full-horizon projected tangency exceeded the frozen tolerance by 1.7% | Closed | Compensated three-term dot products and residual radial cleanup; same equation and tolerance; permanent full-horizon workflow passed. |
 
-## Current hosted state
+## Final verification record
 
-The remediation suite has passed in exact compatibility environments during development, and the clean-extraction audit builder has completed successfully on a pre-final branch commit. Because documentation and integrity-baseline alignment continued afterward, only the latest final-branch run may be cited as the external-audit candidate.
+- exact candidate: `17a17398808cae1befe85e795d371012fe999f03`;
+- accepted packet SHA-256: `5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd`;
+- ordinary suite: **PASS**;
+- hardened tripwire: **PASS**;
+- full-horizon numerical gate: **PASS**;
+- external re-audit: **PASS**;
+- merge commit: `4fb987b34220927466812f0276e10bb0776c28fd`;
+- execution authorization: absent;
+- pilot trajectory data: absent;
+- confirmatory execution: blocked.
 
-No execution authorization, pilot trajectory, pilot result, confirmatory trajectory, or scientific observation has been generated.
+## Closure boundary
 
-## Exit gate
+Phase 6A.1/6A.2 establishes a strongly defended and externally cleared computational runner substrate. It does not establish a pilot result, scientific mechanism effect, physical adequacy, novelty, or ontology.
 
-This phase passes only when:
-
-1. the final branch state passes all pre-existing and audit-derived adversarial tests;
-2. exact Python 3.10 and Python 3.12 hosted compatibility checks pass;
-3. the final clean-extraction audit bundle validates itself and is published for review;
-4. the final bundle contains no execution authorization or trajectory data;
-5. an external Auditor AI reviews that exact artifact and reports no remaining STOP-SHIP finding;
-6. any external findings are remediated through another reviewed baseline, not explained away;
-7. the claim ledger and roadmap are aligned fail closed.
-
-Until then:
-
-\[
-\boxed{
-\text{Phase 6A.1 STOP-SHIP};\quad
-\text{pilot execution blocked};\quad
-\text{scientific claims unchanged}.
-}
-\]
+The next gate is `23_phase6b_clearance_and_authorization.md`.
