@@ -145,10 +145,12 @@ jobs:
           import json
           from pathlib import Path
           result = json.loads(Path('/tmp/arg-phase6b2-h6-diagnostic.json').read_text('utf-8'))
-          assert result['status'] == 'PASS'
+          assert result['passed'] is True
           assert result['configuration_count'] == 50
           assert result['primary_effect_computed'] is False
-          assert result['confirmatory_execution'] == 'BLOCKED'
+          assert result['confirmatory_access'] is False
+          assert result['split'] == 'pilot'
+          assert result['model'] == 'mp'
           PY
       - name: Upload blinded H6 diagnostic
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
