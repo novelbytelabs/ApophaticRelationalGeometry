@@ -18,7 +18,7 @@ $$
 
 $$
 \boxed{
-\text{Phase 6A.2 externally cleared};
+\text{Phase 6A.2 conditional findings remediated};
 \quad
 \text{Phase 6B.0 authorization preparation active};
 \quad
@@ -39,8 +39,8 @@ $$
 | Phase 4 — Implement and verify $M_{FP}$ | COMPLETE | Combined model merged; 51 tests passed in each configured Python environment. |
 | Phase 5 — Freeze comparative experiment protocol | COMPLETE | Data-free protocol and executable decision rules frozen; 65 tests passed in each configured environment. |
 | Phase 6A — Implement pilot-only runner | COMPLETE | Runner and archive machinery implemented. |
-| Phase 6A.1/6A.2 — Integrity remediation and defensive hardening | COMPLETE / EXTERNALLY CLEARED | Exact candidate passed adversarial, full-horizon, and external re-audit gates. |
-| Phase 6B.0 — Clearance integration and authorization freeze | ACTIVE | Environment policy and integrity baseline are being aligned; no authorization or pilot data exists. |
+| Phase 6A.1/6A.2 — Integrity remediation and defensive hardening | COMPLETE / CONDITIONAL PASS | External report: 85/100 conditional pass; numerical core strong, five guardrail failures identified. |
+| Phase 6B.0 — Conditional-audit closure and authorization freeze | ACTIVE | Five demonstrated guardrail failures are remediated; supplied tripwire is 19/0/0; no authorization or pilot data exists. |
 | Phase 6B.1 — Execute development pilot | BLOCKED | Requires a committed authorization binding the exact accepted audit-report SHA-256 and archive destination. |
 | Phase 7 onward | BLOCKED | Confirmatory execution remains unauthorized. |
 
@@ -98,7 +98,7 @@ Original verification: PR `#11`, merge `b0b5acc1f2db77b7b0fab43eefafd15f3ee2f728
 
 ## Result
 
-The integrity and defensive-hardening findings were remediated without changing scientific equations, thresholds, configurations, pilot/confirmatory membership, or outcome rules. The exact candidate passed external re-audit.
+The external report assigned an 85/100 conditional pass and identified five narrow guardrail failures rather than pervasive mathematical defects. Those failures were remediated without changing scientific equations, thresholds, configurations, pilot/confirmatory membership, or outcome rules. The exact supplied tripwire now reports 19 PASS / 0 FAIL / 0 INCONCLUSIVE.
 
 ## Mandatory remediation
 
@@ -119,13 +119,13 @@ The integrity and defensive-hardening findings were remediated without changing 
 - all pre-existing tests remain passing;
 - no pilot or confirmatory data is generated;
 - a fresh audit package validates its own lock and test attestation from a clean extraction;
-- an external Auditor AI reports no remaining STOP-SHIP finding.
+- the supplied external tripwire reports no failed or inconclusive integrity property.
 
 # Phase 6B.0 — Clearance integration and authorization freeze
 
 Active. Record external clearance in the environment policy, refresh the integrity baseline, align the claim ledger, and preserve the absence of `EXECUTION_AUTHORIZATION.json` and pilot artifacts.
 
-Exit requires ordinary tests, the hardened tripwire, and the full-horizon gate to pass with no trajectory generation. The exact accepted external audit-report SHA-256 must be available before the authorization commit.
+Exit requires ordinary tests, the exact supplied external tripwire, and the full-horizon gate to pass with no trajectory generation. The report and tripwire SHA-256 values must be bound before the authorization commit.
 
 # Phase 6B.1 — Execute the development pilot
 
@@ -149,4 +149,4 @@ Initial order:
 
 ## Immediate next action
 
-Complete Phase 6B.0 hosted verification without adding an execution authorization or generating trajectories. Then bind the exact accepted audit-report SHA-256 in a separate authorization commit before running the 50 frozen pilot configurations.
+Complete Phase 6B.0 hosted verification without generating trajectories. Merge the remediated runner, then create exactly one authorization-only commit binding the final runner tree, report, tripwire, frozen scope, and archive destination before running the 50 frozen pilot configurations.
