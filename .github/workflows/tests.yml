@@ -52,6 +52,7 @@ jobs:
             .github/workflows/tests.yml \
             pyproject.toml \
             tools/build_audit_bundle.py \
+            src/apophatic_geometry/__init__.py \
             src/apophatic_geometry/model.py \
             src/apophatic_geometry/models.py \
             src/apophatic_geometry/protocol.py \
@@ -66,6 +67,7 @@ jobs:
             src/apophatic_geometry/pilot_archive.py \
             src/apophatic_geometry/pilot.py \
             src/apophatic_geometry/pilot_cli.py \
+            src/apophatic_geometry/pilot_verify.py \
             protocol/phase5_v1/LOCK.json \
             protocol/phase6_runner_v1/INTEGRITY_BASELINE.json \
             protocol/phase6_runner_v1/EXECUTION_ENVIRONMENT.json \
@@ -74,7 +76,10 @@ jobs:
             tests/test_phase5_protocol.py \
             tests/test_phase6_numerics.py \
             tests/test_phase6_planning.py \
-            tests/test_phase6a1_integrity.py
+            tests/test_phase6a1_integrity.py \
+            tests/test_phase6a2_hardening.py \
+            tests/test_phase6b_audit_closure.py \
+            audits/external/arg_phase6a2_reaudit_inputs.json
       - name: Assert no execution authorization or pilot data
         run: |
           test ! -e protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
