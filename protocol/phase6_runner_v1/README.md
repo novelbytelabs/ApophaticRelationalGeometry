@@ -2,7 +2,7 @@
 
 ## Status
 
-**Phase 6A.2 passed external re-audit. The frozen execution substrate is cleared, but no execution authorization exists and no pilot has been executed.**
+**The external Phase 6A.2 report assigned 85/100 with a conditional pass. Its five demonstrated guardrail failures have now been remediated and the supplied external tripwire reports 19 PASS / 0 FAIL / 0 INCONCLUSIVE. No execution authorization exists and no pilot has been executed.**
 
 The audited candidate was:
 
@@ -39,11 +39,11 @@ These commands do not execute trajectories.
 arg-pilot execute --repo-root . --archive <new-empty-path>
 ```
 
-The command remains fail-closed while `EXECUTION_AUTHORIZATION.json` is absent. The next authorization commit must bind the exact accepted external audit-report SHA-256, verified runner-source commit, frozen execution scope, and archive destination. No placeholder digest is permitted.
+The command remains fail-closed while `EXECUTION_AUTHORIZATION.json` is absent. After the remediated runner is merged, exactly one authorization-only commit must bind the final runner Git tree, report and tripwire SHA-256 values, frozen execution scope, and archive destination.
 
 ## Environment policy
 
-`EXECUTION_ENVIRONMENT.json` records that the exact execution substrate passed the Phase 6A.2 external gate. It permits pilot execution only through a separate committed execution record. It does not authorize execution by itself.
+`EXECUTION_ENVIRONMENT.json` accurately records the 85/100 conditional verdict and the post-report remediation state. It permits pilot execution only through a separate committed execution record. It does not authorize execution by itself.
 
 ## Claim ceiling
 
