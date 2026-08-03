@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document fixes the relationship between the ARG formalism, implemented prototypes, frozen experiment protocol, verified runner, and strongest currently licensed claims. It is binding on documentation, code, experiments, releases, and external descriptions.
+This document fixes the relationship among the ARG formalism, implemented prototypes, frozen protocol, audited runner, consensus program, and strongest licensed claims. It is binding on documentation, code, experiments, releases, and external descriptions.
 
 ## Mechanism distinction
 
@@ -59,7 +59,7 @@ $$
 
 because the node-feedback term is radial and $P_Tx=0$. This identity is local to the same-state node derivative and does not imply trajectory identity.
 
-## Current claim ceiling
+## Binding software claim ceiling
 
 $$
 \boxed{
@@ -69,76 +69,151 @@ M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-## Protocol, runner, and execution status
+## Binding execution ceiling
 
-Phase 5 froze comparative protocol `ARG-P5-COMP-v1` before trajectory generation. Phase 6A implemented and software-verified a runner for exactly the frozen pilot set.
+Phase 5 froze comparative protocol `ARG-P5-COMP-v1` before trajectory generation. Phase 6A implemented a pilot-only runner, but an independent audit found integrity defects outside and around the nominal equations.
 
 Current execution state:
 
 $$
 \boxed{
-\text{pilot-only runner verified};
+\text{Phase 6A.1 integrity remediation STOP-SHIP};
 \quad
-\text{development pilot not executed};
+\text{development pilot not authorized};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
 $$
 
-A development pilot is authorized in principle by the Phase 5 gate, but execution remains blocked until a separate committed authorization names the verified runner commit. Authorization is not execution.
+The earlier statement that a pilot was “authorized in principle” is superseded. A pilot can be considered only after both:
 
-## Passed implementation gates
+1. Phase 6A.1 passes external re-audit;
+2. the consensus program isolates a precise unresolved scientific residual that the frozen pilot actually discriminates.
 
-### $M_P$ version 1.0
+Authorization is not execution, and passing either gate alone is insufficient.
 
-Explicit equality constraint, projection, constraint-preservation tests, independent code-equation parity, diagnostics, and fail-closed singular handling: **PASS at software/mechanism level**.
+## Binding consensus ceiling
 
-$$
-\operatorname{MP\_V1\_IMPLEMENTATION\_CLAIM}=\text{PASS}.
-$$
+The first three CS1 source baskets support the following scoped conclusions:
 
-### $M_{FP}$ version 1.0
+- trajectories depend on dynamics and initial condition;
+- different states can amplify, decay, or cancel differently under one operator;
+- state and topology can coevolve;
+- nonlinear persistence has multiple inequivalent forms;
+- controllability, observability, balanced input/output importance, nonlinear accessibility, viability, and invariant-set preservation are established;
+- smoothly evolving state spaces can be related by explicit pushforward and pullback maps when a compatible map family is supplied;
+- representation equivalence is criterion-dependent.
 
-Feedback proposal, projection ordering, same-state identity, retained $s/q$ feedback, reduction paths, independent parity, and constraint handling: **PASS at software/mechanism level**.
+These are established neighboring results, not ARG discoveries.
 
-$$
-\operatorname{MFP\_V1\_IMPLEMENTATION\_CLAIM}=\text{PASS}.
-$$
-
-### Phase 5 protocol version 1.0
-
-Human- and machine-readable protocol, deterministic split, executable metrics/decisions, numerical and provenance policies, critical-file lock, hosted verification, and no-data condition: **PASS**.
-
-$$
-\operatorname{PHASE5\_PROTOCOL\_FREEZE}=\text{PASS}.
-$$
-
-### Phase 6A pilot-only runner version 1.0
-
-| Gate | Status |
-|---|---|
-| Lock-first manifest loading | PASS |
-| Exact 50-configuration pilot reconstruction | PASS |
-| Mixed/confirmatory batch rejection | PASS |
-| Direct RK4/DOP853 confirmatory rejection | PASS |
-| All-model RK4 and DOP853 decision paths | PASS |
-| H5/H6, refinement, endpoint, and alternate-integrator gates | PASS at tested cases |
-| Frozen controls and all six relabelings | PASS at tested cases |
-| Write-once checksummed archive | PASS at tested cases |
-| Independent membership, trajectory, and checksum references | PASS |
-| Separate execution-authorization boundary | PASS |
-| Hosted verification | PASS — 100 tests on Python 3.10 and 100 on Python 3.12 |
-| No-pilot-data condition | PASS |
+The current consensus ceiling is:
 
 $$
-\operatorname{PHASE6\_RUNNER\_IMPLEMENTATION\_CLAIM}=\text{PASS}.
+\boxed{
+\text{typed family of state–system relations};
+\quad
+\text{no universal compatibility or persistence scalar established};
+\quad
+\text{no ARG-specific residual established}.
+}
 $$
 
-The comparative scientific claim remains:
+## Typed scientific-context rule
+
+A scoped autonomous model may use
 
 $$
-\operatorname{ARG\_COMPARATIVE\_SCIENTIFIC\_CLAIM}=\text{UNVERIFIED}.
+Q_t=(B_t,x_t),
+\qquad
+x_{t+1}=F_{B_t}(x_t).
 $$
+
+But intervention, observation, viability, robustness, invariance, or recoverability claims may require a context such as
+
+$$
+\mathcal S=
+(\mathcal X,F,B_{\mathrm{in}},C_{\mathrm{out}},K,\mathcal U,\mathcal W,\Phi,T).
+$$
+
+No input map, output map, control class, constraint, disturbance class, measured functional, or horizon may be omitted when it changes the claim.
+
+This tuple is a methodological typing requirement, not a final ontology.
+
+## Persistence language
+
+Bare `persistence` is prohibited in scientific claims when a typed predicate is available.
+
+Current distinctions include:
+
+$$
+P_{\mathrm{norm}},
+P_{\mathrm{basin}},
+P_{\mathrm{manifold}},
+P_{\mathrm{retain}},
+P_{\mathrm{structural}},
+P_{\mathrm{viable}},
+P_{\mathrm{invariant}},
+P_{\mathrm{robust}},
+P_{\mathrm{controlled}}.
+$$
+
+Related state–system quantities that are not themselves identical persistence predicates include:
+
+$$
+R_{\mathrm{reachable}},
+\qquad
+O_{\mathrm{observable}},
+\qquad
+I_{\mathrm{balanced}}.
+$$
+
+## Structure–state language
+
+The pair $Q_t=(B_t,x_t)$ may remain a scoped autonomous-model factorization.
+
+It may not be presented as:
+
+- a representation-independent ontology;
+- sufficient for intervention, observation, control, viability, robustness, or information claims;
+- a discovery unique to ARG.
+
+The state–structure boundary remains a modeling factorization unless an invariant distinction is proved.
+
+## Licensed project description
+
+Permitted:
+
+> Apophatic Relational Geometry is a candidate convergence synthesis and executable research framework combining established ingredients from nonlinear dynamics, adaptive networks, constrained systems, control, evolving spaces, and apophatic non-reification. Its novelty, scientific utility, and physical adequacy remain under audit.
+
+Not permitted:
+
+- new fundamental geometry;
+- discovery that state and structure jointly determine behavior;
+- discovery that persistence depends on compatibility;
+- universal state–structure compatibility law;
+- universal persistence scalar;
+- validated theory of physical identity;
+- proof of pluralistic monism;
+- proof that reality is computational or graph-like;
+- scientifically validated mechanism based on software tests.
+
+## Mathematical claims currently licensed
+
+- the declared model equations are definitions;
+- radial projector identities hold under stated regularity conditions;
+- same-state node equality $f_{FP}=f_P$ holds under the frozen assumptions;
+- software agrees with independent reference implementations at tested cases;
+- node-relabeling equivariance is locally unit-tested, not generally proved.
+
+## Scientific claims currently unlicensed
+
+- feedback improves performance;
+- projection improves any typed persistence measure;
+- ARG predicts a physical system better than established alternatives;
+- feedback establishes autonomous downward causation;
+- coevolving geometry produces an irreducible mechanism;
+- the four-model experiment establishes a mechanism result;
+- any ARG compatibility quantity exceeds modal, nonmodal, basin, control, viability, transport, or invariant-set methods.
 
 ## Current non-claims
 
@@ -151,28 +226,35 @@ ARG has not established:
 - that projection or feedback improves prediction;
 - that constant amplitude is a law of nature;
 - that the version-1.0 sandbox is the final relational geometry;
-- that the development pilot has been executed;
+- that the development pilot has been executed or authorized;
 - that the confirmatory experiment is authorized;
 - that macro-level causal autonomy or strong emergence has been demonstrated;
 - that ARG is a fundamental physical theory.
 
-## Verification references
+## Verification and consensus references
 
+- `07_research_grounding_plan.md`
+- `08_claim_ledger.md`
+- `09_novelty_matrix.md`
+- `10_literature_landscape.md`
+- `14_roadmap.md`
 - `16_phase3_mp_verification.md`
 - `17_phase4_mfp_verification.md`
 - `18_phase5_comparative_protocol.md`
 - `19_phase5_protocol_verification.md`
 - `20_phase6_runner_design.md`
 - `21_phase6_runner_verification.md`
-- `protocol/phase5_v1/`
-- `protocol/phase6_runner_v1/`
-
-## NeoEmergenics relationship
-
-NeoEmergenics remains an independent fail-closed harness and claim evaluator. It may enforce this ceiling but supplies no scientific evidence for ARG.
+- `22_consensus_synthesis_program.md`
+- `research/consensus/01_consensus_table.md`
+- `research/consensus/01_translation_dictionary.md`
+- `research/consensus/01_disagreement_map.md`
 
 ## Change-control rule
 
-Every claim must name the model, evidence level, observation map, domain, and protocol version where applicable. “Projected geometry” must be qualified as **constant-amplitude**, **prototype**, and **software-verified** when scientific or ontological interpretation could otherwise be inferred.
+Every claim must name the model, evidence level, observation map, domain, scientific context, and protocol version where applicable. “Projected geometry” must be qualified as **constant-amplitude**, **prototype**, and **software-verified** when scientific or ontological interpretation could otherwise be inferred.
 
 Any substantive change to a frozen metric, threshold, parameter, configuration, split, protected runner file, or decision rule requires a new version and renewed pre-execution review.
+
+## Immediate next action
+
+Complete the CS1 transport-and-structural-change basket and associated representation audit. Do not revise the ontology or authorize execution.
