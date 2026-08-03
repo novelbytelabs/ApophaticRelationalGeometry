@@ -37,15 +37,15 @@ Experiments are proposed only for residual questions that remain unresolved afte
 - `01_state_structure_persistence_scope.md` — scope, claim inventory, fields, and exit criteria for CS1.
 - `01_consensus_table.md` — preliminary scoped consensus extraction from completed source baskets.
 - `01_translation_dictionary.md` — controlled vocabulary and cross-field mapping hazards.
+- `01_disagreement_map.md` — established core separated from modeling choices, interpretations, and ontology.
 - `source_note_template.md` — mandatory intake format for each source.
 - `sources/` — one completed note per primary or authoritative source.
 
 Required outputs still to be created or completed:
 
-- `01_disagreement_map.md`;
 - `01_representation_audit.md`;
 - `01_residual_research_agenda.md`;
-- formalism impact note;
+- final formalism impact note;
 - claim-ledger and novelty-matrix amendments after CS1 review.
 
 ## Source standards
