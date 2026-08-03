@@ -6,7 +6,7 @@ ARG investigates whether nonlinear local dynamics, adaptive relations, state-dep
 
 ## Consensus-led research program
 
-ARG now follows this order:
+ARG follows this order:
 
 $$
 \boxed{
@@ -41,6 +41,7 @@ See:
 - `docs/22_consensus_synthesis_program.md`
 - `research/consensus/01_consensus_table.md`
 - `research/consensus/01_translation_dictionary.md`
+- `research/consensus/01_disagreement_map.md`
 
 No persistence experiment is authorized by this research track.
 
@@ -179,6 +180,7 @@ ARG is not presently:
 - `research/consensus/01_state_structure_persistence_scope.md`
 - `research/consensus/01_consensus_table.md`
 - `research/consensus/01_translation_dictionary.md`
+- `research/consensus/01_disagreement_map.md`
 - `research/consensus/source_note_template.md`
 - `research/consensus/sources/`
 
