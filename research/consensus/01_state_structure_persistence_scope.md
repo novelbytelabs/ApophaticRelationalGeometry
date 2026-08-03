@@ -4,6 +4,12 @@
 
 > **ACTIVE — literature and consensus audit only.**
 
+Three source baskets are entered:
+
+1. initial-value dynamics, adaptive structure, evolving spaces, and equivalence;
+2. nonlinear persistence;
+3. controllability, observability, model reduction, viability, and invariance.
+
 No new state–structure principle, persistence law, transport formalism, or novelty claim is licensed by this document.
 
 ## Governing question
@@ -18,7 +24,7 @@ Recent ARG discussion used statements such as:
 
 > Persistence depends on compatibility between the relational structure and the state moving through it.
 
-That may be useful language, but its mathematical core overlaps established ideas including initial-condition dependence, modal projection, invariant subspaces, basin structure, transient growth, controllability, observability, adaptive networks, and representation equivalence.
+That may be useful umbrella language, but its mathematical core overlaps established ideas including initial-condition dependence, modal projection, invariant subspaces, basin structure, transient growth, controllability, observability, adaptive networks, viability, invariant sets, and representation equivalence.
 
 CS1 must determine exactly what is standard, what is perspective-relative, what is interpretive, and whether any ARG-specific contribution remains.
 
@@ -26,24 +32,47 @@ CS1 must determine exactly what is standard, what is perspective-relative, what 
 
 # Atomic claim inventory
 
-All grades below are **pending** until supported by completed source notes.
+Grades below reflect the current provisional evidence and remain subject to full CS1 review.
 
-| ID | Atomic claim to audit | Claim type | Initial threat of prior establishment |
+| ID | Atomic claim to audit | Claim type | Current provisional status |
 |---|---|---|---|
-| CS1-C01 | A realized trajectory depends jointly on a transition rule and an initial state. | Mathematical | Very high |
-| CS1-C02 | The same transition structure can preserve, suppress, amplify, or transform different states. | Mathematical/dynamical | Very high |
-| CS1-C03 | Persistence in linear systems depends on a state's projection into persistent invariant or modal subspaces. | Mathematical | Very high |
-| CS1-C04 | In nonlinear systems, persistence may depend on basin location, slow manifolds, local contraction, and trajectory-dependent alignment. | Mathematical/dynamical | Very high |
-| CS1-C05 | State–structure interaction may predict behavior beyond state-only or structure-only summaries. | Statistical/mechanistic | High; scope-dependent |
-| CS1-C06 | The boundary between state, structure, parameters, rule, and environment can depend on model representation. | Modeling/philosophical | High |
-| CS1-C07 | Dynamically equivalent formulations can move variables between state and structure without changing observables. | Mathematical/philosophical | High |
-| CS1-C08 | Meaningful compatibility claims require invariance or known covariance under admissible re-representations. | Mathematical/methodological | High |
-| CS1-C09 | When structure changes and state spaces differ, cross-time comparison requires a transport, projection, reset, or correspondence rule. | Mathematical | Very high |
-| CS1-C10 | The source and destination spaces alone may not uniquely determine transport. | Mathematical/philosophical | Very high |
-| CS1-C11 | Energy, shape, information, function, recoverability, and identity are inequivalent notions of persistence. | Conceptual/scientific | Very high |
-| CS1-C12 | A criterion of persistence is always relative to specified observables, equivalences, and time scales. | Methodological/philosophical | High |
-| CS1-C13 | ARG's `structure–state compatibility` is a useful unifying diagnostic across multiple established frameworks. | Synthesis claim | Open |
-| CS1-C14 | ARG's synthesis yields a representation-robust prediction or theorem not already available in neighboring frameworks. | Candidate novelty | Open and unlicensed |
+| CS1-C01 | A realized trajectory depends jointly on a transition rule and an initial state. | Mathematical | C4 within specified dynamical models |
+| CS1-C02 | The same transition structure can preserve, suppress, amplify, or transform different states. | Mathematical/dynamical | C4 in modal and nonmodal dynamics |
+| CS1-C03 | Linear finite-time behavior, control energy, and output sensitivity depend on propagator and Gramian geometry relative to declared inputs, outputs, norms, and horizons. | Mathematical | C4 |
+| CS1-C04 | In nonlinear systems, persistence and accessibility may depend on basin location, invariant and almost-invariant sets, manifolds, local generated directions, and viability regions. | Mathematical/dynamical | C4 within distinct scoped theories |
+| CS1-C05 | State–system interaction is already decomposed into reachability, observability, joint input/output importance, accessibility, viability, and controlled invariance. | Statistical/mechanistic | C4 in scoped control theories |
+| CS1-C06 | The boundary between state, structure, parameters, rule, and environment can depend on model representation. | Modeling/philosophical | C4 for linear realization redundancy; C3 more broadly |
+| CS1-C07 | Dynamically or observationally equivalent formulations can move or remove internal variables without changing specified behavior. | Mathematical/philosophical | C3–C4, criterion-dependent |
+| CS1-C08 | Meaningful compatibility claims require invariance or known covariance under admissible re-representations. | Mathematical/methodological | C3–C4, criterion-dependent |
+| CS1-C09 | When structure changes and state spaces differ, cross-time comparison requires transport, projection, reset, or correspondence. | Mathematical | C4 for scoped evolving-space frameworks; broader basket pending |
+| CS1-C10 | Source and destination spaces alone may not uniquely determine transport or preservation semantics. | Mathematical/philosophical | C3–C4 within audited frameworks; broader basket pending |
+| CS1-C11 | Energy, basin return, manifold continuation, ensemble retention, reachability, observability, viability, invariance, function, recoverability, and identity are inequivalent notions. | Conceptual/scientific | C4 within audited mathematics; other fields pending |
+| CS1-C12 | A persistence criterion is relative to specified observables, inputs, outputs, controls, constraints, disturbances, equivalences, and time scales. | Methodological/philosophical | C3–C4 |
+| CS1-C13 | ARG's `state–structure compatibility` is a useful unifying diagnostic or schema across multiple established frameworks. | Synthesis claim | C1; only a typed umbrella is presently supported |
+| CS1-C14 | ARG's synthesis yields a representation-robust prediction or theorem not already available in neighboring frameworks. | Candidate novelty | C0 and unlicensed |
+
+---
+
+# Current correction to the formal problem
+
+A purely autonomous model may use
+
+$$
+Q_t=(B_t,x_t),
+\qquad
+x_{t+1}=F_{B_t}(x_t).
+$$
+
+But the control-theory basket establishes that many scientific questions require more context. A preliminary typed context is
+
+$$
+\mathcal S=
+(\mathcal X,F,B_{\mathrm{in}},C_{\mathrm{out}},K,\mathcal U,\mathcal W,\Phi,T).
+$$
+
+This includes the state space, transition law, input map, output map, constraints, admissible controls, disturbances, measured functional, and horizon.
+
+This is a methodological typing result. It does not establish a new ontology.
 
 ---
 
@@ -51,73 +80,88 @@ All grades below are **pending** until supported by completed source notes.
 
 ## Linear dynamics and spectral theory
 
-Audit:
+Entered:
 
-- eigenmode and generalized-eigenmode decomposition;
-- invariant subspaces;
+- eigenmode and generalized-eigenmode dependence;
 - non-normal transient growth;
-- pseudospectra;
+- propagator and singular-vector analysis;
 - destructive interference and cancellation;
-- asymptotic versus finite-time persistence.
+- asymptotic versus finite-time behavior.
 
 ## Nonlinear dynamical systems
 
-Audit:
+Entered:
 
 - attractors and basins;
-- invariant and slow manifolds;
-- Lyapunov stability;
-- local Jacobian directions;
-- bifurcation and metastability;
+- invariant manifolds;
+- metastability and almost-invariant sets;
 - structural stability.
+
+Still required:
+
+- slow manifolds and singular perturbation;
+- bifurcation;
+- trajectory-dependent local contraction;
+- noise-driven escape.
 
 ## Control theory
 
-Audit:
+Entered:
 
 - controllability and observability;
-- state-transition operators;
-- Gramians;
-- model reduction;
-- viability and invariant sets;
-- state-dependent and switched systems.
+- state-transition operators and Gramians;
+- balanced realization and model reduction;
+- nonlinear accessibility and observability;
+- viability kernels;
+- positive, robust, and controlled invariance.
+
+Still required:
+
+- switched and hybrid control;
+- stochastic viability;
+- practical computational limits in changing structures.
 
 ## Evolving spaces and hybrid systems
 
-Audit:
+Entered:
 
 - pushforward and pullback;
+- evolving Hilbert/Banach spaces.
+
+Next basket:
+
 - connections and parallel transport;
-- evolving Hilbert/Banach spaces;
 - reset maps and reset relations;
 - remeshing and conservative projection;
 - dimension-changing systems.
 
 ## Adaptive, temporal, and graph-based systems
 
-Audit:
+Entered:
 
-- coevolving state and topology;
+- coevolving state and topology.
+
+Still required:
+
 - graph signals on time-varying graphs;
 - dynamic graph Laplacians;
 - sheaves and local-to-global consistency;
 - graph matching and optimal transport;
-- representation and node-label invariance.
+- node-label and quotient invariance.
 
 ## Computation, machine learning, and information
 
-Audit:
+Still required:
 
 - hidden state versus parameters;
 - recurrent memory and state-space models;
-- representation equivalence;
 - sufficient statistics and causal states;
 - information preservation and recoverability;
 - architecture–input interaction.
 
 ## Biology and systems science
 
-Audit:
+Still required:
 
 - organizational persistence;
 - homeostasis and allostasis;
@@ -128,12 +172,15 @@ Audit:
 
 ## Philosophy
 
-Audit:
+Entered in part:
+
+- theoretical equivalence criteria.
+
+Still required:
 
 - persistence and identity through change;
-- structural realism and ontic structural realism;
+- structural realism;
 - process ontology;
-- dispositional and powers accounts;
 - scientific perspectivism and pluralism;
 - gauge, representation, and underdetermination;
 - criteria of objecthood and continuity.
@@ -145,12 +192,13 @@ Audit:
 The following terms must not be treated as automatically equivalent:
 
 - mathematical state / physical state / epistemic state;
-- graph structure / geometric structure / causal structure / organizational structure;
-- invariant mode / stable pattern / persistent identity;
-- constraint / cause / law / boundary condition;
-- information / entropy / semantic content / recoverability;
+- graph structure / transition structure / input structure / output structure / constraint structure;
+- invariant mode / reachable direction / observable direction / stable pattern / persistent identity;
+- constraint / cause / control / law / boundary condition;
+- information / observability / entropy / semantic content / recoverability;
 - transport / physical motion / identity continuation;
-- representation dependence / observer dependence / subjectivity.
+- representation dependence / observer dependence / subjectivity;
+- autonomous invariance / controlled invariance / attraction / viability.
 
 Every proposed bridge must identify the exact relation among the terms.
 
@@ -160,43 +208,14 @@ Every proposed bridge must identify the exact relation among the terms.
 
 CS1 is complete only when it produces:
 
-1. **Consensus table** — one row per atomic claim with sources, scope, grade, exceptions, and ARG implication.
-2. **Translation dictionary** — state, structure, rule, parameter, environment, relation, compatibility, transport, and persistence across fields.
-3. **Disagreement map** — accepted formal or empirical core separated from live interpretations.
-4. **Representation audit** — the admissible transformations under which each claim is invariant, covariant, or representation-relative.
-5. **Novelty decision** — standard result, useful synthesis, open question, candidate residual, or rejected claim.
-6. **Residual agenda** — only questions not already answered by consensus.
-7. **Claim-ledger amendments** — promotion, narrowing, rejection, or quarantine of affected ARG claims.
-8. **Formalism impact note** — whether the current `Q_t=(B_t,x_t)` language should be retained, revised, or treated as one modeling factorization.
-
----
-
-# Search and source baskets
-
-Initial terminology should include:
-
-- initial condition dependence;
-- modal projection and persistence;
-- non-normal dynamics and transient growth;
-- invariant subspace and slow manifold;
-- basin stability;
-- state–operator interaction;
-- parameter augmentation;
-- skew-product dynamical system;
-- cocycle and random dynamical system;
-- conjugate dynamical systems;
-- gauge and representation equivalence;
-- evolving state spaces;
-- transport on vector bundles;
-- reset maps in hybrid systems;
-- graph signals on time-varying graphs;
-- adaptive and coevolving networks;
-- organizational persistence;
-- identity through change;
-- structural realism;
-- process ontology.
-
-Search vocabulary is an orientation aid, not evidence.
+1. **Consensus table** — active and provisional.
+2. **Translation dictionary** — active and provisional.
+3. **Disagreement map** — pending.
+4. **Representation audit** — pending.
+5. **Novelty decision** — pending completion of source baskets.
+6. **Residual agenda** — pending.
+7. **Claim-ledger amendments** — pending independent review.
+8. **Formalism impact note** — preliminary typed-context correction entered; final note pending.
 
 ---
 
@@ -227,4 +246,12 @@ CS1 passes only when an independent reviewer can trace every consensus statement
 
 ## Immediate action
 
-Begin source intake with authoritative field maps, then trace every load-bearing claim to original mathematical or experimental sources. Do not revise the ontology from abstracts or isolated quotations.
+Proceed with the transport-and-structural-change basket:
+
+1. connections and parallel transport;
+2. hybrid reset maps and reset relations;
+3. remeshing and conservative projection;
+4. graph correspondence and optimal transport;
+5. dimension-changing and noninvertible transitions.
+
+Do not revise the ontology or propose a transport experiment until this basket and the associated representation audit are complete.
