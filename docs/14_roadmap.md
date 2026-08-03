@@ -4,20 +4,6 @@
 
 ARG advances by passed gates, not by calendar optimism. A phase is complete only when its exit criteria pass and the claim ledger is aligned.
 
-The governing research order is:
-
-$$
-\boxed{
-\text{research first}
-\;\longrightarrow\;
-\text{synthesize second}
-\;\longrightarrow\;
-\text{formalize third}
-\;\longrightarrow\;
-\text{experiment only on the unresolved remainder}.
-}
-$$
-
 ## Binding claim ceiling
 
 $$
@@ -40,13 +26,9 @@ $$
 }
 $$
 
-The consensus-synthesis track does not change this execution state.
-
 ## Current position
 
-### Four-model implementation and experiment track
-
-| Phase | Status | Result |
+| Track or phase | Status | Result |
 |---|---|---|
 | Phase 0 — Alignment and claim control | COMPLETE | Public and internal descriptions aligned. |
 | Phase 1 — Four-model design contract | COMPLETE | Contract v1.0 frozen. |
@@ -56,76 +38,16 @@ The consensus-synthesis track does not change this execution state.
 | Phase 5 — Freeze comparative experiment protocol | COMPLETE | Data-free protocol and executable decision rules frozen; 65 tests passed in each configured environment. |
 | Phase 6A — Implement pilot-only runner | COMPLETE WITH AUDIT REMEDIATION REQUIRED | Runner gate passed, but an independent audit found integrity defects outside and around the nominal equations. |
 | Phase 6A.1 — Integrity remediation | STOP-SHIP / ACTIVE | Provenance, numerical-domain, immutability, atomic-output, lock-containment, strict-JSON, environment-lock, and bundle-assembly defects must be closed and externally re-audited. |
-| Phase 6B — Execute development pilot | BLOCKED | No execution authorization may be created until Phase 6A.1 passes external audit. |
+| Phase 6B — Execute development pilot | BLOCKED | No execution authorization may be created until Phase 6A.1 passes external audit and the consensus track confirms scientific necessity. |
 | Phase 7 onward | BLOCKED | Confirmatory execution remains unauthorized. |
+| CS0 — Consensus governance | DRAFT COMPLETE / REVIEW | Consensus method, workspace, source template, grades, and stop rules added on PR #29. |
+| CS1 — State, structure, representation, persistence | ACTIVE | Three source baskets entered: initial-value/equivalence, nonlinear persistence, and control theory. |
 
-Software tests verify declared code and protocol contracts. They do not validate the scientific hypothesis, and they do not supersede an unresolved independent audit.
-
-### Consensus synthesis track
-
-| Phase | Status | Result or required output |
-|---|---|---|
-| CS0 — Governance and schemas | REVIEW PENDING | Consensus method, evidence grades, integration rules, workspace, and source-note schema added on an isolated branch. |
-| CS1 — State, structure, representation, and persistence | ACTIVE / LITERATURE AUDIT ONLY | Determine the established mathematical, scientific, and philosophical core before revising formalism or proposing experiments. |
-| CS2 — Change, transport, and identity | BLOCKED BY CS1 | Separate standard transport machinery from identity criteria and unresolved representation choices. |
-| CS3 — Constraint and causation | BLOCKED | Separate dynamical constraint, intervention, counterfactual, and causal interpretation. |
-| CS4 — Parts, wholes, and emergence | BLOCKED | Synthesize composition, closure, multiscale organization, and emergence without forcing one interpretation. |
-| CS5 — Scale and effective description | BLOCKED | Audit coarse-graining, model reduction, renormalization, and higher-level autonomy. |
-| CS6 — Space, time, and geometry | BLOCKED | Separate mathematical structures, physical evidence, and metaphysical readings. |
-| CS7 — Information and measurement | BLOCKED | Disambiguate physical, statistical, computational, semantic, and epistemic information. |
-| CS8 — Perspective and observer | BLOCKED | Distinguish reference-frame, gauge, model, and measurement dependence from subjectivism. |
-| CS9 — Minimal ARG Core | BLOCKED | Publish only C3–C4 bridge propositions that survive all completed audits. |
-| CS10 — Formal revision | BLOCKED | Align notation, papers, claim ledger, novelty matrix, and public language with the consensus core. |
-
-The consensus track is governed by `docs/22_consensus_synthesis_program.md`. Its working material lives under `research/consensus/`.
+Software tests verify declared code and protocol contracts. They do not validate the scientific hypothesis, and they do not supersede an unresolved independent audit or a no-novelty consensus result.
 
 ---
 
-# Consensus synthesis gates
-
-## Objective
-
-Determine what ARG can responsibly synthesize from established cross-disciplinary results before treating familiar principles as discoveries or spending compute on questions already answered by consensus.
-
-## Required artifacts
-
-- Consensus Atlas;
-- Concept Translation Dictionary;
-- Minimal ARG Core;
-- Disagreement and Boundary Map;
-- Residual Research Agenda.
-
-## Core operating constraints
-
-- organize research around phenomena, not disciplinary silos;
-- decompose prose into atomic claims;
-- classify each claim by type and consensus grade;
-- map claims into established field terminology before assessing novelty;
-- distinguish identity, translation, specialization, approximation, analogy, and loose resemblance;
-- preserve interpretive disagreement where shared evidence does not select one ontology;
-- test representation robustness before calling a relation invariant;
-- import established results rather than recreating them;
-- propose experiments only for a precise unresolved residual;
-- treat a no-novelty result as a successful research outcome.
-
-## CS1 exit criteria
-
-CS1 passes only when:
-
-- every load-bearing state–structure and persistence claim has traceable source notes;
-- consensus statements are graded and scoped;
-- state, structure, rule, parameter, environment, compatibility, transport, and persistence have cross-field dictionary entries;
-- representation-dependent claims are labeled as such;
-- accepted evidence is separated from philosophical interpretation;
-- the novelty matrix records direct equation or concept comparisons;
-- the claim ledger is narrowed, promoted, rejected, or quarantined as required;
-- any proposed experiment addresses a demonstrably unresolved remainder.
-
-CS1 may conclude that the general state–structure principle is standard and that ARG's contribution is synthesis, application, or nothing further. That is an acceptable result.
-
----
-
-# Completed gates
+# Completed software gates
 
 ## Phases 0–2
 
@@ -155,19 +77,19 @@ $$
 
 while feedback remains in $s$ and $q$.
 
-Verification: PR `#7`, merge `205fb8c5bf1b832e241af230612e3d7056be05f5`, Actions `30718821666`, 51 tests in each configured Python environment.
+Verification: PR `#7`, merge `205fb8c5bf1b832e241af230612e3d7056be05f5`, Actions `30718821666`, 51 tests in each configured environment.
 
 ## Phase 5 — Frozen comparative protocol
 
 Protocol `ARG-P5-COMP-v1` froze the primary and secondary hypotheses, observation maps, thresholds, direction-level units, deterministic pilot/confirmatory split, parameters, numerical replication, exclusions, stop rules, archive provenance, executable metrics, fail-closed decisions, and critical-file lock before trajectory generation.
 
-Verification: PR `#9`, merge `d60bb3e618c590e0c994188cebf060bd4b347903`, Actions `30720596773`, 65 tests in each configured Python environment.
+Verification: PR `#9`, merge `d60bb3e618c590e0c994188cebf060bd4b347903`, Actions `30720596773`, 65 tests in each configured environment.
 
 ## Phase 6A — Pilot-only runner
 
 The runner implementation and its original software gate passed, but that result is now subordinate to the independent audit and does not authorize execution.
 
-Original verification: PR `#11`, merge `b0b5acc1f2db77b7b0fab43eefafd15f3ee2f728`, 100 tests in each configured Python environment.
+Original verification: PR `#11`, merge `b0b5acc1f2db77b7b0fab43eefafd15f3ee2f728`, 100 tests in each configured environment.
 
 ---
 
@@ -200,19 +122,20 @@ Remediate the audit findings without changing scientific equations, thresholds, 
 
 # Phase 6B — Execute the development pilot
 
-Blocked until Phase 6A.1 is externally cleared. A prior execution issue or authorization template does not override this block.
+Blocked until both conditions hold:
 
-The consensus track may independently narrow or eliminate the scientific motivation for execution. Clearing software integrity is necessary but not sufficient to justify a pilot.
+1. Phase 6A.1 is externally cleared;
+2. CS1 and the applicable later consensus slices establish a precise unresolved scientific residual that the frozen pilot actually discriminates.
+
+A prior execution issue or authorization template does not override either block.
 
 # Phase 7 — Confirmatory four-model experiment
 
-Blocked. Only a separately authorized held-out execution may support scoped comparative claims.
+Blocked. Only a separately authorized held-out execution may support scoped comparative claims, and only if a literature-grounded residual remains.
 
 # Phase 8 — Relational projection v2
 
-A constraint involving mismatch, $s$, $q$, intrinsic distance, or compatibility requires a new versioned model contract.
-
-No v2 contract should be drafted until the applicable consensus and novelty audits identify a precise unresolved contribution.
+A constraint involving mismatch, $s$, $q$, intrinsic distance, or compatibility requires a new versioned model contract and must survive the consensus audit.
 
 # Phase 9 — Physical anchors
 
@@ -222,11 +145,79 @@ Initial order:
 2. incompressible-flow projection;
 3. adaptive synchronization or flocking.
 
-## Immediate next actions
+---
 
-Two independent tracks may proceed without weakening either gate:
+# Consensus synthesis track
 
-1. **Integrity track:** complete Phase 6A.1 remediation on its isolated branch, run hosted adversarial verification, assemble a fresh self-validating audit bundle, and submit it to an external Auditor AI. Do not create execution authorization or run the pilot.
-2. **Consensus track:** execute CS1 as a primary-source literature and translation audit. Populate source notes, consensus grades, dictionary entries, disagreement boundaries, and the residual agenda before revising ARG's formal ontology or proposing a new persistence experiment.
+## CS0 — Governance
 
-No development-pilot or confirmatory execution is authorized by this roadmap revision.
+Draft governance and workspace are present on PR `#29`. The program requires research before synthesis, synthesis before formalization, and experiments only on the unresolved remainder.
+
+## CS1 — State, structure, representation, and persistence
+
+### Basket 1 — entered
+
+- nonmodal initial-value dynamics;
+- adaptive networks;
+- evolving state spaces and transport;
+- theoretical equivalence.
+
+### Basket 2 — entered
+
+- basin stability;
+- invariant-manifold persistence;
+- metastability and almost-invariant sets;
+- structural stability.
+
+### Basket 3 — entered
+
+- linear controllability and observability;
+- minimal realization;
+- balanced realization and model reduction;
+- nonlinear accessibility and observability;
+- viability kernels;
+- positive and controlled invariance.
+
+### Current provisional correction
+
+The evidence supports a typed family of relations rather than one universal compatibility or persistence scalar.
+
+Many scientific questions require a context broader than
+
+$$
+Q_t=(B_t,x_t).
+$$
+
+A preliminary typed context is
+
+$$
+\mathcal S=
+(\mathcal X,F,B_{\mathrm{in}},C_{\mathrm{out}},K,\mathcal U,\mathcal W,\Phi,T).
+$$
+
+This is a methodological correction, not an ontological promotion.
+
+### Remaining CS1 gates
+
+- transport and structural-change basket;
+- gauge, quotient, and representation audit;
+- information and recoverability basket;
+- biological persistence basket;
+- philosophical identity and persistence basket;
+- disagreement map;
+- residual research agenda;
+- formalism impact note;
+- claim-ledger and novelty-matrix amendments;
+- independent review.
+
+## Immediate next action
+
+Proceed with the CS1 transport-and-structural-change basket:
+
+1. connections and parallel transport;
+2. hybrid reset maps and reset relations;
+3. remeshing and conservative projection;
+4. graph correspondence and optimal transport;
+5. dimension-changing and noninvertible transitions.
+
+Do not execute the pilot or revise the ontology before this basket and the associated representation audit are complete.
