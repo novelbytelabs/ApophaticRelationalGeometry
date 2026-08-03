@@ -79,80 +79,62 @@ Every substantive statement must be classified by both **claim type** and **cons
 - empirical regularity;
 - mechanistic claim;
 - modeling convention;
-- bridge proposition;
 - interpretive thesis;
-- metaphysical conjecture;
-- research question.
+- metaphysical conjecture.
 
 ## Consensus grades
 
-- **C4 — Established:** textbook-level theorem, definition, or repeatedly replicated scientific result within a clear scope.
-- **C3 — Strong convergence:** substantial independent evidence and broad expert agreement, with limited live dispute about the scoped statement.
-- **C2 — Shared evidence, disputed interpretation:** the observational or formal core is accepted, but its meaning or ontology remains contested.
-- **C1 — Plausible synthesis:** compatible with established results but not itself established.
-- **C0 — Speculative:** conjecture or open research question.
-- **R — Rejected:** contradicted, disproved, withdrawn, or based on an invalid inference.
+- **C4 — Established:** textbook-level theorem, repeatedly confirmed empirical result, or mature field consensus within explicit scope.
+- **C3 — Strong convergence:** multiple independent lines of evidence or methods agree, with bounded exceptions.
+- **C2 — Accepted core, disputed interpretation:** the result is accepted but its meaning, explanation, or ontology remains contested.
+- **C1 — Plausible synthesis:** compatible with established results but not independently established.
+- **C0 — Open or speculative:** conjecture, unresolved question, or proposed research direction.
+- **R — Rejected:** contradicted, disproved, withdrawn, or superseded within the declared scope.
 
-The **Minimal ARG Core** may initially contain only C3 and C4 statements. C2 statements belong in the disagreement map. C0 and C1 statements belong in the research agenda, not in the project’s binding ontology.
-
----
-
-# 4. Required distinction: evidence is not interpretation
-
-ARG must keep four levels separate:
-
-1. **Empirical findings** — observations produced under a stated protocol.
-2. **Formal results** — definitions, equations, proofs, mechanisms, and simulations.
-3. **Working synthesis** — a cross-field interpretation that organizes established results.
-4. **Apophatic restraint** — explicit refusal to treat any representation as exhaustive or absolute.
-
-Allowed inference:
-
-$$
-\text{evidence may constrain formal models, and formal models may motivate interpretation}.
-$$
-
-Prohibited inference:
-
-$$
-\text{successful model}
-\not\Rightarrow
-\text{final ontology}.
-$$
+Only C3 and C4 statements may enter the Minimal ARG Core. C2 statements belong in the disagreement map. C0 and C1 statements belong in the residual research agenda.
 
 ---
 
-# 5. Phenomenon-first research map
+# 4. Phenomenon-first research map
 
-The program is organized around shared phenomena rather than isolated disciplinary summaries.
+ARG research is organized around shared phenomena rather than separate disciplinary essays:
 
-1. **Relation, relata, and representation**
-2. **State, structure, rule, and realized dynamics**
-3. **Change, transport, persistence, and identity**
-4. **Constraint, intervention, and causation**
-5. **Parts, wholes, closure, and emergence**
-6. **Scale, coarse-graining, and effective description**
-7. **Locality, global organization, and nonseparability**
-8. **Space, time, geometry, and dynamical background structure**
-9. **Information, measurement, and recoverability**
-10. **Observer, perspective, and model dependence**
-11. **Minimal ontology and apophatic boundary**
+1. relation and representation;
+2. state, structure, rule, and environment;
+3. change, transport, and persistence;
+4. identity through change;
+5. constraint, intervention, and causation;
+6. parts, wholes, and emergence;
+7. scale and effective description;
+8. space and time;
+9. information, measurement, and recoverability;
+10. observer, perspective, and knowledge;
+11. minimal ontology and apophatic limits.
 
-Each topic must be studied through all relevant lenses. A field may be inapplicable to a particular claim; it must not be included merely for symmetry.
+Each phenomenon receives mathematical, empirical, computational, biological, and philosophical perspectives as applicable.
 
 ---
 
-# 6. Research workflow for each topic
+# 5. Mandatory research artifacts
 
-Every topic proceeds through the following gates.
+Each consensus slice must produce:
 
-## Gate A — Claim decomposition
+1. **Atomic claim inventory** — each proposition split into independently assessable statements.
+2. **Source notes** — exact theorem, experiment, equation, assumptions, and limitations.
+3. **Consensus table** — claim, type, grade, scope, sources, exceptions, and ARG consequence.
+4. **Translation dictionary** — definitions across fields and mapping type.
+5. **Disagreement map** — accepted core separated from competing interpretations.
+6. **Representation audit** — admissible transformations and preserved content.
+7. **Novelty decision** — established result, useful synthesis, open residual, or rejected claim.
+8. **Residual agenda** — only questions not already answered by the literature.
+9. **Formalism impact note** — what must change in ARG notation and claims.
+10. **Claim-ledger amendments** — promotion, narrowing, rejection, or quarantine.
 
-Convert broad prose into atomic claims. Separate definitions, empirical statements, mathematical facts, mechanisms, and interpretations.
+---
 
-## Gate B — Terminology translation
+# 6. Translation discipline
 
-Map ARG language into the established vocabulary of each field. Record whether a proposed connection is:
+A proposed cross-field bridge must be labeled as one of:
 
 - identity;
 - exact translation;
@@ -162,174 +144,201 @@ Map ARG language into the established vocabulary of each field. Record whether a
 - analogy;
 - loose resemblance.
 
-Loose resemblance cannot support a bridge proposition.
+Every bridge must state:
 
-## Gate C — Primary-source evidence map
-
-For every atomic claim, record:
-
-- original theorem, equation, experiment, or observation;
-- assumptions and domain;
-- replication or review status;
-- known exceptions;
-- competing interpretations;
-- mapping into ARG terminology.
-
-Primary sources and authoritative reviews take precedence over summaries.
-
-## Gate D — Consensus extraction
-
-State the weakest proposition supported by the strongest convergent evidence. Do not import a preferred metaphysical interpretation into the consensus layer.
-
-## Gate E — Disagreement and boundary map
-
-Record where fields or interpretations diverge. Distinguish:
-
-- factual disagreement;
-- model-domain difference;
-- scale difference;
-- terminological difference;
-- underdetermined interpretation;
-- genuine contradiction.
-
-## Gate F — Bridge propositions
-
-A bridge proposition must specify:
-
-1. source and destination concepts;
+1. source and destination objects;
 2. assumptions;
-3. preserved structure or observables;
-4. scope;
-5. failure conditions;
-6. whether the bridge is exact or approximate.
+3. preserved properties;
+4. lost properties;
+5. failure cases;
+6. whether the bridge supports prediction, explanation, or interpretation.
 
-## Gate G — Invariance and representation audit
-
-Test whether the proposed statement survives admissible re-representations. When a statement is representation-relative, label it as such rather than discarding it or presenting it as universal.
-
-## Gate H — ARG integration
-
-Update, as applicable:
-
-- `08_claim_ledger.md`;
-- `09_novelty_matrix.md`;
-- `10_literature_landscape.md`;
-- `13_alignment_and_claim_ceiling.md`;
-- `14_roadmap.md`;
-- formal definitions and papers.
-
-## Gate I — Residual decision
-
-Classify the result:
-
-- already established;
-- established but perspective-relative;
-- shared evidence with disputed interpretation;
-- useful synthesis;
-- open problem;
-- candidate novel contribution;
-- rejected.
-
-Only open problems and candidate novel contributions may generate new experiments. Established results should be cited and imported rather than rediscovered.
+Analogies may guide research but do not establish identity or mechanism. Loose resemblance does not support an ARG proposition.
 
 ---
 
-# 7. Program artifacts
+# 7. Typed scientific-context rule
 
-The consensus track must produce five linked artifacts.
+The completed control-theory basket demonstrates that a bare structure–state pair is often insufficient for a scientific claim.
 
-## A. Consensus Atlas
+For an autonomous trajectory question, a schematic model may use
 
-One chapter per phenomenon, presenting the strongest established statements, their scopes, and their supporting fields.
+$$
+Q_t=(B_t,x_t),
+\qquad
+x_{t+1}=F_{B_t}(x_t).
+$$
 
-## B. Concept Translation Dictionary
+But intervention, observation, viability, invariance, robustness, or recoverability claims may require a typed context such as
 
-Cross-field definitions and mappings for terms including relation, structure, state, rule, constraint, cause, information, identity, scale, geometry, and observer.
+$$
+\mathcal S=
+(\mathcal X,F,B_{\mathrm{in}},C_{\mathrm{out}},K,\mathcal U,\mathcal W,\Phi,T),
+$$
 
-## C. Minimal ARG Core
+where:
 
-Only C3–C4 bridge statements that survive the translation, scope, and invariance gates.
+- $\mathcal X$ is the state space;
+- $F$ is the transition law or admissible transition family;
+- $B_{\mathrm{in}}$ is an input or intervention map;
+- $C_{\mathrm{out}}$ is an output or observation map;
+- $K$ is a constraint or admissibility set;
+- $\mathcal U$ is the admissible control class;
+- $\mathcal W$ is a disturbance or uncertainty class;
+- $\Phi$ is the measured functional;
+- $T$ is the horizon.
 
-## D. Disagreement and Boundary Map
-
-Accepted evidence separated from live interpretive alternatives and unresolved questions.
-
-## E. Residual Research Agenda
-
-Only the remainder not already resolved by established mathematics, science, or philosophy. This artifact controls future experiments.
-
----
-
-# 8. Phase sequence
-
-| Phase | Objective | Exit criterion |
-|---|---|---|
-| CS0 — Governance and schemas | Freeze the consensus method, evidence grades, intake schema, and integration rules. | Program document and working directory reviewed; no scientific conclusion claimed. |
-| CS1 — State, structure, representation, and persistence | Determine the established core behind the current structure–state language and identify representation dependence. | Consensus chapter, translation dictionary entries, claim classifications, and residual questions complete. |
-| CS2 — Change, transport, and identity | Synthesize evolving spaces, hybrid resets, remapping, optimal transport, biological continuity, and philosophical identity criteria. | Transport-relative and representation-relative claims separated; no duplicated experiment proposed. |
-| CS3 — Constraint and causation | Map dynamical constraints, intervention, counterfactuals, causal emergence, and global consistency. | Shared empirical/formal core separated from causal interpretation. |
-| CS4 — Parts, wholes, and emergence | Compare composition, closure, multiscale organization, synergetics, effective theories, and emergence accounts. | Bridge propositions and disagreement map complete. |
-| CS5 — Scale and effective description | Audit coarse-graining, renormalization, model reduction, causal states, and autonomous higher-level explanation. | Scope-safe scale principles added to the Minimal Core. |
-| CS6 — Space, time, and geometry | Compare manifold, relational, operational, causal, discrete, and emergent treatments. | Mathematical structures separated from physical and metaphysical claims. |
-| CS7 — Information and measurement | Synthesize physical, statistical, semantic, computational, and epistemic uses of information. | Equivocations removed; recoverability and observer dependence precisely scoped. |
-| CS8 — Perspective and observer | Audit perspectival realism, gauge, reference frames, measurement contexts, and model pluralism. | Perspective dependence distinguished from subjectivism. |
-| CS9 — Minimal ARG Core | Extract only the propositions that survived all completed tracks. | Versioned core, boundary map, and residual agenda published. |
-| CS10 — Formal revision | Revise ARG notation and papers to express the consensus core without ontological promotion. | Formalism and claim ledger aligned; obsolete claims rejected or narrowed. |
-
-Phases may expose dependencies requiring limited backtracking. No phase may silently promote a lower-grade claim.
+The tuple is a methodological typing requirement, not a final ontology. No component may be omitted when the claim depends on it.
 
 ---
 
-# 9. Immediate active slice: CS1
+# 8. Research gates
 
-The first slice is:
+## Gate A — scope
 
-> **State, structure, representation, and persistence: a consensus synthesis.**
+- phenomenon and atomic claims fixed;
+- claim types identified;
+- prohibited inferences listed;
+- primary fields and search vocabulary declared.
 
-It will answer:
+## Gate B — source sufficiency
 
-- How do dynamical systems distinguish state, operator, parameters, constraints, and trajectory?
-- Which distinctions are mathematical necessities and which are modeling choices?
-- How do adaptive networks and learning systems move quantities between “state” and “structure”?
-- What is already established about modal alignment, basins, transient growth, memory, and persistence?
-- When changing structures imply changing state spaces, what transport machinery is standard?
-- Which persistence measures are inequivalent?
-- Which claims are invariant under relabeling, conjugacy, augmentation, or coordinate change?
-- Does ARG retain any contribution beyond terminology, synthesis, or application?
+- load-bearing claims traced to primary sources;
+- authoritative reviews used to establish field structure;
+- counterexamples and scope limits recorded;
+- no technical claim rests solely on secondary summaries.
 
-The working scope and initial claim inventory live in `research/consensus/01_state_structure_persistence_scope.md`.
+## Gate C — translation
 
----
+- mappings classified;
+- assumptions and losses explicit;
+- terminology collisions resolved;
+- perspective-specific information preserved.
 
-# 10. Relationship to the four-model track
+## Gate D — consensus
 
-The consensus program governs interpretation but does not alter the frozen experimental track.
+- grades assigned claim by claim;
+- C2 disagreements preserved;
+- C0–C1 proposals excluded from the Minimal Core;
+- independent reviewer can trace every row to its evidence.
 
-- Phase 6A.1 remains STOP-SHIP until independently cleared.
-- No pilot execution authorization is created by this document.
-- Existing model equations and protocols remain unchanged.
-- Literature findings may narrow or reject claims before execution.
-- Any future protocol amendment requires a new version and separate authorization.
-- A known result should be reproduced only when reproduction is necessary to validate implementation or a claimed extension.
+## Gate E — residual
 
----
+A new proof or experiment is authorized only if:
 
-# 11. Stop rules
-
-Pause or narrow a topic when:
-
-- the proposed principle is already a standard scoped result;
-- primary fields use superficially similar words for non-equivalent concepts;
-- no exact or defensible approximate bridge can be stated;
-- the claim depends entirely on an arbitrary representation choice;
-- the literature already answers the proposed experiment;
-- the evidence supports several interpretations but no consensus ontology;
-- the residual question cannot produce a discriminating theorem, observation, or experiment.
-
-A no-novelty conclusion is a successful result of this program.
+- the exact residual is not already established;
+- an established method cannot answer it without modification;
+- the test discriminates among live alternatives;
+- the result would change a claim, model, or research decision;
+- controls, nulls, and stop conditions are fixed first.
 
 ---
 
-# 12. Governing maxim
+# 9. Stop rules
 
-> **Establish what is known. Translate without erasing differences. Preserve disagreement where evidence underdetermines interpretation. Formalize only the invariant core. Experiment only on the unresolved remainder. Reify nothing.**
+Stop a novelty claim, formal extension, or experiment when:
+
+- a standard theorem already establishes the result;
+- ARG merely renames a known quantity;
+- a proposed experiment reproduces a known qualitative effect;
+- the claim changes under an admissible representation and no invariant content is identified;
+- the evidence supports several interpretations but no discriminating test exists;
+- a bridge is analogy rather than translation;
+- a proposed ontology exceeds the weakest supporting discipline.
+
+In those cases, cite, synthesize, and narrow.
+
+---
+
+# 10. Program phases
+
+## CS0 — Governance and workspace
+
+- define the consensus method;
+- create source-note, consensus-table, dictionary, disagreement-map, and residual-agenda formats;
+- align README, roadmap, claim ledger, and novelty controls.
+
+## CS1 — State, structure, representation, and persistence
+
+Active. Establish what is already known about initial conditions, operators, adaptive structure, nonlinear persistence, controllability, observability, viability, transport, and representation equivalence.
+
+## CS2 — Constraint, intervention, and causation
+
+Separate dynamical constraint, control, counterfactual difference-making, causal modeling, and metaphysical causation.
+
+## CS3 — Parts, wholes, organization, and emergence
+
+Audit compositionality, closure, coarse-graining, multiscale causation, synergetics, biological organization, and emergence claims.
+
+## CS4 — Scale and effective description
+
+Audit renormalization, model reduction, singular perturbation, slaving, homogenization, and autonomous effective theories.
+
+## CS5 — Space, time, and relational geometry
+
+Audit metric, topology, connection, causal structure, spacetime, relational mechanics, and evolving discrete geometry.
+
+## CS6 — Information, measurement, and recoverability
+
+Separate Shannon information, algorithmic information, sufficient statistics, causal states, quantum information, semantic content, and observability.
+
+## CS7 — Observer and perspective
+
+Audit perspectival realism, gauge, coordinate choice, measurement context, epistemic access, and observer dependence.
+
+## CS8 — Minimal consensus core
+
+Extract only C3–C4 bridge propositions surviving the prior slices.
+
+## CS9 — Residual ARG contribution
+
+Classify the remainder as theorem, method, implementation, synthesis, interpretation, open problem, or no residual contribution.
+
+## CS10 — Formal and public alignment
+
+Revise equations, papers, README, roadmap, claim ledger, novelty matrix, and experiment authorization to match the completed synthesis.
+
+---
+
+# 11. Relationship to the four-model track
+
+The consensus program does not cancel software-integrity work. Phase 6A.1 remains STOP-SHIP and must be remediated before any execution could be considered.
+
+However, passing Phase 6A.1 does not itself justify the pilot. Execution remains scientifically blocked when:
+
+- the tested claim has already been established;
+- the model only reproduces a standard mechanism;
+- no discriminating residual remains;
+- the result would not change the synthesis.
+
+Software trustworthiness and scientific necessity are independent gates.
+
+---
+
+# 12. Current CS1 result
+
+After the first three source baskets, the provisional conclusion is:
+
+> General state–operator dependence, state–topology coevolution, evolving-space transport, nonlinear basin and invariant-set dependence, controllability, observability, balanced state importance, viability, and controlled invariance are established neighboring results rather than ARG discoveries.
+
+The current evidence supports a typed family of relations, not one universal `state–structure compatibility` scalar.
+
+No addition to the Minimal ARG Core is authorized before CS1 review is complete.
+
+---
+
+# 13. Immediate next action
+
+Proceed with the transport-and-structural-change basket:
+
+1. connections and parallel transport;
+2. hybrid reset maps and reset relations;
+3. remeshing and conservative projection;
+4. graph correspondence and optimal transport;
+5. dimension-changing and noninvertible transitions.
+
+Then update the representation audit and determine whether the transport problem leaves any genuine ARG residual.
+
+## Research maxim
+
+> Establish what is known. Translate without erasing. Preserve disagreement. Test only the remainder. Reify nothing.
