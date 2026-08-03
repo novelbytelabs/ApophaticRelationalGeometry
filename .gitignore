@@ -9,3 +9,4 @@ dist/
 *.csv
 *.npz
 .DS_Store
+temps/
