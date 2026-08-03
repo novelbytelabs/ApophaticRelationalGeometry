@@ -113,3 +113,7 @@ This preliminary synthesis does **not** establish that:
 ## Promotion rule
 
 No row may enter the Minimal ARG Core until its primary-source base, exceptions, cross-field translation, and representation audit have been independently reviewed.
+
+## Basket completion record
+
+CS1 basket 3 was completed on branch `agent/consensus-synthesis-roadmap` with source notes for Kalman 1963, Moore 1981, Hermann and Krener 1977, Saint-Pierre 1994, and Blanchini 1999. No experiment was run or authorized.
