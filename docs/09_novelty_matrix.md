@@ -20,24 +20,46 @@ $$
 
 Implementation removes a software gap. It does not establish mathematical novelty, scientific utility, or physical adequacy.
 
-## Initial matrix
+## Current consensus correction
 
-| Component | Established neighboring work to investigate | Shared structure | Candidate addition in ARG | Current status | Required evidence |
-|---|---|---|---|---|---|
-| Collective feedback | Mean-field models, order-parameter feedback, collective-coordinate dynamics, adaptive control | A system-derived statistic affects constituent dynamics. | Feedback is coupled to adaptive relational topology and intrinsic metric variables. | Implemented in $M_F$ and $M_{FP}$; novelty unassessed | Map the exact $c(x)$ paths to known feedback models and test reparameterization. |
-| Constraint projection | Projected dynamical systems, constrained mechanics, differential-algebraic equations, incompressible-flow projection | Proposed motion is corrected to satisfy explicit constraints. | Constraint geometry may eventually involve coevolving state and relation variables. | Constant-amplitude sandbox implemented in $M_P$ and $M_{FP}$; novelty unassessed | Derive exact overlap with standard projected systems and identify what, if anything, is distinct. |
-| Feedback-projection combination | Constrained mean-field systems, projected adaptive control, feedback under algebraic constraints | Feedback modifies a proposal that is also constrained. | Separately measurable $F_0$, $F_F$, combined proposal, and projection correction on adaptive relational geometry. | Implemented in $M_{FP}$; novelty unassessed | Search for exact precedents, map equations, and test reparameterization. |
-| Same-state node identity | Orthogonal projection of radial fields | A radial component is annihilated by projection onto a sphere tangent space. | $f_{FP}=f_P$ at the same regular full state while $s/q$ feedback remains. | Proved under the frozen assumptions and unit-tested | Determine whether the trajectory-level consequence offers any nontrivial or useful distinction. |
-| Feedback-projection equivalence | Model reduction, conjugacy, observational equivalence | Distinct formulations may generate equivalent dynamics. | Determine whether $M_F$ approximates or equals $M_P$ on a restricted domain or observation map. | Unverified | Exact conjugacy, reparameterization, bounded approximation, or scoped observation-map result. |
-| Adaptive topology | Adaptive networks, rewiring systems, temporal graphs | Node states and connection strengths coevolve. | Edge activation contributes directly to intrinsic geometry. | Implemented in all four prototypes; novelty unassessed | Compare with state-dependent weighted-network formulations. |
-| State-dependent metric | Metric graphs, dynamic metric spaces, graph Ricci flow | Distances or geometric quantities evolve. | Metric depends jointly on mismatch, activation, and deformation variables. | Implemented scalar specialization in all four prototypes | Determine whether it is reducible to standard weighted shortest paths. |
-| Local-to-global compatibility | Cellular sheaves, bundles, consensus systems, distributed constraint satisfaction | Local assignments must agree on overlaps or relations. | Compatibility may participate in nonlinear coevolving metric and projected dynamics. | Target-family concept; not implemented generally | Formalize restriction structure and compare with nonlinear sheaf models. |
-| Prototype-level downward feedback | Multiscale feedback, order-parameter control, causal coarse-graining | Aggregate substrate information changes constituent transitions. | Explicit path $x\to c(x)\to(\dot x,\dot s,\dot q)$. | Implemented; stronger causal status unverified | Test organization dependence, counterfactual adequacy, invariance, transport, and alternatives. |
-| Non-collapse barrier | Singular potentials, hard-core repulsion, collision avoidance | Energy diverges near forbidden contact. | Barrier acts on intrinsic relational edge length rather than fixed ambient distance. | Proposed; theorem absent | Derive reduction to or distinction from existing singular interaction models. |
-| Presentation invariance | Gauge symmetry, equivariant dynamics, quotient state spaces | Labels and coordinates are not physical observables. | Applied to adaptive graph, metric, feedback, and projection structures. | Permutation equivariance unit-tested for all four; general proof absent | State the transformation groupoid and prove per-model equivariance. |
-| Mechanism influence diagnostics | Influence decomposition, constraint-force analysis, causal contribution measures | Separate baseline, feedback, and corrective terms. | Distinct local proposal, feedback, combined-proposal, projection, and retraction diagnostics. | Implemented; discriminating value untested | Demonstrate robustness and usefulness against matched alternatives. |
-| One-many interpretation | Relational mechanics, systems theory, process ontology | Global organization and local parts are mutually dependent descriptions. | Pluralistic-monist interpretation governed by a non-reification schema. | Philosophical synthesis | Keep separate from mathematical novelty claims. |
-| Prime substrate | Number-theoretic physics, arithmetic dynamics, prime graphs | Arithmetic structure is proposed as generative. | Primes would generate a relational computational substrate. | Undefined and quarantined | Supply a precise object, lawful dynamics, and unique prediction. |
+The first three CS1 source baskets establish that the following are mature neighboring results:
+
+- state- and initial-condition-dependent dynamics;
+- nonmodal amplification and cancellation;
+- coevolving state and topology;
+- basin, invariant-manifold, metastable, and structural persistence;
+- controllability and observability;
+- balanced realization and input/output model reduction;
+- nonlinear accessibility and observability geometry;
+- viability kernels;
+- positive, robust, and controlled invariance;
+- smooth evolving-space transport;
+- multiple inequivalent notions of theoretical equivalence.
+
+Therefore neither `state–structure interaction` nor `persistence under constraints` is licensed as a broad ARG novelty claim.
+
+## Updated matrix
+
+| Component | Established neighboring work | Shared structure | Candidate addition in ARG | Current status | Threat level | Required evidence |
+|---|---|---|---|---|---:|---|
+| Initial-state dependence | Modal and nonmodal dynamics, propagator analysis | Outcome depends on transition law and initial condition. | Cross-field synthesis only unless a new invariant is found. | Established ingredient | 4 for broad principle | Compare any ARG predictor with propagator, singular-vector, pseudospectral, and basin methods. |
+| State–structure interaction | Controllability, observability, accessibility, Gramians, balanced realization | State directions differ in reachability, visibility, and input/output importance relative to system structure. | Possible typed umbrella schema across changing structures. | Broad principle established; one universal schema unverified | 3–4 | Prove a nontrivial common schema or withdraw universal language. |
+| Persistence | Stability, basins, invariant manifolds, metastability, structural stability, viability, invariant sets | Multiple forms of continuation or preservation are formally defined. | Typed synthesis across distinct predicates. | No universal scalar licensed | 4 for broad claim | Specify observable, horizon, equivalence, controls, constraints, and mechanism. |
+| Collective feedback | Mean-field models, order-parameter feedback, collective-coordinate dynamics, adaptive control | A system-derived statistic affects constituent dynamics. | Feedback coupled to adaptive relational topology and intrinsic metric variables. | Implemented in $M_F$ and $M_{FP}$; novelty unassessed | 2–3 | Map exact $c(x)$ paths to known feedback models and test reparameterization. |
+| Constraint projection | Projected dynamical systems, constrained mechanics, DAEs, incompressible-flow projection | Proposed motion is corrected to satisfy explicit constraints. | Constraint geometry may involve coevolving state and relation variables. | Constant-amplitude sandbox implemented | 3–4 for broad mechanism | Derive exact overlap with standard projected, viable, and invariant-set systems. |
+| Feedback-projection combination | Constrained feedback systems, projected control, controlled invariance | Feedback modifies a proposal that is also constrained. | Separately measurable local, feedback, proposal, projection, and retraction terms on adaptive geometry. | Implemented in $M_{FP}$; novelty unassessed | 2–3 | Search exact precedents, map equations, and test reparameterization. |
+| Same-state node identity | Orthogonal projection of radial fields | A radial component is annihilated by projection onto a sphere tangent space. | $f_{FP}=f_P$ at the same regular full state while $s/q$ feedback remains. | Proved under frozen assumptions | 4 for algebraic identity | Determine whether any trajectory-level consequence is nontrivial. |
+| Feedback-projection equivalence | Model reduction, conjugacy, observational equivalence | Distinct formulations may generate equivalent dynamics. | Determine whether $M_F$ approximates or equals $M_P$ on a restricted domain or observation map. | Unverified | 3 | Exact conjugacy, reparameterization, bounded approximation, or scoped observation-map result. |
+| Adaptive topology | Adaptive networks, rewiring systems, temporal graphs | Node states and connection strengths coevolve. | Edge activation contributes directly to intrinsic geometry. | Implemented; broad architecture established | 3–4 | Compare with state-dependent weighted-network formulations. |
+| State-dependent metric | Metric graphs, dynamic metric spaces, graph Ricci flow | Distances or geometric quantities evolve. | Metric depends jointly on mismatch, activation, and deformation variables. | Implemented scalar specialization | 2–3 | Determine whether reducible to standard weighted shortest paths or evolving metric graphs. |
+| Local-to-global compatibility | Cellular sheaves, bundles, consensus systems, distributed constraints | Local assignments must agree on overlaps or relations. | Compatibility may participate in nonlinear coevolving metric and projected dynamics. | Target-family concept | 2–3 | Formalize restrictions and compare with nonlinear sheaf and bundle models. |
+| Downward feedback | Multiscale feedback, order-parameter control, causal coarse-graining | Aggregate information changes constituent transitions. | Explicit path $x\to c(x)\to(\dot x,\dot s,\dot q)$. | Implemented; stronger causal status unverified | 2–3 | Test organization dependence, counterfactual adequacy, invariance, transport, and alternatives. |
+| Viability and controlled persistence | Viability kernels, positive and controlled invariance, constrained control | States or sets can remain admissible autonomously or under policy. | Possible integration with adaptive relational geometry and mechanism diagnostics. | General principle established; ARG-specific result absent | 4 for broad principle | Derive distinct ARG viability or invariant-set theorem or matched performance advantage. |
+| Non-collapse barrier | Singular potentials, hard-core repulsion, collision avoidance | Energy diverges near forbidden contact. | Barrier acts on intrinsic relational edge length rather than fixed ambient distance. | Proposed; theorem absent | 2–3 | Derive reduction to or distinction from existing singular interaction models. |
+| Presentation invariance | Gauge symmetry, equivariant dynamics, quotient state spaces, realization equivalence | Labels and coordinates are not physical observables. | Applied to adaptive graph, metric, feedback, and projection structures. | Permutation tests only; general criterion absent | 3 | State transformation groupoid and prove per-model invariance or covariance. |
+| Mechanism diagnostics | Gramians, influence decomposition, constraint-force analysis | Separate baseline, input, output, feedback, and corrective contributions. | Distinct local proposal, feedback, projection, and retraction diagnostics. | Implemented; discriminating value untested | 2–3 | Compare directly with control-energy, observability, sensitivity, and invariant-set diagnostics. |
+| One-many interpretation | Relational mechanics, systems theory, process ontology | Global organization and local parts are mutually dependent descriptions. | Pluralistic-monist interpretation governed by non-reification. | Philosophical synthesis | 1–2 | Keep separate from mathematical novelty. |
+| Prime substrate | Number-theoretic physics, arithmetic dynamics, prime graphs | Arithmetic structure proposed as generative. | Primes generate a relational computational substrate. | Undefined and quarantined | unknown | Supply precise object, lawful dynamics, observable, and unique prediction. |
 
 ## Candidate synthesis statement
 
@@ -58,18 +80,20 @@ $$
 }
 $$
 
-The first five ingredients have concrete contract-v1.0 prototypes. General compatibility constraints, non-collapse theorems, broad presentation invariance, scientific utility, and physical grounding remain open. ARG remains a **candidate synthesis**, not an established innovation.
+The first five ingredients have concrete contract-v1.0 prototypes. General compatibility constraints, non-collapse theorems, broad presentation invariance, scientific utility, and physical grounding remain open.
+
+ARG remains a **candidate synthesis**, not an established innovation.
 
 ## Closest-framework procedure
 
 For each neighboring framework:
 
-1. reproduce its governing equations in ARG notation;
+1. reproduce governing equations in ARG notation;
 2. map variables into the canonical model family where possible;
 3. identify exact correspondences;
-4. distinguish feedback, projection, penalty, multiplier, and adaptive-geometry terms;
+4. distinguish autonomous dynamics, input, output, feedback, projection, penalty, multiplier, constraints, and adaptive geometry;
 5. test whether differences disappear under reparameterization;
-6. compare observable predictions under matched conditions;
+6. compare predictions under matched conditions;
 7. record whether ARG is broader, equivalent, approximate, or merely differently interpreted.
 
 ## Novelty threat levels
@@ -78,7 +102,7 @@ For each neighboring framework:
 - **Level 1 — Ingredient overlap:** one component is already standard.
 - **Level 2 — Structural overlap:** several coupled components already appear together.
 - **Level 3 — Near equivalence:** a known framework maps into ARG with minor changes.
-- **Level 4 — Full equivalence:** the mechanism is a reparameterization or reinterpretation of existing work.
+- **Level 4 — Full equivalence or established broad principle:** the claimed mechanism is a reparameterization, reinterpretation, or general result already known.
 
 A Level 4 result requires withdrawal of the affected mathematical novelty claim, but may leave a valid synthesis, implementation, diagnostic, or interpretive contribution.
 
@@ -96,9 +120,12 @@ Do not describe ARG as:
 - a new foundation of physics;
 - a proof of pluralistic monism;
 - a replacement for existing geometry;
+- a discovery that state and structure jointly determine behavior;
+- a discovery that persistence depends on compatibility;
+- a discovery of constrained or controlled persistence;
 - a discovery of the computational fabric of reality;
 - scientifically validated merely because all four prototypes are implemented.
 
 Permitted language:
 
-> ARG implements and studies a candidate synthesis of endogenous collective feedback, adaptive relational geometry, and constant-amplitude projected-admissibility mechanisms. Novelty and scientific adequacy remain open.
+> ARG implements and studies a candidate synthesis of endogenous collective feedback, adaptive relational geometry, and constant-amplitude projected-admissibility mechanisms. The broad state–system interaction and persistence principles are established in neighboring fields; any ARG-specific residual remains under audit.
