@@ -1,0 +1,35 @@
+flowchart TB
+    subgraph LOCAL["Local processes"]
+        X1["x_1"]
+        X2["x_2"]
+        X3["x_3"]
+    end
+
+    REL["Relational organization<br/>B_t"]
+    OBS["Collective observable<br/>c(Q_t)"]
+    CONS["Global admissibility<br/>Gamma(Q_t)=0, H(Q_t)>=0"]
+    TRANS["Admissible local transitions<br/>dot Q = Pi_T F(Q)"]
+
+    X1 --> OBS
+    X2 --> OBS
+    X3 --> OBS
+    REL --> OBS
+    OBS --> CONS
+    REL --> CONS
+    CONS --> TRANS
+    TRANS --> X1
+    TRANS --> X2
+    TRANS --> X3
+
+    NOTE["No external homunculus:<br/>the whole is computed from and<br/>realized through constituent relations"]
+    NOTE -.-> OBS
+    NOTE -.-> TRANS
+
+    classDef local fill:#EAF2F8,stroke:#244A64,stroke-width:2px,color:#132D3D;
+    classDef macro fill:#FFF3D6,stroke:#A56A00,stroke-width:2px,color:#513500;
+    classDef action fill:#E8F5EC,stroke:#2F6B42,stroke-width:2px,color:#183923;
+    classDef note fill:#F7F9FB,stroke:#7A8791,stroke-dasharray:5 3,color:#30383E;
+    class X1,X2,X3,REL local;
+    class OBS,CONS macro;
+    class TRANS action;
+    class NOTE note;

@@ -1,0 +1,28 @@
+flowchart LR
+    H["H_t<br/>historical dependence"]
+    O["O_t<br/>organizational continuity"]
+    C["C_t<br/>structure-state compatibility"]
+    V["V_t<br/>successor viability"]
+
+    AND(("AND"))
+    P{"P_t = 1?"}
+    YES["Extend identity lineage<br/>Q_t ~ Q_(t+1)"]
+    NO["Identity break,<br/>replacement, or reclassification"]
+
+    H --> AND
+    O --> AND
+    C --> AND
+    V --> AND
+    AND --> P
+    P -->|"true"| YES
+    P -->|"false"| NO
+
+    classDef predicate fill:#EAF2F8,stroke:#244A64,stroke-width:2px,color:#132D3D;
+    classDef gate fill:#FFF3D6,stroke:#A56A00,stroke-width:2px,color:#513500;
+    classDef success fill:#E8F5EC,stroke:#2F6B42,stroke-width:2px,color:#183923;
+    classDef failure fill:#FDEBEC,stroke:#A7373F,stroke-width:2px,color:#591B20;
+    class H,O,C,V predicate;
+    class AND,P gate;
+    class YES success;
+    class NO failure;
+

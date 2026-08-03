@@ -1,0 +1,46 @@
+flowchart TB
+    subgraph INPUT["Context at tick t"]
+        ENV["Environment E_t"]
+        COND["Constraints C_t"]
+        MEM["Memory M_t"]
+        subgraph ENTITY["Structured occurrence Q_t"]
+            B["Structure B_t"]
+            X["State x_t in X(B_t)"]
+            B <-->|"co-defines"| X
+        end
+    end
+
+    PROP["Proposal"]
+    SPLIT{"Decompose"}
+    RAIL["RAIL component"]
+    SHADOW["SHADOW"]
+    KEEP["KEEPER<br/>sense - classify - select"]
+    CORR["Selected delta"]
+    PROJ["Admissibility map"]
+    NEXT["Next occurrence"]
+    MEMNEXT["Updated memory"]
+
+    ENV --> COND
+    COND --> PROP
+    ENTITY --> PROP
+    MEM --> PROP
+    PROP --> SPLIT
+    SPLIT --> RAIL
+    SPLIT --> SHADOW
+    SHADOW --> KEEP
+    ENV --> KEEP
+    RAIL --> CORR
+    KEEP --> CORR
+    CORR --> PROJ
+    COND --> PROJ
+    PROJ --> NEXT
+    NEXT --> MEMNEXT
+
+    classDef state fill:#EAF2F8,stroke:#244A64,stroke-width:2px,color:#132D3D;
+    classDef operation fill:#F7F9FB,stroke:#526D82,stroke-width:1.5px,color:#172A3A;
+    classDef control fill:#FFF3D6,stroke:#A56A00,stroke-width:2px,color:#513500;
+    classDef result fill:#E8F5EC,stroke:#2F6B42,stroke-width:2px,color:#183923;
+    class B,X,MEM,MEMNEXT,ENV,COND state;
+    class PROP,SPLIT,RAIL,SHADOW,CORR,PROJ operation;
+    class KEEP control;
+    class NEXT result;

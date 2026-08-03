@@ -1,0 +1,15 @@
+flowchart LR
+    F["1. Formal coherence<br/>types, invariants, mechanisms"]
+    P["2. Persistence experiments<br/>state-structure alignment"]
+    C["3. Causal-field interventions<br/>difference-making"]
+    W["4. Whole formation<br/>closure and constraint"]
+    A["5. Adversarial audit<br/>reification, scale, nulls"]
+
+    F --> P --> C --> W --> A
+    A -.->|"revise definitions"| F
+    A -.->|"amend protocol"| P
+
+    classDef stage fill:#EAF2F8,stroke:#244A64,stroke-width:2px,color:#132D3D;
+    classDef audit fill:#FFF3D6,stroke:#A56A00,stroke-width:2px,color:#513500;
+    class F,P,C,W stage;
+    class A audit;

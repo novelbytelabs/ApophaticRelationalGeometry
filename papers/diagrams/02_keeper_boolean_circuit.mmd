@@ -1,0 +1,58 @@
+flowchart TB
+    subgraph INPUTS["Measured inputs"]
+        EPS["Residual<br/>epsilon_t"]
+        RANK["Constraint<br/>regularity"]
+        AGE["Refresh clock<br/>a_t"]
+    end
+
+    subgraph FLAGS["Comparator flags"]
+        L["L: low residual"]
+        H["H: high residual"]
+        R["R: regular"]
+        S["S: stale"]
+    end
+
+    subgraph LOGIC["Boolean selection circuit"]
+        GENV["OR gate<br/>g_env = H OR S OR (NOT R)"]
+        GPASS["AND gate<br/>g_pass = L AND (NOT S) AND R"]
+        GSH["AND gate<br/>g_shadow = (NOT L) AND (NOT H)<br/>AND R AND (NOT S)"]
+    end
+
+    ENVREF["ENV REFRESH<br/>external re-alignment"]
+    PASS["PASS<br/>carry proposal"]
+    SHADOW["SHADOW UPDATE<br/>internal correction"]
+
+    EPS --> L
+    EPS --> H
+    RANK --> R
+    AGE --> S
+
+    H --> GENV
+    S --> GENV
+    R --> GENV
+
+    L --> GPASS
+    S --> GPASS
+    R --> GPASS
+
+    L --> GSH
+    H --> GSH
+    R --> GSH
+    S --> GSH
+
+    GENV --> ENVREF
+    GPASS --> PASS
+    GSH --> SHADOW
+
+    classDef input fill:#EAF2F8,stroke:#244A64,stroke-width:2px,color:#132D3D;
+    classDef comparator fill:#F7F9FB,stroke:#526D82,stroke-width:1.5px,color:#172A3A;
+    classDef gate fill:#FFF3D6,stroke:#A56A00,stroke-width:2px,color:#513500;
+    classDef safe fill:#E8F5EC,stroke:#2F6B42,stroke-width:2px,color:#183923;
+    classDef warn fill:#FFF4E5,stroke:#B66A00,stroke-width:2px,color:#5E3700;
+    classDef danger fill:#FDEBEC,stroke:#A7373F,stroke-width:2px,color:#591B20;
+    class EPS,RANK,AGE input;
+    class L,H,R,S comparator;
+    class GENV,GPASS,GSH gate;
+    class PASS safe;
+    class SHADOW warn;
+    class ENVREF danger;
