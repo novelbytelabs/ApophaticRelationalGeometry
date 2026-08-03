@@ -4,6 +4,20 @@
 
 ARG advances by passed gates, not by calendar optimism. A phase is complete only when its exit criteria pass and the claim ledger is aligned.
 
+The governing research order is:
+
+$$
+\boxed{
+\text{research first}
+\;\longrightarrow\;
+\text{synthesize second}
+\;\longrightarrow\;
+\text{formalize third}
+\;\longrightarrow\;
+\text{experiment only on the unresolved remainder}.
+}
+$$
+
 ## Binding claim ceiling
 
 $$
@@ -26,7 +40,11 @@ $$
 }
 $$
 
+The consensus-synthesis track does not change this execution state.
+
 ## Current position
+
+### Four-model implementation and experiment track
 
 | Phase | Status | Result |
 |---|---|---|
@@ -42,6 +60,68 @@ $$
 | Phase 7 onward | BLOCKED | Confirmatory execution remains unauthorized. |
 
 Software tests verify declared code and protocol contracts. They do not validate the scientific hypothesis, and they do not supersede an unresolved independent audit.
+
+### Consensus synthesis track
+
+| Phase | Status | Result or required output |
+|---|---|---|
+| CS0 — Governance and schemas | REVIEW PENDING | Consensus method, evidence grades, integration rules, workspace, and source-note schema added on an isolated branch. |
+| CS1 — State, structure, representation, and persistence | ACTIVE / LITERATURE AUDIT ONLY | Determine the established mathematical, scientific, and philosophical core before revising formalism or proposing experiments. |
+| CS2 — Change, transport, and identity | BLOCKED BY CS1 | Separate standard transport machinery from identity criteria and unresolved representation choices. |
+| CS3 — Constraint and causation | BLOCKED | Separate dynamical constraint, intervention, counterfactual, and causal interpretation. |
+| CS4 — Parts, wholes, and emergence | BLOCKED | Synthesize composition, closure, multiscale organization, and emergence without forcing one interpretation. |
+| CS5 — Scale and effective description | BLOCKED | Audit coarse-graining, model reduction, renormalization, and higher-level autonomy. |
+| CS6 — Space, time, and geometry | BLOCKED | Separate mathematical structures, physical evidence, and metaphysical readings. |
+| CS7 — Information and measurement | BLOCKED | Disambiguate physical, statistical, computational, semantic, and epistemic information. |
+| CS8 — Perspective and observer | BLOCKED | Distinguish reference-frame, gauge, model, and measurement dependence from subjectivism. |
+| CS9 — Minimal ARG Core | BLOCKED | Publish only C3–C4 bridge propositions that survive all completed audits. |
+| CS10 — Formal revision | BLOCKED | Align notation, papers, claim ledger, novelty matrix, and public language with the consensus core. |
+
+The consensus track is governed by `docs/22_consensus_synthesis_program.md`. Its working material lives under `research/consensus/`.
+
+---
+
+# Consensus synthesis gates
+
+## Objective
+
+Determine what ARG can responsibly synthesize from established cross-disciplinary results before treating familiar principles as discoveries or spending compute on questions already answered by consensus.
+
+## Required artifacts
+
+- Consensus Atlas;
+- Concept Translation Dictionary;
+- Minimal ARG Core;
+- Disagreement and Boundary Map;
+- Residual Research Agenda.
+
+## Core operating constraints
+
+- organize research around phenomena, not disciplinary silos;
+- decompose prose into atomic claims;
+- classify each claim by type and consensus grade;
+- map claims into established field terminology before assessing novelty;
+- distinguish identity, translation, specialization, approximation, analogy, and loose resemblance;
+- preserve interpretive disagreement where shared evidence does not select one ontology;
+- test representation robustness before calling a relation invariant;
+- import established results rather than recreating them;
+- propose experiments only for a precise unresolved residual;
+- treat a no-novelty result as a successful research outcome.
+
+## CS1 exit criteria
+
+CS1 passes only when:
+
+- every load-bearing state–structure and persistence claim has traceable source notes;
+- consensus statements are graded and scoped;
+- state, structure, rule, parameter, environment, compatibility, transport, and persistence have cross-field dictionary entries;
+- representation-dependent claims are labeled as such;
+- accepted evidence is separated from philosophical interpretation;
+- the novelty matrix records direct equation or concept comparisons;
+- the claim ledger is narrowed, promoted, rejected, or quarantined as required;
+- any proposed experiment addresses a demonstrably unresolved remainder.
+
+CS1 may conclude that the general state–structure principle is standard and that ARG's contribution is synthesis, application, or nothing further. That is an acceptable result.
 
 ---
 
@@ -122,6 +202,8 @@ Remediate the audit findings without changing scientific equations, thresholds, 
 
 Blocked until Phase 6A.1 is externally cleared. A prior execution issue or authorization template does not override this block.
 
+The consensus track may independently narrow or eliminate the scientific motivation for execution. Clearing software integrity is necessary but not sufficient to justify a pilot.
+
 # Phase 7 — Confirmatory four-model experiment
 
 Blocked. Only a separately authorized held-out execution may support scoped comparative claims.
@@ -129,6 +211,8 @@ Blocked. Only a separately authorized held-out execution may support scoped comp
 # Phase 8 — Relational projection v2
 
 A constraint involving mismatch, $s$, $q$, intrinsic distance, or compatibility requires a new versioned model contract.
+
+No v2 contract should be drafted until the applicable consensus and novelty audits identify a precise unresolved contribution.
 
 # Phase 9 — Physical anchors
 
@@ -138,6 +222,11 @@ Initial order:
 2. incompressible-flow projection;
 3. adaptive synchronization or flocking.
 
-## Immediate next action
+## Immediate next actions
 
-Complete Phase 6A.1 remediation on an isolated branch, run hosted adversarial verification, assemble a fresh self-validating audit bundle, and submit it to an external Auditor AI. Do not create execution authorization or run the pilot.
+Two independent tracks may proceed without weakening either gate:
+
+1. **Integrity track:** complete Phase 6A.1 remediation on its isolated branch, run hosted adversarial verification, assemble a fresh self-validating audit bundle, and submit it to an external Auditor AI. Do not create execution authorization or run the pilot.
+2. **Consensus track:** execute CS1 as a primary-source literature and translation audit. Populate source notes, consensus grades, dictionary entries, disagreement boundaries, and the residual agenda before revising ARG's formal ontology or proposing a new persistence experiment.
+
+No development-pilot or confirmatory execution is authorized by this roadmap revision.
