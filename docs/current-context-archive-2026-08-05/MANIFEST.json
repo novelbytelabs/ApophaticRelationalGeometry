@@ -1,0 +1,218 @@
+{
+  "archive_name": "ARG_Current_Context_Archive_2026-08-05",
+  "created_utc": "2026-08-05T20:46:00.674297+00:00",
+  "scope": "Current conversation context and attached source only; no external research.",
+  "files": [
+    {
+      "path": "00_INDEX.md",
+      "bytes": 5486,
+      "sha256": "97d07d2ce15969b13baf8c28871fddfd12c5a7a8fc05919545c25fdfd355ac1c"
+    },
+    {
+      "path": "01_CANDIDATE_SYNTHESIS.md",
+      "bytes": 7207,
+      "sha256": "4d8309f9a0d8e759f97a2dd2efeaf3ea6490a9b84960632725261d518d911cde"
+    },
+    {
+      "path": "02_SCOPE_STATUS_AND_CLAIMS.md",
+      "bytes": 5256,
+      "sha256": "00871b05f707d51c92b278599d43d1834271ccfb239271121e02419910bc1c02"
+    },
+    {
+      "path": "03_GLOSSARY.md",
+      "bytes": 7416,
+      "sha256": "82fa0848ae2711333f230623846bcd78ee56f4793f1b313d94bfdd3fb88a607b"
+    },
+    {
+      "path": "MASTER_ARCHIVE.md",
+      "bytes": 187477,
+      "sha256": "8a2ec3561defc11c261ead71264fe1b0a13538395fdd210730a44884a4cd6fc6"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1873,
+      "sha256": "6eb76bcc74a3662b62f0a55633f28c62e107a6e27c32cea9ba39ce6e276e633d"
+    },
+    {
+      "path": "archive/60_CURRENT_CONTEXT_NARRATIVE.md",
+      "bytes": 7692,
+      "sha256": "c868e4477d3bff96ca3f474a9f0e96fa9190d76214b58cf7bbcd78f581bb7256"
+    },
+    {
+      "path": "archive/61_QUOTATION_AND_FORMULA_LEDGER.md",
+      "bytes": 4121,
+      "sha256": "096811bfbf561d37528b4620cc18a207077f17245b94d9a8183829004da254fb"
+    },
+    {
+      "path": "archive/62_REJECTED_OR_REVISED_FORMULATIONS.md",
+      "bytes": 4785,
+      "sha256": "65b361d2c6024ff877361156eae6facd3b61294a9e59595aa940f18d7f8ea07d"
+    },
+    {
+      "path": "becoming/20_STRUCTURED_BECOMING.md",
+      "bytes": 4489,
+      "sha256": "e9af70db2f3d3145ed475d2fafcba62c1fb7f687904d984d175cbf0f60aab985"
+    },
+    {
+      "path": "becoming/21_PERSISTENCE_IDENTITY_AND_DISSOLUTION.md",
+      "bytes": 3979,
+      "sha256": "26f3318bef2bc357f4f6819d94ec3a9ae2fbd9b16f1168ae75dfde483568e768"
+    },
+    {
+      "path": "becoming/22_RAIL_SHADOW_KEEPER.md",
+      "bytes": 3568,
+      "sha256": "2b4bfae8256a244a0c63798dca06323b07cd50c16be0ab7e0388628b7350cf72"
+    },
+    {
+      "path": "becoming/23_CAUSATION_CONSTRAINT_AND_DEPENDENCE.md",
+      "bytes": 3447,
+      "sha256": "b29d77f9fe384901382e4ba382be1defd91b16f33ad40156b9ca54fb50ee4270"
+    },
+    {
+      "path": "experiments/43_FALSIFICATION_AND_EXPERIMENT_PROGRAM.md",
+      "bytes": 6240,
+      "sha256": "9b6604b694786ecc9ee7324670dea28ca0ecb9c3a203ffeeaeeec100ee00a52d"
+    },
+    {
+      "path": "experiments/44_EMPIRICAL_PREDICTIONS.md",
+      "bytes": 4531,
+      "sha256": "dd3eba0009852a515e858a68f72f80279abe25aeb77865a7f853a94deadee8c0"
+    },
+    {
+      "path": "experiments/45_RELATION_TO_EXISTING_MATHEMATICS_AND_PHYSICS.md",
+      "bytes": 4860,
+      "sha256": "7f50683764752ae1640ac89d14d9b3edb5b3f793d2fbe6761bb06e621a154703"
+    },
+    {
+      "path": "governance/50_CLAIMS_LEDGER.md",
+      "bytes": 6916,
+      "sha256": "17a99fb2d6643baf8322652a1619ab2d917521c3277abd153ca17105138e9e07"
+    },
+    {
+      "path": "governance/51_DECISION_LEDGER.md",
+      "bytes": 5119,
+      "sha256": "f3302ef910f602b9864425413021bfbea430d46c83d2d16a6f0ee90a777310ea"
+    },
+    {
+      "path": "governance/52_OPEN_QUESTIONS.md",
+      "bytes": 5754,
+      "sha256": "7d4f4a97159e7243a2c5d8ec8e01c7bfc3242eec42eafbc07d785933ef8d8972"
+    },
+    {
+      "path": "governance/53_CONTRIBUTIONS_AND_ATTRIBUTION.md",
+      "bytes": 4208,
+      "sha256": "e46a57e644d730d8f0af61d143cd5bc4638699e30f4c392e6a93e2b404e02438"
+    },
+    {
+      "path": "governance/54_SOURCEBOOK.md",
+      "bytes": 4584,
+      "sha256": "82780b68ba267f6f3feff923290528b421ede7074b68c1ac209f7455f4fca34e"
+    },
+    {
+      "path": "governance/55_DIAGRAMS_AND_CONCEPT_MAPS.md",
+      "bytes": 3161,
+      "sha256": "8f44fa247fe4db47a93d1a39d5a35faaf86b54d5c05657bceda38bd2bac01517"
+    },
+    {
+      "path": "governance/56_ROADMAP.md",
+      "bytes": 4875,
+      "sha256": "28071dc7d611c7631f9e103f1a3b20eac23c562ca5f30bd2d05b27eda15bd665"
+    },
+    {
+      "path": "governance/57_PAPER_OUTLINE.md",
+      "bytes": 3610,
+      "sha256": "5d6d75aacefb9e68786b5cd72630cac0b337c7f7059db6951420b7365478fdfb"
+    },
+    {
+      "path": "mathematics/30_FORMAL_DOMAIN_AND_PRESENTATIONS.md",
+      "bytes": 5155,
+      "sha256": "741f2057c1c2246ab95c208f1cdb9d1c603ebe80802fc12f3efe2cc085bdb43c"
+    },
+    {
+      "path": "mathematics/31_DYNAMIC_RELATIONAL_CONSTRAINT_GEOMETRY.md",
+      "bytes": 5207,
+      "sha256": "ba8254d49211fcd55d63019156242c999780aca50703f9d2234e8e79b56f4028"
+    },
+    {
+      "path": "mathematics/32_LOCAL_GLOBAL_DYNAMICS.md",
+      "bytes": 4105,
+      "sha256": "2f714a2d06091a5bfe0a9762e963cbfc9eff0667fa6b25389f40a5da2515011e"
+    },
+    {
+      "path": "mathematics/33_DYNAMIC_METRIC_AND_TOPOLOGY.md",
+      "bytes": 4138,
+      "sha256": "60478456a2ba67a01eedb859ba92e50d61613fbdabec3ace6f2a6d2a8015534f"
+    },
+    {
+      "path": "mathematics/34_PRESENTATION_INVARIANCE_AND_GAUGE.md",
+      "bytes": 4127,
+      "sha256": "ee1ad73251d32105eb667f088f8585855bb0b58d7e3d99746b081a63dfca97aa"
+    },
+    {
+      "path": "mathematics/35_INFINITY_BARRIERS_AND_NONCOLLAPSE.md",
+      "bytes": 3417,
+      "sha256": "c015e81bb08bd0dd63e1d62a69cec1d5fea0f349d7ce43fc36a7144add460daa"
+    },
+    {
+      "path": "mathematics/36_COMPUTATIONAL_FABRIC.md",
+      "bytes": 4109,
+      "sha256": "9dd053a28e822edacef23cb2527afc7d98425c577ce28bdadc9f80c6dd1c0dac"
+    },
+    {
+      "path": "models/40_ARG_MECHANISM_SANDBOX_V1.md",
+      "bytes": 3653,
+      "sha256": "3174acf065538d50ae46a60f7df0ee4c6320da4501455474713c9f0a085ff61c"
+    },
+    {
+      "path": "models/41_MINIMAL_THREE_NODE_MODEL.md",
+      "bytes": 4411,
+      "sha256": "4eb19728e92ce7cd92fbaa709e7dfcc4a7c2975ccf42e4613544976c57732654"
+    },
+    {
+      "path": "models/42_PROOF_OBLIGATIONS.md",
+      "bytes": 4393,
+      "sha256": "c1c86ffcd2c93f3c188d5a4b00a7467d0f3fa431ea22ba43dd80e58cf0b8c32f"
+    },
+    {
+      "path": "philosophy/10_APOPHATIC_META_AXIOM.md",
+      "bytes": 5124,
+      "sha256": "ad11de7b5a71613b25ad5d01f230fe15c0cdd2987572f5322d943e4adc45c47f"
+    },
+    {
+      "path": "philosophy/11_NEGATIVE_MATHEMATICS_ARCHIVE.md",
+      "bytes": 5338,
+      "sha256": "6aa65ee26f816d894a6849f3bc40e1e2e0201640d2db9b893109caeb60245f51"
+    },
+    {
+      "path": "philosophy/12_APEIRON_WHOLE_NOTHINGNESS_INFINITY.md",
+      "bytes": 5261,
+      "sha256": "3e4a5b6411d34f03c0a5b0598e07ed41459c797f62ab2ee291a1e540b2754a9e"
+    },
+    {
+      "path": "philosophy/13_PLURALISTIC_MONISM.md",
+      "bytes": 4405,
+      "sha256": "8266162115037042dbeaffea95cc89d004d32702c9a9682e786b102006ad445d"
+    },
+    {
+      "path": "philosophy/14_FIRST_CAUSE_GROUND_AND_EXPLANATION.md",
+      "bytes": 3896,
+      "sha256": "0c7ff9a7049dba5ef9bf1d5573283b182805dbe7034ab5d334c292af6d7fbc59"
+    },
+    {
+      "path": "philosophy/15_PRIME_DISTINCTIONS_HYPOTHESIS.md",
+      "bytes": 4661,
+      "sha256": "8721d20120acb09b74ce548ebce4115d3c7937abe425e302c2f30de088abc6fc"
+    },
+    {
+      "path": "source/Pasted text(429).txt",
+      "bytes": 10286,
+      "sha256": "e9561cd4c1719d7e7c86a6e4482b6b45ac31d0050c7bd50f929c6d8b97eb18d7"
+    },
+    {
+      "path": "source/images/image(118).png",
+      "bytes": 755903,
+      "sha256": "8cef725fb6d02c717adbaf4ebab73b9cc78921ec296412aeea4eb7e9d292f9d5"
+    }
+  ],
+  "manifest_note": "MANIFEST.json does not include its own final hash."
+}
