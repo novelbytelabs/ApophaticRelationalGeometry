@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=69", "wheel"]
+requires = ["setuptools==80.9.0", "wheel==0.45.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -16,7 +16,11 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=8.0",
+  "pytest==9.1.1",
+]
+phase6-execution = [
+  "numpy==2.5.1; python_version == '3.12'",
+  "scipy==1.18.0; python_version == '3.12'",
 ]
 
 [project.scripts]
@@ -30,3 +34,4 @@ where = ["src"]
 testpaths = ["tests"]
 pythonpath = ["tests"]
 addopts = "-q"
+markers = ["slow: dedicated long-running numerical verification"]

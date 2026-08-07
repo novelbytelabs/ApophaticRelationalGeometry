@@ -1,0 +1,51 @@
+{
+  "authorization_id": "ARG-P6-PILOT-EXEC-v1",
+  "confirmatory_execution": "BLOCKED",
+  "execution_id": "ARG-P6-PILOT-20260802T192400Z",
+  "execution_utc": "2026-08-02T19:24:00Z",
+  "external_audit": {
+    "bundle_sha256": "5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd",
+    "clearance": "USER_AUTHORIZED_EXPLORATORY_PILOT_AFTER_REMEDIATION",
+    "report_sha256": "985e0534fd52dcf1f2832e17d3796ad6627d728dedd5711c4e6bdc546ddfe749",
+    "tripwire_sha256": "8979a1aa6a481b3376f7f86be26f511acf6b2b1fe4f1add5fa7e9861430049b3",
+    "verdict": "CONDITIONAL_PASS"
+  },
+  "protocol_id": "ARG-P5-COMP-v1",
+  "protocol_version": "1.0.0",
+  "runner_id": "ARG-P6-PILOT-RUNNER-v1",
+  "runner_source_commit": "5d9c014bc8828763b905bf3b198eb9ae22fa550a",
+  "runner_version": "1.0.0",
+  "scope": {
+    "archive_destination": "/tmp/arg-phase6-pilot-20260802T192400Z",
+    "archive_schema_version": "ARG-P6-ARCHIVE-v3",
+    "authorization_only_commit_count": 1,
+    "configuration_count": 50,
+    "confirmatory_execution": "BLOCKED",
+    "execution_environment_sha256": "2b8af6ef62fe6afba8e9b8211a561b9b6819596435102909f82a3549e8c7cc59",
+    "expected_summary_records": 50,
+    "expected_trajectory_records": 1450,
+    "integrator_suite": "rk4-refinement-plus-segmented-dop853-v1",
+    "integrity_baseline_sha256": "5d22ff760fa8f733191eeabd24584b93032c4e83e6fc52458aadcd9d71b12d39",
+    "pilot_membership_sha256": "20b0e27b3b3e941cd9ad8996b049c95de8fc42a6ca920c8748eb09aeff9891d2",
+    "protocol_lock_sha256": "be54c8e54e8b16f439a903ca00df118252cd649ad22f315a546822551da3b5eb",
+    "runner_git_tree": "0967cd3cf051bdad5b9a22568ec06a51b19bdb9c",
+    "runner_source_commit": "5d9c014bc8828763b905bf3b198eb9ae22fa550a",
+    "runner_source_tree_sha256": "126c10a7d21fe68fd7770c784b8eb0b348b0bbcdbc8d1c4bfb575bcb5f6903d5",
+    "scope_version": "ARG-P6-EXEC-SCOPE-v3",
+    "time_policy": {
+      "horizon": 10.0,
+      "include_initial_state": true,
+      "observation_count": 1001,
+      "observation_interval": 0.01,
+      "reference_rk4_dt": 0.001,
+      "refinement_dts": [
+        0.001,
+        0.0005,
+        0.00025
+      ]
+    }
+  },
+  "scope_sha256": "020409f6822fec3ced033d8d42ed9e72a44b93b705cf18ad8cca03fbf81dacf4",
+  "split": "pilot",
+  "status": "AUTHORIZED"
+}

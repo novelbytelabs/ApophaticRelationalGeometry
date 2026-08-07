@@ -2,15 +2,27 @@
 
 ## Status
 
-**Runner implementation and software verification passed. No pilot has been executed.**
+**The external Phase 6A.2 report assigned 85/100 with a conditional pass. Its five demonstrated guardrail failures have now been remediated and the supplied external tripwire reports 19 PASS / 0 FAIL / 0 INCONCLUSIVE. No execution authorization exists and no pilot has been executed.**
 
-The runner implements protocol `ARG-P5-COMP-v1` for the 50 frozen pilot configurations. Confirmatory trajectory generation is blocked in the planner, batch authorizer, RK4 path, DOP853 path, archive writer, execution authorization, and archive contamination scan.
+The audited candidate was:
 
-Final hosted verification:
+```text
+17a17398808cae1befe85e795d371012fe999f03
+```
 
-- GitHub Actions run `30723005085`;
-- Python 3.10: 100 passed;
-- Python 3.12: 100 passed.
+and it merged as:
+
+```text
+4fb987b34220927466812f0276e10bb0776c28fd
+```
+
+The accepted re-audit packet SHA-256 is:
+
+```text
+5d524253f24f31893ce44e1be4a0de1fa3ab9ae2f87812ee2d35416ac5ca84fd
+```
+
+The runner implements protocol `ARG-P5-COMP-v1` for the 50 frozen pilot configurations. Confirmatory trajectory generation remains blocked in planning, batch authorization, RK4, DOP853, archive writing, and contamination scanning.
 
 ## Data-free commands
 
@@ -19,50 +31,20 @@ arg-pilot validate --repo-root .
 arg-pilot plan --repo-root .
 ```
 
-Both commands verify the Phase 5 lock, reconstruct only the pilot plan, and check that the Phase 4 model files are unchanged. They generate no trajectory.
+These commands do not execute trajectories.
 
-The command
+## Execution command
 
 ```bash
-arg-pilot execute --repo-root . --archive artifacts/phase6_pilot
+arg-pilot execute --repo-root . --archive <new-empty-path>
 ```
 
-fails closed unless a later execution slice commits the fixed file:
+The command remains fail-closed while `EXECUTION_AUTHORIZATION.json` is absent. After the remediated runner is merged, exactly one authorization-only commit must bind the final runner Git tree, report and tripwire SHA-256 values, frozen execution scope, and archive destination.
 
-```text
-protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
-```
+## Environment policy
 
-There is no command-line flag, environment variable, alternate path, or fallback that bypasses this gate.
+`EXECUTION_ENVIRONMENT.json` accurately records the 85/100 conditional verdict and the post-report remediation state. It permits pilot execution only through a separate committed execution record. It does not authorize execution by itself.
 
-## Future authorization record
+## Claim ceiling
 
-The authorization file must name:
-
-- protocol and runner identifiers;
-- the previously hosted-verified `runner_source_commit`;
-- an execution identifier and UTC timestamp;
-- split `pilot`;
-- `confirmatory_execution: BLOCKED`.
-
-The execution commit may add the authorization file, but protected model, protocol, runner, analysis, and split-control files must remain equivalent to the authorized runner commit.
-
-## Archive layout
-
-A successful future pilot execution writes a new, empty destination containing:
-
-```text
-RUN_MANIFEST.json
-environment/
-configs/
-raw/
-summaries/
-failures.jsonl
-checksums.sha256
-```
-
-Raw arrays and metadata are write-once. Finalization hashes every file and changes the archive to read-only. Failed and singular runs are retained without imputation.
-
-## Non-claims
-
-Passing the runner gate establishes software behavior only. It does not establish a numerical mechanism result, feedback–projection equivalence, physical adequacy, causal autonomy, strong emergence, mathematical novelty, or ontology.
+The runner and its tests do not establish a numerical mechanism result, feedback–projection equivalence, predictive superiority, physical adequacy, causal autonomy, emergence, novelty, or ontology.

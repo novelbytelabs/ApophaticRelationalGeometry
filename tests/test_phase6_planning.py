@@ -10,6 +10,7 @@ import pytest
 import apophatic_geometry.pilot as pilot_module
 import apophatic_geometry.pilot_manifest as manifest_module
 from apophatic_geometry.models import ModelId
+from apophatic_geometry.protocol import canonical_json_sha256
 from apophatic_geometry.pilot import (
     CONFIRMATORY_SPLIT, EXPECTED_PILOT_CONFIGURATIONS, EXPECTED_PILOT_DIRECTIONS,
     ConfirmatoryAccessError, PilotConfiguration, ProtocolIntegrityError,
@@ -135,20 +136,49 @@ def test_model_baseline_mutation_fails_closed(bundle, monkeypatch) -> None:
     original = manifest_module._run_git
 
     def mutated(root: Path, *args: str):
-        if args and args[0] == "diff":
-            return subprocess.CompletedProcess(args, 1, "", "changed")
+        if args and args[0] == "show" and str(args[1]).endswith(
+            ":src/apophatic_geometry/models.py"
+        ):
+            return subprocess.CompletedProcess(
+                args, 0, "PROJECTOR_TOLERANCE = 9.0\n", ""
+            )
         return original(root, *args)
 
     monkeypatch.setattr(manifest_module, "_run_git", mutated)
-    with pytest.raises(ProtocolIntegrityError, match="model equations differ"):
+    with pytest.raises(
+        ProtocolIntegrityError,
+        match="outside the authorized projector roundoff remediation",
+    ):
         verify_model_baseline(REPO_ROOT, bundle.protocol)
 
 
-def test_execution_authorization_names_prior_runner_commit(tmp_path, monkeypatch) -> None:
+def test_execution_authorization_binds_exact_tree_and_authorization_only_commit(
+    tmp_path, monkeypatch
+) -> None:
     auth_path = tmp_path / "protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json"
     auth_path.parent.mkdir(parents=True)
     runner_commit = "1" * 40
     execution_commit = "2" * 40
+    expected_scope = {
+        "scope_version": "ARG-P6-EXEC-SCOPE-v3",
+        "protocol_lock_sha256": "1" * 64,
+        "integrity_baseline_sha256": "2" * 64,
+        "execution_environment_sha256": "3" * 64,
+        "pilot_membership_sha256": "4" * 64,
+        "integrator_suite": "rk4-refinement-plus-segmented-dop853-v1",
+        "time_policy": {"horizon": 10.0},
+        "archive_schema_version": "ARG-P6-ARCHIVE-v3",
+        "configuration_count": 50,
+        "expected_trajectory_records": 1450,
+        "expected_summary_records": 50,
+        "confirmatory_execution": "BLOCKED",
+    }
+    exact_scope = expected_scope | {
+        "runner_source_commit": runner_commit,
+        "runner_git_tree": "a" * 40,
+        "runner_source_tree_sha256": "b" * 64,
+        "authorization_only_commit_count": 1,
+    }
     auth_path.write_text(
         json.dumps(
             {
@@ -162,18 +192,100 @@ def test_execution_authorization_names_prior_runner_commit(tmp_path, monkeypatch
                 "runner_source_commit": runner_commit,
                 "execution_id": "test",
                 "execution_utc": "2026-08-01T00:00:00Z",
+                "scope": exact_scope,
+                "scope_sha256": canonical_json_sha256(exact_scope),
+                "external_audit": {
+                    "verdict": "CONDITIONAL_PASS",
+                    "clearance": "USER_AUTHORIZED_EXPLORATORY_PILOT_AFTER_REMEDIATION",
+                    "bundle_sha256": "5" * 64,
+                    "report_sha256": "6" * 64,
+                    "tripwire_sha256": "7" * 64,
+                },
                 "confirmatory_execution": "BLOCKED",
             }
         ),
         encoding="utf-8",
     )
 
+    monkeypatch.setattr(manifest_module, "_git_tree_hash", lambda *args: "a" * 40)
+    monkeypatch.setattr(manifest_module, "_tracked_commit_sha256", lambda *args: "b" * 64)
+
     def git_ok(root: Path, *args: str):
+        if args[:2] == ("rev-parse", f"{execution_commit}^"):
+            return subprocess.CompletedProcess(args, 0, runner_commit + "\n", "")
+        if args[:2] == ("rev-list", "--count"):
+            return subprocess.CompletedProcess(args, 0, "1\n", "")
+        if args[:2] == ("diff", "--name-only"):
+            return subprocess.CompletedProcess(
+                args, 0,
+                "protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json\n",
+                "",
+            )
         return subprocess.CompletedProcess(args, 0, "", "")
 
     monkeypatch.setattr(manifest_module, "_run_git", git_ok)
-    authorization = validate_execution_authorization(tmp_path, execution_commit)
-    assert authorization["runner_source_commit"] == runner_commit
+    authorization = validate_execution_authorization(
+        tmp_path, execution_commit, expected_scope=expected_scope
+    )
+    assert authorization["scope"]["runner_git_tree"] == "a" * 40
+
+
+def test_authorization_rejects_post_clearance_executable_change(
+    tmp_path, monkeypatch
+) -> None:
+    auth_path = tmp_path / "protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json"
+    auth_path.parent.mkdir(parents=True)
+    runner_commit = "1" * 40
+    execution_commit = "2" * 40
+    expected_scope = {"scope_version": "ARG-P6-EXEC-SCOPE-v3"}
+    exact_scope = expected_scope | {
+        "runner_source_commit": runner_commit,
+        "runner_git_tree": "a" * 40,
+        "runner_source_tree_sha256": "b" * 64,
+        "authorization_only_commit_count": 1,
+    }
+    auth_path.write_text(json.dumps({
+        "authorization_id": "ARG-P6-PILOT-EXEC-v1",
+        "status": "AUTHORIZED",
+        "protocol_id": "ARG-P5-COMP-v1",
+        "protocol_version": "1.0.0",
+        "runner_id": "ARG-P6-PILOT-RUNNER-v1",
+        "runner_version": "1.0.0",
+        "split": "pilot",
+        "runner_source_commit": runner_commit,
+        "execution_id": "test",
+        "execution_utc": "2026-08-01T00:00:00Z",
+        "scope": exact_scope,
+        "scope_sha256": canonical_json_sha256(exact_scope),
+        "external_audit": {
+            "verdict": "CONDITIONAL_PASS",
+                    "clearance": "USER_AUTHORIZED_EXPLORATORY_PILOT_AFTER_REMEDIATION",
+            "bundle_sha256": "5" * 64,
+            "report_sha256": "6" * 64,
+            "tripwire_sha256": "7" * 64,
+        },
+        "confirmatory_execution": "BLOCKED",
+    }), encoding="utf-8")
+    monkeypatch.setattr(manifest_module, "_git_tree_hash", lambda *args: "a" * 40)
+    monkeypatch.setattr(manifest_module, "_tracked_commit_sha256", lambda *args: "b" * 64)
+    def git_changed(root: Path, *args: str):
+        if args[:2] == ("rev-parse", f"{execution_commit}^"):
+            return subprocess.CompletedProcess(args, 0, runner_commit + "\n", "")
+        if args[:2] == ("rev-list", "--count"):
+            return subprocess.CompletedProcess(args, 0, "1\n", "")
+        if args[:2] == ("diff", "--name-only"):
+            return subprocess.CompletedProcess(
+                args, 0,
+                "protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json\n"
+                "src/apophatic_geometry/__init__.py\n",
+                "",
+            )
+        return subprocess.CompletedProcess(args, 0, "", "")
+    monkeypatch.setattr(manifest_module, "_run_git", git_changed)
+    with pytest.raises(ProtocolIntegrityError, match="change only"):
+        validate_execution_authorization(
+            tmp_path, execution_commit, expected_scope=expected_scope
+        )
 
 
 def test_execute_is_blocked_without_separate_authorization(tmp_path) -> None:

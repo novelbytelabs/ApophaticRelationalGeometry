@@ -8,10 +8,10 @@ from numpy.typing import NDArray
 
 from .model import EDGES, Parameters, State
 from .models import ModelId, ProjectionTarget, combined_projected_derivative, projected_derivative
-from .pilot_integrators import integrate_rk4
-from .pilot_manifest import configuration_payload
+from .pilot_integrators import _integrate_rk4_unchecked
+from .pilot_manifest import configuration_payload, require_frozen_configuration
 from .pilot_mechanisms import all_permutations
-from .pilot_types import NumericalAssessment, NumericalGateError, PilotConfiguration, Trajectory
+from .pilot_types import FrozenProtocolBundle, NumericalAssessment, NumericalGateError, PilotConfiguration, Trajectory
 from .protocol import canonical_json_sha256, max_abs_discrepancy, symmetric_normalized_rms
 
 FloatArray = NDArray[np.float64]
@@ -153,6 +153,7 @@ def run_permutation_tripwires(
     params: Parameters,
     model: ModelId | str,
     *,
+    bundle: FrozenProtocolBundle | None = None,
     dt: float,
     horizon: float,
     observation_interval: float,
@@ -163,7 +164,13 @@ def run_permutation_tripwires(
 
     if tolerance <= 0.0 or not np.isfinite(tolerance):
         raise ValueError("permutation tolerance must be finite and positive")
-    base = integrate_rk4(
+    if configuration.split == "pilot":
+        if bundle is None:
+            raise ValueError("pilot permutation checks require frozen membership")
+        require_frozen_configuration(bundle, configuration)
+    elif bundle is not None:
+        require_frozen_configuration(bundle, configuration)
+    base = _integrate_rk4_unchecked(
         configuration,
         params,
         model,
@@ -190,7 +197,7 @@ def run_permutation_tripwires(
             initial_state=permuted_state,
             configuration_hash=canonical_json_sha256(payload),
         )
-        candidate = integrate_rk4(
+        candidate = _integrate_rk4_unchecked(
             permuted_config,
             params,
             model,

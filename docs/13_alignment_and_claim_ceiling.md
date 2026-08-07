@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document fixes the relationship between the ARG formalism, implemented prototypes, frozen experiment protocol, verified runner, and strongest currently licensed claims. It is binding on documentation, code, experiments, releases, and external descriptions.
+This document fixes the relationship between the ARG formalism, implemented prototypes, frozen experiment protocol, runner software, independent audit, remediation state, and strongest currently licensed claims. It is binding on documentation, code, experiments, releases, and external descriptions.
 
 ## Mechanism distinction
 
@@ -59,7 +59,7 @@ $$
 
 because the node-feedback term is radial and $P_Tx=0$. This identity is local to the same-state node derivative and does not imply trajectory identity.
 
-## Current claim ceiling
+## Current scientific claim ceiling
 
 $$
 \boxed{
@@ -69,25 +69,27 @@ M_F\equiv M_P\ \text{unverified}.
 }
 $$
 
-## Protocol, runner, and execution status
+## Binding integrity and execution status
 
-Phase 5 froze comparative protocol `ARG-P5-COMP-v1` before trajectory generation. Phase 6A implemented and software-verified a runner for exactly the frozen pilot set.
+The independent audit found that the delivered bundle could not reproduce its advertised test result, contained obsolete Euler output, and exposed current or historical defects in provenance, state immutability, finite geometry, atomic output, lock containment, strict JSON, and environment locking.
 
-Current execution state:
+Several defects reproduced against current `main`; therefore previous runner test counts do not authorize execution.
+
+Current binding state:
 
 $$
 \boxed{
-\text{pilot-only runner verified};
+\text{Phase 6A.1 STOP-SHIP remediation active};
 \quad
-\text{development pilot not executed};
+\text{development pilot not authorized for execution};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
 $$
 
-A development pilot is authorized in principle by the Phase 5 gate, but execution remains blocked until a separate committed authorization names the verified runner commit. Authorization is not execution.
+Issue #12, the former Phase 6B authorization path, is closed as superseded. A fresh authorization gate may be created only from an externally cleared remediation commit.
 
-## Passed implementation gates
+## Passed historical implementation gates
 
 ### $M_P$ version 1.0
 
@@ -107,34 +109,61 @@ $$
 
 ### Phase 5 protocol version 1.0
 
-Human- and machine-readable protocol, deterministic split, executable metrics/decisions, numerical and provenance policies, critical-file lock, hosted verification, and no-data condition: **PASS**.
+The scientific design—hypotheses, parameters, initial conditions, split, metrics, thresholds, numerical policy, exclusions, stop rules, and decisions—was frozen before trajectory generation. Phase 6A.1 changes only integrity and execution controls; `ARG-P5-LOCK-v1.1-INTEGRITY` records that no scientific design field changed.
 
 $$
-\operatorname{PHASE5\_PROTOCOL\_FREEZE}=\text{PASS}.
+\operatorname{PHASE5\_SCIENTIFIC\_DESIGN\_FREEZE}=\text{PASS}.
 $$
 
-### Phase 6A pilot-only runner version 1.0
+### Phase 6A runner version 1.0
 
-| Gate | Status |
-|---|---|
-| Lock-first manifest loading | PASS |
-| Exact 50-configuration pilot reconstruction | PASS |
-| Mixed/confirmatory batch rejection | PASS |
-| Direct RK4/DOP853 confirmatory rejection | PASS |
-| All-model RK4 and DOP853 decision paths | PASS |
-| H5/H6, refinement, endpoint, and alternate-integrator gates | PASS at tested cases |
-| Frozen controls and all six relabelings | PASS at tested cases |
-| Write-once checksummed archive | PASS at tested cases |
-| Independent membership, trajectory, and checksum references | PASS |
-| Separate execution-authorization boundary | PASS |
-| Hosted verification | PASS — 100 tests on Python 3.10 and 100 on Python 3.12 |
-| No-pilot-data condition | PASS |
+The original runner implemented exact pilot reconstruction, confirmatory rejection, all-model RK4/DOP853 paths, H5/H6 and numerical gates, frozen controls, all six relabelings, archive construction, and independent software references. That remains a historical software result.
+
+It does not license execution while Phase 6A.1 is STOP-SHIP.
+
+## Phase 6A.1 remediation gate
+
+The remediation branch currently implements:
+
+- copied read-only state arrays;
+- fail-closed finite-positive exponential, conductance, length, distance, and derivative domains;
+- strict rejection of non-standard JSON constants;
+- root-confined regular-file lock targets with traversal and symlink-escape rejection;
+- Git-derived source commit and tracked-tree attestation;
+- installed-distribution, Python executable, protocol-lock, implementation-file, and runtime fingerprints;
+- atomic standalone output, explicit completion manifest, row counts, and output checksum;
+- source-bound execution identity distinct from the scientific configuration hash;
+- pilot archive run identity bound to authorization, attestation, environment policy, configuration hashes, and integrator suite;
+- exact future scientific execution environment, still marked `FROZEN_NO_EXECUTION`;
+- an integrity baseline over canonical equations, remediated code, independent references, adversarial tests, CI workflow, build metadata, and audit-bundle builder;
+- 300 generated-state all-model derivative and RK4 comparisons against a separately written reference path;
+- a clean-extraction audit-bundle builder that reruns tests, reconstructs the data-free pilot plan, rebuilds the wheel, verifies all file hashes, and republishes nothing until final re-extraction passes.
+
+Internal and hosted checks do not close this gate by themselves.
+
+### Mandatory remaining gate
 
 $$
-\operatorname{PHASE6\_RUNNER\_IMPLEMENTATION\_CLAIM}=\text{PASS}.
+\boxed{
+\operatorname{PHASE6A1\_CLEARANCE}
+=
+\text{hosted checks}
+\land
+\text{self-validating final bundle}
+\land
+\text{external Auditor AI clearance}.
+}
 $$
 
-The comparative scientific claim remains:
+Until all terms pass:
+
+$$
+\operatorname{PHASE6A1\_CLEARANCE}=\text{BLOCKED}.
+$$
+
+## Comparative scientific claim
+
+No trajectory experiment has run. Therefore:
 
 $$
 \operatorname{ARG\_COMPARATIVE\_SCIENTIFIC\_CLAIM}=\text{UNVERIFIED}.
@@ -152,6 +181,7 @@ ARG has not established:
 - that constant amplitude is a law of nature;
 - that the version-1.0 sandbox is the final relational geometry;
 - that the development pilot has been executed;
+- that Phase 6A.1 has passed external audit;
 - that the confirmatory experiment is authorized;
 - that macro-level causal autonomy or strong emergence has been demonstrated;
 - that ARG is a fundamental physical theory.
@@ -164,8 +194,10 @@ ARG has not established:
 - `19_phase5_protocol_verification.md`
 - `20_phase6_runner_design.md`
 - `21_phase6_runner_verification.md`
+- `22_phase6a1_integrity_remediation.md`
 - `protocol/phase5_v1/`
 - `protocol/phase6_runner_v1/`
+- `history/legacy_euler_run_rejected.md`
 
 ## NeoEmergenics relationship
 
@@ -175,4 +207,4 @@ NeoEmergenics remains an independent fail-closed harness and claim evaluator. It
 
 Every claim must name the model, evidence level, observation map, domain, and protocol version where applicable. “Projected geometry” must be qualified as **constant-amplitude**, **prototype**, and **software-verified** when scientific or ontological interpretation could otherwise be inferred.
 
-Any substantive change to a frozen metric, threshold, parameter, configuration, split, protected runner file, or decision rule requires a new version and renewed pre-execution review.
+No narrative explanation, internal test count, or prior authorization can override an unresolved independent integrity finding. Any substantive scientific-design change requires a new protocol version and a fresh unexecuted confirmatory set. Any integrity-file change requires a new baseline and external re-review.

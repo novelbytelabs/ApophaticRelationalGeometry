@@ -1,8 +1,8 @@
 """Phase 6 pilot-only runner facade and gated execution orchestrator.
 
 Importing or validating this module never executes a frozen pilot configuration.
-The complete 50-configuration development pilot requires a separately committed
-execution-authorization record at the fixed protocol path.
+Execution requires a separate committed authorization, a cleared external-audit
+environment policy, a clean source tree, and a full execution attestation.
 """
 
 from __future__ import annotations
@@ -11,8 +11,14 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+from .attestation import build_attestation
 from .models import CONTRACT_VERSION, ModelId
-from .pilot_archive import PilotArchiveWriter, archive_has_confirmatory_identifiers
+from .pilot_archive import (
+    PilotArchiveWriter,
+    archive_has_confirmatory_identifiers,
+    expected_trajectory_schema,
+)
+from .pilot_verify import verify_pilot_archive
 from .pilot_integrate import (
     all_permutations,
     assess_numerics,
@@ -34,9 +40,9 @@ from .pilot_manifest import (
     frozen_parameters,
     load_frozen_bundle,
     require_complete_pilot_batch,
-    runtime_environment,
     smoke_configuration,
     validate_execution_authorization,
+    validate_execution_environment_policy,
     verify_model_baseline,
 )
 from .pilot_types import (
@@ -60,10 +66,35 @@ from .pilot_types import (
 from .protocol import (
     PROTOCOL_ID,
     PROTOCOL_VERSION,
+    canonical_json_sha256,
+    load_json,
     max_abs_discrepancy,
     root_energy_ratio,
     symmetric_normalized_rms,
 )
+
+PILOT_IMPLEMENTATION_PATHS = (
+    "src/apophatic_geometry/__init__.py",
+    "src/apophatic_geometry/model.py",
+    "src/apophatic_geometry/models.py",
+    "src/apophatic_geometry/protocol.py",
+    "src/apophatic_geometry/attestation.py",
+    "src/apophatic_geometry/pilot_types.py",
+    "src/apophatic_geometry/pilot_manifest.py",
+    "src/apophatic_geometry/pilot_mechanisms.py",
+    "src/apophatic_geometry/pilot_integrators.py",
+    "src/apophatic_geometry/pilot_gates.py",
+    "src/apophatic_geometry/pilot_integrate.py",
+    "src/apophatic_geometry/pilot_archive.py",
+    "src/apophatic_geometry/pilot_verify.py",
+    "src/apophatic_geometry/pilot.py",
+    "src/apophatic_geometry/pilot_cli.py",
+    "protocol/phase5_v1/LOCK.json",
+    "protocol/phase6_runner_v1/INTEGRITY_BASELINE.json",
+    "protocol/phase6_runner_v1/EXECUTION_ENVIRONMENT.json",
+)
+PILOT_INTEGRATOR_SUITE = "rk4-refinement-plus-segmented-dop853-v1"
+EXPECTED_TRAJECTORIES_PER_CONFIGURATION = 29
 
 
 def pilot_plan(bundle: FrozenProtocolBundle) -> dict[str, Any]:
@@ -101,18 +132,20 @@ def summarize_configuration(
 
     fine_profile = f"rk4-dt-{dts[2]:.8g}"
     medium_profile = f"rk4-dt-{dts[1]:.8g}"
-    required = {
-        (model.value, fine_profile) for model in ModelId
-    } | {
+    required = {(model.value, fine_profile) for model in ModelId} | {
         (ModelId.MF.value, medium_profile),
         (ModelId.MP.value, medium_profile),
     }
     missing = required.difference(trajectories)
     if missing:
-        raise ProtocolIntegrityError(f"configuration summary lacks trajectories: {sorted(missing)}")
+        raise ProtocolIntegrityError(
+            f"configuration summary lacks trajectories: {sorted(missing)}"
+        )
     expected_alternates = {model.value for model in ModelId}
     if set(alternates) != expected_alternates:
-        raise ProtocolIntegrityError("configuration summary lacks canonical alternate runs")
+        raise ProtocolIntegrityError(
+            "configuration summary lacks canonical alternate runs"
+        )
 
     m0 = trajectories[(ModelId.M0.value, fine_profile)]
     mf = trajectories[(ModelId.MF.value, fine_profile)]
@@ -123,11 +156,15 @@ def summarize_configuration(
 
     mf_num = max(
         symmetric_normalized_rms(mf_medium.states, mf.states),
-        symmetric_normalized_rms(mf.states, alternates[ModelId.MF.value].states),
+        symmetric_normalized_rms(
+            mf.states, alternates[ModelId.MF.value].states
+        ),
     )
     mp_num = max(
         symmetric_normalized_rms(mp_medium.states, mp.states),
-        symmetric_normalized_rms(mp.states, alternates[ModelId.MP.value].states),
+        symmetric_normalized_rms(
+            mp.states, alternates[ModelId.MP.value].states
+        ),
     )
     primary_floor = max(mf_num, mp_num)
 
@@ -146,8 +183,12 @@ def summarize_configuration(
             ),
             "h3_m0_mf_full": symmetric_normalized_rms(m0.states, mf.states),
             "h4_m0_mp_full": symmetric_normalized_rms(m0.states, mp.states),
-            "mf_mp_geometry": symmetric_normalized_rms(mf.geometry, mp.geometry),
-            "mp_mfp_geometry": symmetric_normalized_rms(mp.geometry, mfp.geometry),
+            "mf_mp_geometry": symmetric_normalized_rms(
+                mf.geometry, mp.geometry
+            ),
+            "mp_mfp_geometry": symmetric_normalized_rms(
+                mp.geometry, mfp.geometry
+            ),
         },
         "mechanism_ratios": {
             "mf_feedback": root_energy_ratio(mf.feedback, mf.local_proposal),
@@ -163,28 +204,88 @@ def summarize_configuration(
         },
         "validity": {
             "mp_max_constraint_residual": float(
-                max(abs(mp.constraint_residual).max(), abs(mp.post_constraint_residual).max())
+                max(
+                    abs(mp.constraint_residual).max(),
+                    abs(mp.post_constraint_residual).max(),
+                )
             ),
             "mfp_max_constraint_residual": float(
-                max(abs(mfp.constraint_residual).max(), abs(mfp.post_constraint_residual).max())
+                max(
+                    abs(mfp.constraint_residual).max(),
+                    abs(mfp.post_constraint_residual).max(),
+                )
             ),
         },
     }
 
 
 def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
-    """Execute the frozen pilot only after the separate authorization gate.
-
-    Phase 6 runner verification intentionally ships without the authorization
-    record. Calling this function therefore fails before archive creation or
-    integration until a later, explicit execution slice adds that record.
-    """
+    """Execute the frozen pilot only after every independent gate passes."""
 
     bundle = load_frozen_bundle(repo_root)
     source_commit = verify_model_baseline(bundle.repo_root, bundle.protocol)
-    authorization = validate_execution_authorization(bundle.repo_root, source_commit)
-    configurations = require_complete_pilot_batch(build_pilot_configurations(bundle))
+    configurations = require_complete_pilot_batch(
+        build_pilot_configurations(bundle)
+    )
+    configuration_hashes = {
+        item.config_id: item.configuration_hash for item in configurations
+    }
+    expected_trajectory_records = (
+        len(configurations) * EXPECTED_TRAJECTORIES_PER_CONFIGURATION
+    )
+    expected_scope = {
+        "scope_version": "ARG-P6-EXEC-SCOPE-v3",
+        "protocol_lock_sha256": canonical_json_sha256(
+            load_json(bundle.repo_root / "protocol/phase5_v1/LOCK.json")
+        ),
+        "integrity_baseline_sha256": canonical_json_sha256(
+            load_json(
+                bundle.repo_root
+                / "protocol/phase6_runner_v1/INTEGRITY_BASELINE.json"
+            )
+        ),
+        "execution_environment_sha256": canonical_json_sha256(
+            load_json(
+                bundle.repo_root
+                / "protocol/phase6_runner_v1/EXECUTION_ENVIRONMENT.json"
+            )
+        ),
+        "pilot_membership_sha256": canonical_json_sha256(
+            configuration_hashes
+        ),
+        "integrator_suite": PILOT_INTEGRATOR_SUITE,
+        "time_policy": dict(bundle.protocol["time_and_sampling"]),
+        "archive_schema_version": "ARG-P6-ARCHIVE-v3",
+        "archive_destination": str(Path(archive_root).resolve()),
+        "configuration_count": len(configurations),
+        "expected_trajectory_records": expected_trajectory_records,
+        "expected_summary_records": len(configurations),
+        "confirmatory_execution": "BLOCKED",
+    }
+    authorization = validate_execution_authorization(
+        bundle.repo_root,
+        source_commit,
+        expected_scope=expected_scope,
+    )
     params = frozen_parameters(bundle)
+
+    attestation = build_attestation(
+        bundle.repo_root,
+        integrator=PILOT_INTEGRATOR_SUITE,
+        implementation_paths=PILOT_IMPLEMENTATION_PATHS,
+    )
+    if attestation.get("source_commit") != source_commit:
+        raise ProtocolIntegrityError(
+            "source commit differs between runner and attestation gates"
+        )
+    environment = attestation.get("runtime_environment")
+    if not isinstance(environment, dict):
+        raise ProtocolIntegrityError("runtime environment attestation is missing")
+    environment_policy = validate_execution_environment_policy(
+        bundle.repo_root,
+        environment,
+        require_execution_clearance=True,
+    )
 
     time_policy = bundle.protocol["time_and_sampling"]
     horizon = float(time_policy["horizon"])
@@ -193,11 +294,42 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
     if dts != [0.001, 0.0005, 0.00025]:
         raise ProtocolIntegrityError("RK4 schedule changed after protocol freeze")
 
+    run_identity_payload = {
+        "authorization": dict(authorization),
+        "attestation_sha256": attestation["attestation_sha256"],
+        "environment_policy_id": environment_policy["environment_id"],
+        "configuration_hashes": {
+            item.config_id: item.configuration_hash for item in configurations
+        },
+        "integrator_suite": PILOT_INTEGRATOR_SUITE,
+    }
+    run_identity_sha256 = canonical_json_sha256(run_identity_payload)
+    trajectory_schema = [
+        {
+            "model_id": model_id,
+            "integrator": integrator,
+            "profile": profile,
+            "control_id": control_id,
+        }
+        for model_id, integrator, profile, control_id in expected_trajectory_schema(bundle)
+    ]
     run_manifest = {
         "runner_id": RUNNER_ID,
         "runner_version": RUNNER_VERSION,
         "source_commit": source_commit,
-        "model_implementation_commit": bundle.protocol["model_implementation_commit"],
+        "source_tree_sha256": attestation["source_tree_sha256"],
+        "attestation_sha256": attestation["attestation_sha256"],
+        "protocol_lock": attestation["protocol_lock"],
+        "implementation_files": attestation["implementation_files"],
+        "runtime_environment_sha256": attestation[
+            "runtime_environment_sha256"
+        ],
+        "environment_policy_id": environment_policy["environment_id"],
+        "integrator_suite": PILOT_INTEGRATOR_SUITE,
+        "run_identity_sha256": run_identity_sha256,
+        "model_implementation_commit": bundle.protocol[
+            "model_implementation_commit"
+        ],
         "protocol_id": PROTOCOL_ID,
         "protocol_version": PROTOCOL_VERSION,
         "contract_version": CONTRACT_VERSION,
@@ -205,10 +337,25 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
         "execution_utc": authorization["execution_utc"],
         "split": PILOT_SPLIT,
         "configuration_count": len(configurations),
+        "configuration_hashes": configuration_hashes,
+        "trajectory_schema": trajectory_schema,
+        "time_policy": dict(bundle.protocol["time_and_sampling"]),
+        "execution_scope": expected_scope,
+        "execution_scope_sha256": canonical_json_sha256(expected_scope),
+        "expected_trajectory_records": expected_trajectory_records,
+        "expected_summary_records": len(configurations),
         "confirmatory_execution": "BLOCKED",
     }
-    archive = PilotArchiveWriter(archive_root, run_manifest)
-    archive.write_environment(runtime_environment())
+    archive = PilotArchiveWriter(archive_root, run_manifest, bundle=bundle)
+    archive.write_environment(
+        {
+            "policy": dict(environment_policy),
+            "attested_runtime": environment,
+            "runtime_environment_sha256": attestation[
+                "runtime_environment_sha256"
+            ],
+        }
+    )
     for configuration in configurations:
         archive.write_configuration(configuration)
 
@@ -223,6 +370,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                         configuration,
                         params,
                         model,
+                        bundle=bundle,
                         dt=dt,
                         horizon=horizon,
                         observation_interval=observation_interval,
@@ -242,6 +390,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                     configuration,
                     params,
                     model,
+                    bundle=bundle,
                     horizon=horizon,
                     observation_interval=observation_interval,
                     source_commit=source_commit,
@@ -262,9 +411,15 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                 ModelId.MFP: ("x",),
             }
             for model, maps in decision_maps.items():
-                coarse = trajectories[(model.value, f"rk4-dt-{dts[0]:.8g}")]
-                medium = trajectories[(model.value, f"rk4-dt-{dts[1]:.8g}")]
-                fine = trajectories[(model.value, f"rk4-dt-{dts[2]:.8g}")]
+                coarse = trajectories[
+                    (model.value, f"rk4-dt-{dts[0]:.8g}")
+                ]
+                medium = trajectories[
+                    (model.value, f"rk4-dt-{dts[1]:.8g}")
+                ]
+                fine = trajectories[
+                    (model.value, f"rk4-dt-{dts[2]:.8g}")
+                ]
                 for map_id in maps:
                     assessment = assess_numerics(
                         coarse,
@@ -273,19 +428,23 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                         alternates[model.value],
                         map_id,
                     )
-                    assessments[f"{model.value}:{map_id}"] = asdict(assessment) | {
-                        "passed": assessment.passed
-                    }
+                    assessments[f"{model.value}:{map_id}"] = asdict(
+                        assessment
+                    ) | {"passed": assessment.passed}
                     if not assessment.passed:
                         raise NumericalGateError(
-                            f"numerical acceptance failed for {model.value}:{map_id}"
+                            "numerical acceptance failed for "
+                            f"{model.value}:{map_id}"
                         )
 
-            mf_fine = trajectories[(ModelId.MF.value, f"rk4-dt-{dts[2]:.8g}")]
+            mf_fine = trajectories[
+                (ModelId.MF.value, f"rk4-dt-{dts[2]:.8g}")
+            ]
             replay = integrate_rk4(
                 configuration,
                 params,
                 ModelId.MF,
+                bundle=bundle,
                 dt=dts[2],
                 horizon=horizon,
                 observation_interval=observation_interval,
@@ -300,6 +459,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                         configuration,
                         params,
                         model,
+                        bundle=bundle,
                         dt=dts[0],
                         horizon=horizon,
                         observation_interval=observation_interval,
@@ -310,7 +470,9 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                     require_same_state_identity_gate(
                         controlled, params, configuration.c0
                     )
-                    raw_hashes.update(archive.write_trajectory(controlled).files)
+                    raw_hashes.update(
+                        archive.write_trajectory(controlled).files
+                    )
 
             permutation_results: dict[str, Any] = {}
             for model in ModelId:
@@ -318,6 +480,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                     configuration,
                     params,
                     model,
+                    bundle=bundle,
                     dt=dts[0],
                     horizon=horizon,
                     observation_interval=observation_interval,
@@ -333,6 +496,7 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                     "direction_id": configuration.direction_id,
                     "split": configuration.split,
                     "configuration_hash": configuration.configuration_hash,
+                    "run_identity_sha256": run_identity_sha256,
                     "effects": effects,
                     "numerical_assessments": assessments,
                     "permutation_tripwires": permutation_results,
@@ -347,11 +511,14 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
                     "config_id": configuration.config_id,
                     "direction_id": configuration.direction_id,
                     "split": configuration.split,
+                    "run_identity_sha256": run_identity_sha256,
                     "error_type": type(exc).__name__,
                     "error": str(exc),
                 }
             )
-            if isinstance(exc, (ProtocolIntegrityError, ConfirmatoryAccessError)):
+            if isinstance(
+                exc, (ProtocolIntegrityError, ConfirmatoryAccessError)
+            ):
                 raise
             if failures / len(configurations) > 0.10:
                 raise NumericalGateError(
@@ -364,8 +531,11 @@ def execute_pilot(repo_root: str | Path, archive_root: str | Path) -> None:
         if entry["split"] == CONFIRMATORY_SPLIT
     }
     if archive_has_confirmatory_identifiers(archive.root, confirmatory_ids):
-        raise ConfirmatoryAccessError("confirmatory identifier contamination detected")
+        raise ConfirmatoryAccessError(
+            "confirmatory identifier contamination detected"
+        )
     archive.finalize()
+    verify_pilot_archive(archive.root, bundle)
 
 
 __all__ = [
@@ -388,6 +558,7 @@ __all__ = [
     "Trajectory",
     "all_permutations",
     "archive_has_confirmatory_identifiers",
+    "expected_trajectory_schema",
     "assess_numerics",
     "authorize_pilot_batch",
     "build_pilot_configurations",
@@ -410,5 +581,7 @@ __all__ = [
     "smoke_configuration",
     "summarize_configuration",
     "validate_execution_authorization",
+    "validate_execution_environment_policy",
     "verify_model_baseline",
+    "verify_pilot_archive",
 ]

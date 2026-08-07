@@ -1,0 +1,140 @@
+name: phase6b-pilot-execution
+
+on:
+  push:
+    branches: [phase6a1-integrity-remediation]
+    paths:
+      - protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json
+
+permissions:
+  contents: read
+
+concurrency:
+  group: arg-phase6-pilot-execution
+  cancel-in-progress: false
+
+jobs:
+  execute-frozen-pilot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12.13"
+      - name: Verify authorization-only successor commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-list --count HEAD^..HEAD)" = "1"
+          test "$(git diff --name-only HEAD^ HEAD)" = \
+            "protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json"
+          test -z "$(git status --porcelain --untracked-files=all)"
+          git rev-parse HEAD
+          git rev-parse HEAD^
+          git rev-parse HEAD^{tree}
+          sha256sum \
+            .github/workflows/phase6b-pilot-execution.yml \
+            protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json \
+            protocol/phase6_runner_v1/INTEGRITY_BASELINE.json \
+            protocol/phase6_runner_v1/EXECUTION_ENVIRONMENT.json \
+            protocol/phase5_v1/LOCK.json
+      - name: Install exact execution environment
+        run: |
+          python -m pip install --only-binary=:all: \
+            'setuptools==80.9.0' \
+            'wheel==0.45.1' \
+            'numpy==2.5.1' \
+            'scipy==1.18.0'
+          python -m pip install --no-build-isolation --no-deps -e .
+      - name: Resolve bound archive destination
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive_root="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          authorization = json.loads(
+              Path('protocol/phase6_runner_v1/EXECUTION_AUTHORIZATION.json').read_text(
+                  encoding='utf-8'
+              )
+          )
+          print(authorization['scope']['archive_destination'])
+          PY
+          )"
+          case "$archive_root" in
+            /tmp/arg-phase6-pilot-*) ;;
+            *) echo "authorization archive destination is outside the frozen /tmp namespace" >&2; exit 1 ;;
+          esac
+          test ! -e "$archive_root"
+          echo "ARG_PILOT_ARCHIVE_ROOT=$archive_root" >> "$GITHUB_ENV"
+      - name: Validate and display frozen pilot plan
+        env:
+          PYTHONHASHSEED: "0"
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: |
+          arg-pilot validate --repo-root .
+          arg-pilot plan --repo-root .
+      - name: Execute frozen 50-configuration development pilot
+        shell: bash
+        env:
+          PYTHONHASHSEED: "0"
+          PYTHONNOUSERSITE: "1"
+          OMP_NUM_THREADS: "1"
+          OPENBLAS_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: |
+          set -euo pipefail
+          arg-pilot execute \
+            --repo-root . \
+            --archive "$ARG_PILOT_ARCHIVE_ROOT" \
+            2>&1 | tee "$RUNNER_TEMP/arg-phase6-pilot-execution.log"
+      - name: Independently verify completed archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from apophatic_geometry.pilot_manifest import load_frozen_bundle
+          from apophatic_geometry.pilot_verify import verify_pilot_archive
+
+          root = Path(os.environ['ARG_PILOT_ARCHIVE_ROOT'])
+          result = verify_pilot_archive(root, load_frozen_bundle('.'))
+          evidence = {
+              'status': 'VERIFIED_COMPLETE',
+              'github_run_id': os.environ['GITHUB_RUN_ID'],
+              'github_sha': os.environ['GITHUB_SHA'],
+              'github_ref': os.environ['GITHUB_REF'],
+              'archive_root': str(root),
+              'verification': result,
+          }
+          Path(os.environ['RUNNER_TEMP'], 'arg-phase6-pilot-verification.json').write_text(
+              json.dumps(evidence, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(evidence, indent=2, sort_keys=True))
+          PY
+          test -z "$(find "$ARG_PILOT_ARCHIVE_ROOT" -type f -perm /222 -print -quit)"
+          sha256sum \
+            "$ARG_PILOT_ARCHIVE_ROOT/RUN_MANIFEST.json" \
+            "$ARG_PILOT_ARCHIVE_ROOT/ARCHIVE_COMPLETE.json" \
+            "$ARG_PILOT_ARCHIVE_ROOT/checksums.sha256" \
+            > "$RUNNER_TEMP/arg-phase6-pilot-root-hashes.sha256"
+      - name: Upload immutable pilot archive and execution evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: arg-phase6-development-pilot
+          path: |
+            ${{ env.ARG_PILOT_ARCHIVE_ROOT }}
+            ${{ runner.temp }}/arg-phase6-pilot-execution.log
+            ${{ runner.temp }}/arg-phase6-pilot-verification.json
+            ${{ runner.temp }}/arg-phase6-pilot-root-hashes.sha256
+          if-no-files-found: error
+          retention-days: 90
