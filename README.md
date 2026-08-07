@@ -4,6 +4,47 @@
 
 ARG investigates whether nonlinear local dynamics, adaptive relations, state-dependent geometry, endogenous collective feedback, and explicit admissibility projection can form a coherent and scientifically useful framework. Mathematical novelty, physical relevance, and explanatory value remain open.
 
+## Consensus-led research program
+
+ARG follows this order:
+
+$$
+\boxed{
+\text{research first}
+\to
+\text{synthesize second}
+\to
+\text{formalize third}
+\to
+\text{experiment only on the unresolved remainder}.
+}
+$$
+
+The active CS1 audit studies state, structure, representation, and persistence across mathematics, dynamical systems, control, adaptive networks, evolving spaces, and philosophy.
+
+The first three source baskets indicate that the following are established neighboring results rather than ARG discoveries:
+
+- state- and initial-condition-dependent dynamics;
+- nonmodal amplification and cancellation;
+- coevolving state and topology;
+- basin, invariant-manifold, metastable, and structural persistence;
+- controllability, observability, balanced state importance, viability, and controlled invariance;
+- explicit transport on smoothly evolving spaces;
+- multiple inequivalent criteria of representation equivalence.
+
+Current evidence supports a **typed family of relations**, not one universal `state–structure compatibility` scalar.
+
+Scientific claims may require a context broader than a bare pair $(B,x)$, including the transition law, input map, output map, constraints, admissible controls, disturbances, measured functional, and horizon.
+
+See:
+
+- `docs/22_consensus_synthesis_program.md`
+- `research/consensus/01_consensus_table.md`
+- `research/consensus/01_translation_dictionary.md`
+- `research/consensus/01_disagreement_map.md`
+
+No persistence experiment is authorized by this research track.
+
 ## Implemented four-model family
 
 ### $M_0$ — local/adaptive baseline
@@ -62,44 +103,34 @@ $$
 
 No implemented result establishes scientific superiority, physical adequacy, strong emergence, macro-level causal autonomy, mathematical novelty, or a fundamental geometry.
 
-## Frozen protocol and verified pilot-only runner
+## Frozen protocol and integrity stop-ship
 
-Protocol `ARG-P5-COMP-v1` was frozen before trajectory generation. It fixes the hypotheses, effect and equivalence thresholds, direction-level inferential units, deterministic pilot/confirmatory split, fixed parameters, RK4 refinement, DOP853 replication, numerical floors, exclusions, stop rules, provenance, executable decision logic, and critical-file lock.
+Protocol `ARG-P5-COMP-v1` was frozen before trajectory generation. It fixes hypotheses, thresholds, direction-level inferential units, the pilot/confirmatory split, parameters, numerical replication, exclusions, stop rules, provenance, executable decision logic, and the critical-file lock.
 
-Phase 6 now implements and software-verifies a fail-closed runner for exactly the 50 frozen pilot configurations. The runner:
-
-- verifies the Phase 5 lock before loading configurations;
-- rejects confirmatory and mixed batches before integration;
-- rejects confirmatory input independently in RK4, DOP853, and archive paths;
-- runs all four models under the frozen numerical policy;
-- implements the frozen controls and all six node-relabeling tripwires;
-- writes a checksummed, write-once archive;
-- requires a separate committed execution authorization naming a previously verified runner commit.
-
-Final hosted verification in GitHub Actions run `30723005085` reported **100 passing tests** on Python 3.10 and **100 passing tests** on Python 3.12.
+The Phase 6A pilot-only runner passed its original software gate, but an independent audit identified integrity defects outside and around the nominal equations.
 
 Current execution state:
 
 $$
 \boxed{
-\text{runner verified};
+\text{Phase 6A.1 integrity remediation STOP-SHIP};
 \quad
-\text{development pilot not executed};
+\text{development pilot not authorized};
 \quad
 \text{confirmatory execution and scientific claims blocked}.
 }
 $$
 
-The verification slice contains no execution authorization, pilot trajectory, pilot result, pilot archive, or confirmatory artifact.
+Passing the integrity gate would establish software trustworthiness only. It would not establish that the experiment remains scientifically necessary after the consensus audit.
 
 ## What this project is—and is not
 
 ARG is:
 
-- a candidate synthesis of established mathematical ingredients;
+- a candidate synthesis of established mathematical, scientific, and philosophical constraints;
 - an executable family separating local dynamics, feedback, projection, and their combination;
 - a phase-gated research program with explicit proof obligations and falsification criteria;
-- a preregistered mechanism-comparison framework with a verified pilot-only runner.
+- a consensus-led audit designed to prevent rediscovery and reification.
 
 ARG is not presently:
 
@@ -107,7 +138,9 @@ ARG is not presently:
 - validation that any mechanism improves prediction;
 - evidence of macro-level causal autonomy or strong emergence;
 - a completed physical theory;
-- proof that reality literally is a graph, manifold, constraint surface, or computational structure.
+- proof that reality literally is a graph, manifold, constraint surface, or computational structure;
+- evidence that persistence is one universal quantity;
+- evidence that a structure–state pair is a representation-independent ontology.
 
 ## Repository map
 
@@ -138,8 +171,18 @@ ARG is not presently:
 - `docs/19_phase5_protocol_verification.md`
 - `docs/20_phase6_runner_design.md`
 - `docs/21_phase6_runner_verification.md`
+- `docs/22_consensus_synthesis_program.md`
 - `protocol/phase5_v1/` — frozen protocol bundle and lock.
 - `protocol/phase6_runner_v1/` — runner authorization boundary; no execution authorization is present.
+
+### Consensus workspace
+
+- `research/consensus/01_state_structure_persistence_scope.md`
+- `research/consensus/01_consensus_table.md`
+- `research/consensus/01_translation_dictionary.md`
+- `research/consensus/01_disagreement_map.md`
+- `research/consensus/source_note_template.md`
+- `research/consensus/sources/`
 
 ### Implementation and tests
 
@@ -161,14 +204,17 @@ arg-pilot validate --repo-root .
 arg-pilot plan --repo-root .
 ```
 
-`validate` and `plan` do not execute trajectories. `arg-pilot execute` fails closed because the separate execution authorization is intentionally absent.
+`validate` and `plan` do not execute trajectories. Execution remains blocked by the Phase 6A.1 stop-ship state and the absent scientific authorization.
 
 ## Roadmap position
 
-**Phases 0–5 are complete. The Phase 6 runner gate has passed; pilot execution is the next separate gate.**
+Two governed tracks are active:
 
-No development-pilot result or confirmatory result exists.
+1. **software integrity:** Phase 6A.1 STOP-SHIP;
+2. **consensus synthesis:** CS1 active, with three source baskets entered.
+
+The next CS1 basket covers transport and structural change: connections, reset maps, remeshing, graph correspondence, and noninvertible transitions.
 
 ## Research maxim
 
-> Separate the mechanisms. Freeze the contracts. Test the alternatives. Reify nothing.
+> Establish what is known. Translate without erasing. Preserve disagreement. Test only the remainder. Reify nothing.

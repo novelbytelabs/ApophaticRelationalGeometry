@@ -28,7 +28,7 @@ $$
 
 ## Current position
 
-| Phase | Status | Result |
+| Track or phase | Status | Result |
 |---|---|---|
 | Phase 0 — Alignment and claim control | COMPLETE | Public and internal descriptions aligned. |
 | Phase 1 — Four-model design contract | COMPLETE | Contract v1.0 frozen. |
@@ -38,14 +38,16 @@ $$
 | Phase 5 — Freeze comparative experiment protocol | COMPLETE | Data-free protocol and executable decision rules frozen; 65 tests passed in each configured environment. |
 | Phase 6A — Implement pilot-only runner | COMPLETE WITH AUDIT REMEDIATION REQUIRED | Runner gate passed, but an independent audit found integrity defects outside and around the nominal equations. |
 | Phase 6A.1 — Integrity remediation | STOP-SHIP / ACTIVE | Provenance, numerical-domain, immutability, atomic-output, lock-containment, strict-JSON, environment-lock, and bundle-assembly defects must be closed and externally re-audited. |
-| Phase 6B — Execute development pilot | BLOCKED | No execution authorization may be created until Phase 6A.1 passes external audit. |
+| Phase 6B — Execute development pilot | BLOCKED | No execution authorization may be created until Phase 6A.1 passes external audit and the consensus track confirms scientific necessity. |
 | Phase 7 onward | BLOCKED | Confirmatory execution remains unauthorized. |
+| CS0 — Consensus governance | DRAFT COMPLETE / REVIEW | Consensus method, workspace, source template, grades, and stop rules added on PR #29. |
+| CS1 — State, structure, representation, persistence | ACTIVE | Three source baskets entered: initial-value/equivalence, nonlinear persistence, and control theory. |
 
-Software tests verify declared code and protocol contracts. They do not validate the scientific hypothesis, and they do not supersede an unresolved independent audit.
+Software tests verify declared code and protocol contracts. They do not validate the scientific hypothesis, and they do not supersede an unresolved independent audit or a no-novelty consensus result.
 
 ---
 
-# Completed gates
+# Completed software gates
 
 ## Phases 0–2
 
@@ -75,19 +77,19 @@ $$
 
 while feedback remains in $s$ and $q$.
 
-Verification: PR `#7`, merge `205fb8c5bf1b832e241af230612e3d7056be05f5`, Actions `30718821666`, 51 tests in each configured Python environment.
+Verification: PR `#7`, merge `205fb8c5bf1b832e241af230612e3d7056be05f5`, Actions `30718821666`, 51 tests in each configured environment.
 
 ## Phase 5 — Frozen comparative protocol
 
 Protocol `ARG-P5-COMP-v1` froze the primary and secondary hypotheses, observation maps, thresholds, direction-level units, deterministic pilot/confirmatory split, parameters, numerical replication, exclusions, stop rules, archive provenance, executable metrics, fail-closed decisions, and critical-file lock before trajectory generation.
 
-Verification: PR `#9`, merge `d60bb3e618c590e0c994188cebf060bd4b347903`, Actions `30720596773`, 65 tests in each configured Python environment.
+Verification: PR `#9`, merge `d60bb3e618c590e0c994188cebf060bd4b347903`, Actions `30720596773`, 65 tests in each configured environment.
 
 ## Phase 6A — Pilot-only runner
 
 The runner implementation and its original software gate passed, but that result is now subordinate to the independent audit and does not authorize execution.
 
-Original verification: PR `#11`, merge `b0b5acc1f2db77b7b0fab43eefafd15f3ee2f728`, 100 tests in each configured Python environment.
+Original verification: PR `#11`, merge `b0b5acc1f2db77b7b0fab43eefafd15f3ee2f728`, 100 tests in each configured environment.
 
 ---
 
@@ -120,15 +122,20 @@ Remediate the audit findings without changing scientific equations, thresholds, 
 
 # Phase 6B — Execute the development pilot
 
-Blocked until Phase 6A.1 is externally cleared. A prior execution issue or authorization template does not override this block.
+Blocked until both conditions hold:
+
+1. Phase 6A.1 is externally cleared;
+2. CS1 and the applicable later consensus slices establish a precise unresolved scientific residual that the frozen pilot actually discriminates.
+
+A prior execution issue or authorization template does not override either block.
 
 # Phase 7 — Confirmatory four-model experiment
 
-Blocked. Only a separately authorized held-out execution may support scoped comparative claims.
+Blocked. Only a separately authorized held-out execution may support scoped comparative claims, and only if a literature-grounded residual remains.
 
 # Phase 8 — Relational projection v2
 
-A constraint involving mismatch, $s$, $q$, intrinsic distance, or compatibility requires a new versioned model contract.
+A constraint involving mismatch, $s$, $q$, intrinsic distance, or compatibility requires a new versioned model contract and must survive the consensus audit.
 
 # Phase 9 — Physical anchors
 
@@ -138,6 +145,79 @@ Initial order:
 2. incompressible-flow projection;
 3. adaptive synchronization or flocking.
 
+---
+
+# Consensus synthesis track
+
+## CS0 — Governance
+
+Draft governance and workspace are present on PR `#29`. The program requires research before synthesis, synthesis before formalization, and experiments only on the unresolved remainder.
+
+## CS1 — State, structure, representation, and persistence
+
+### Basket 1 — entered
+
+- nonmodal initial-value dynamics;
+- adaptive networks;
+- evolving state spaces and transport;
+- theoretical equivalence.
+
+### Basket 2 — entered
+
+- basin stability;
+- invariant-manifold persistence;
+- metastability and almost-invariant sets;
+- structural stability.
+
+### Basket 3 — entered
+
+- linear controllability and observability;
+- minimal realization;
+- balanced realization and model reduction;
+- nonlinear accessibility and observability;
+- viability kernels;
+- positive and controlled invariance.
+
+### Current provisional correction
+
+The evidence supports a typed family of relations rather than one universal compatibility or persistence scalar.
+
+Many scientific questions require a context broader than
+
+$$
+Q_t=(B_t,x_t).
+$$
+
+A preliminary typed context is
+
+$$
+\mathcal S=
+(\mathcal X,F,B_{\mathrm{in}},C_{\mathrm{out}},K,\mathcal U,\mathcal W,\Phi,T).
+$$
+
+This is a methodological correction, not an ontological promotion.
+
+### Remaining CS1 gates
+
+- transport and structural-change basket;
+- gauge, quotient, and representation audit;
+- information and recoverability basket;
+- biological persistence basket;
+- philosophical identity and persistence basket;
+- disagreement map;
+- residual research agenda;
+- formalism impact note;
+- claim-ledger and novelty-matrix amendments;
+- independent review.
+
 ## Immediate next action
 
-Complete Phase 6A.1 remediation on an isolated branch, run hosted adversarial verification, assemble a fresh self-validating audit bundle, and submit it to an external Auditor AI. Do not create execution authorization or run the pilot.
+Proceed with the CS1 transport-and-structural-change basket:
+
+1. connections and parallel transport;
+2. hybrid reset maps and reset relations;
+3. remeshing and conservative projection;
+4. graph correspondence and optimal transport;
+5. dimension-changing and noninvertible transitions.
+
+Do not execute the pilot or revise the ontology before this basket and the associated representation audit are complete.
